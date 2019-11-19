@@ -12,7 +12,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 
-import {faFolder, faFile} from '@fortawesome/free-solid-svg-icons'
+import {faFolder, faFile, faReply} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './DirectoryTable.scss'
 
@@ -20,7 +20,7 @@ function createData(name, modifiedDate, type, size) {
   return { name, modifiedDate, type, size };
 }
 
-const rows = [
+const rows = [  
   createData('apple.exe', 305, '응용 프로그램', 6),
   createData('movie.mp4', 452, 'MP4 파일', 51),
   createData('Eclair', 262, '파일 폴더', 24),
@@ -228,6 +228,22 @@ export default function DirectoryTable() {
               rowCount={rows.length}
             />
             <TableBody>
+              <TableRow
+                      hover
+                      onClick={event => handleClick(event, '...')}
+                      tabIndex={-1}
+                    >                     
+                      <TableCell component="th">
+                      <span style={{marginRight:'7px'}} ><FontAwesomeIcon icon={faReply} size='1x'/> </span>                                          
+                        ...
+                      </TableCell>
+                      <TableCell>
+                      </TableCell>
+                      <TableCell>
+                      </TableCell>
+                      <TableCell>
+                      </TableCell>
+                </TableRow>
               {stableSort(rows, getSorting(order, orderBy))
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name);
