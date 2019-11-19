@@ -1,0 +1,9 @@
+.MuiTableRow-hover:hover {    
+    background-color: rgba(229, 243, 255, 0.7) !important;   
+}
+.Mui-selected {    
+    background-color: rgba(024, 232, 255, 0.4) !important;
+    &:hover {    
+        background-color: rgba(024, 232, 255, 0.4) !important;   
+    }
+}

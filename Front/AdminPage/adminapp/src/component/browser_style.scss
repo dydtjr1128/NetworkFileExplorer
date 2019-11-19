@@ -1,0 +1,48 @@
+    #mainTable{
+      width: 100%;
+      th, td{      
+        text-align: left;
+        font-weight: normal;
+        margin: 0;
+      }
+      th {
+        font-weight: bold;
+      }
+      th, td{
+        &.size, &.modified{
+          text-align: right;
+        }      
+      }
+      thead th {
+        border-bottom: 0.1rem solid #ddd;
+      }
+      tr:not(:last-child) td{
+        border-bottom: 0.1rem solid #eee;
+      }
+      tr>td{
+        cursor: pointer;
+        &:selected {
+          td{
+            font-weight: bold;
+            input, button{
+              font-weight: normal;
+            }
+          }
+            &.name {
+              position: relative;
+              &:after {
+                content: ' ';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+              }
+            }
+      }
+      &.dragover {
+        td, th{
+          background: #eee;
+        }
+      }
+    }
+}
