@@ -1,3 +1,4 @@
+/*
 package com.dydtjr1128.nfe;
 
 import org.slf4j.Logger;
@@ -31,3 +32,4 @@ public class ServerTask implements Callable<Socket> {
         logger.debug("receive msg( " + socket.getInetAddress() + " ) : " + msg);
     }
 }
+*/

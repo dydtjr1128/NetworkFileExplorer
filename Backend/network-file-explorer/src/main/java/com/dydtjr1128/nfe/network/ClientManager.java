@@ -1,11 +1,8 @@
-package com.dydtjr1128.nfe;
+package com.dydtjr1128.nfe.network;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.channels.AsynchronousSocketChannel;
 import java.util.*;
 
 public class ClientManager {
@@ -14,17 +11,9 @@ public class ClientManager {
     public List<Client> clientsVector;
     public Map<String, Client> clientsHashMap;
 
-    private static class LazyHolder {
-        private static final ClientManager INSTANCE = new ClientManager();
-    }
 
     public static ClientManager getInstance() {
         return LazyHolder.INSTANCE;
-    }
-
-    private ClientManager() {
-        clientsVector = Collections.synchronizedList(new Vector<>(1024));
-        clientsHashMap = Collections.synchronizedMap(new HashMap<>());
     }
 
     public void addClient(Client client) {
@@ -33,12 +22,23 @@ public class ClientManager {
         clientsHashMap.put(clientIP, client);
 
     }
+
     public void removeClient(Client client) {
         clientsVector.remove(client);
         clientsHashMap.remove(client.getClientIP());
     }
-    public int getClientCount(){
+
+    public int getClientCount() {
         return clientsVector.size();
+    }
+
+    private static class LazyHolder {
+        private static final ClientManager INSTANCE = new ClientManager();
+    }
+
+    private ClientManager() {
+        clientsVector = Collections.synchronizedList(new Vector<>(1024));
+        clientsHashMap = Collections.synchronizedMap(new HashMap<>());
     }
 
 }

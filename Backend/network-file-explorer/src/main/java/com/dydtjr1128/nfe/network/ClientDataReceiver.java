@@ -1,8 +1,10 @@
-package com.dydtjr1128.nfe;
+package com.dydtjr1128.nfe.network;
 
+import com.dydtjr1128.nfe.ClientDataHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.CompletionHandler;
 
@@ -17,7 +19,6 @@ public class ClientDataReceiver {
     }
 
     public void receive(final Client client) {
-        System.out.println("@@connected : " + ClientManager.getInstance().getClientCount());
         client.read(new CompletionHandler<Integer, ByteBuffer>() {
             @Override
             public void completed(Integer result, ByteBuffer buffer) {
@@ -27,8 +28,12 @@ public class ClientDataReceiver {
                     logger.debug("[Closing connection to ] : " + client);
                     ClientManager.getInstance().removeClient(client);
                 } else {
-                    logger.debug("[Some data received from ] : " + client.getClientIP());
-                    handler.onDataReceive(client, buffer, result);
+                    logger.debug("[Some data received from] : " + client.getClientIP());
+                    try {
+                        handler.onDataReceive(client, buffer, result);
+                    } catch (InterruptedException | IOException e) {
+                        e.printStackTrace();
+                    }
                     // enqueue next round of actions
                     client.run();
                 }

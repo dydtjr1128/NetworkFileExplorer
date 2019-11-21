@@ -1,4 +1,4 @@
-package com.dydtjr1128.nfe;
+package com.dydtjr1128.nfe.network;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,5 +1,6 @@
-package com.dydtjr1128.nfe;
+package com.dydtjr1128.nfe.network;
 
+import com.dydtjr1128.nfe.protocol.NFEProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class AsyncServer implements Runnable {
     }
 
     private void initializeServerConfig() throws IOException {
-        port = 14410;
+        port = 14411;
         threadPoolCount = Runtime.getRuntime().availableProcessors();
     }
 
@@ -78,8 +79,8 @@ public class AsyncServer implements Runnable {
         client.run();
     }
 
-    public void writeMessageToClients(String clientIP, String message) {
+    public void writeMessageToClients(String clientIP, String message) throws IOException {
         logger.debug("[Send message to client] : " + clientIP);
-        ClientManager.getInstance().clientsHashMap.get(clientIP).writeStringMessage("GET C:\\Windows\\Cursors");
+        ClientManager.getInstance().clientsHashMap.get(clientIP).writeStringMessage(NFEProtocol.GET_LIST, "C:\\Windows\\Cursors");
     }
 }
