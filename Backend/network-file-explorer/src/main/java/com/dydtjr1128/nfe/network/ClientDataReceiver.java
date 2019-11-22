@@ -1,6 +1,5 @@
 package com.dydtjr1128.nfe.network;
 
-import com.dydtjr1128.nfe.ClientDataHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

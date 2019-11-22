@@ -1,5 +1,6 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe;
 
+import com.dydtjr1128.nfe.network.ServerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
