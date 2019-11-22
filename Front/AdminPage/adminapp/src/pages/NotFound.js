@@ -1,13 +1,13 @@
 import React from 'react';
 
-const Home = () => {
+const NotFound = () => {
     return (
         <div>
             <h2>
-                홈
+                NotFound
             </h2>
         </div>
     );
 };
 
-export default Home;
+export default NotFound;
