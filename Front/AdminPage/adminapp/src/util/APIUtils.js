@@ -42,8 +42,8 @@ export function getClients() {
     return request(url, requestData);
 }
 
-export function getDirectores(ip, path) {    
-    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + path.replace(/\\/g, "|");    
+export function getDirectores(ip, path) {
+    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + path.replace(/\\/g, "|");
     const requestData = {
         method: 'GET'
     }

@@ -9,31 +9,50 @@ import useStores from '../util/useStore'
 const ClientTreeItem = observer((props) => {
     const { match } = props;
     const [directories, setDirectories] = React.useState([]);
+    const [response, setResponse] = React.useState([]);
     const ip = match.ip//192.168.0.0.1
-    const path = match.absolutePath//c://windows/aa
+    const path = match.absolutepath//c://windows/aa
     const name = match.name//aa
     const { store } = useStores()
-    //console.log(ip + "=="+path+"=="+name)
-    function onClickClient() {
-        getDirectores(ip, path).then(response => {
-            //console.log(response)
-            var array = [];
-            response.map((dir, index) => {
-                if (dir.i) {
-                    array.push(dir.f);
-                }
-            });
-            setDirectories(array);
+
+    function onClickClient(e) {
+        console.log(match.nodeId + "@@@" + ip + "@" + path + "@" + name);
+        if (response.length > 0) {
             store.currentClientIP = ip;
             store.currentClientPath = path;
             store.currentDirectoriesList = response;
-        }).catch(error => {
-            if (error.status === 401) {
-                alert('Not authenticated')
-            } else {
-                alert(error.message || 'Sorry! Something went wrong. Please try again!')
-            }
-        });
+            //store.addExpanded(match.nodeId)       
+            //console.log("로컬!")
+        }
+        else {
+            //console.log("request!")
+            getDirectores(ip, path).then(response => {
+                var array = [];
+                if (response === null)
+                    alert("빈 폴더 입니다.!")
+                else {
+                    var array = []
+                    response.map((dir, index) => {
+                        if (dir.i) {
+                            array.push(dir.f);
+                        }
+                    });
+                    setResponse(response)
+                    setDirectories(array);
+                    store.currentClientIP = ip;
+                    store.currentClientPath = path;
+                    store.currentDirectoriesList = response;
+                    //store.addExpanded(match.nodeId)
+                }
+            }).catch(error => {
+                if (error.status === 401) {
+                    alert('Not authenticated')
+                } else {
+                    alert(error.message || 'Sorry! Something went wrong. Please try again!')
+                }
+            });
+            console.log(store.expanded)
+        }
     }
 
     return (
@@ -44,12 +63,13 @@ const ClientTreeItem = observer((props) => {
             nodeId={path}
             {...match}>
 
-            {directories.map((row, index) => {
-                return (
-                    <ClientTreeItem match={{ ip: ip, name: row, absolutePath: path + "\\" + row }} />
+            {directories == null ? alert("읽을 수 없는 폴더 입니다.") :
+                directories.map((row, index) => {
+                    return (
+                        <ClientTreeItem match={{ ip: ip, name: row, absolutepath: path + "\\" + row, nodeId: ip + "\\" + path + "\\" + row }} key={path + "\\" + row} />
 
-                );
-            })}
+                    );
+                })}
 
         </TreeItem>
     );

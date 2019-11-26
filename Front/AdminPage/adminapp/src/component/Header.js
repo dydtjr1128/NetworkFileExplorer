@@ -1,27 +1,30 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import { observer } from 'mobx-react';
+import useStores from '../util/useStore'
 
 const useStyles = makeStyles(theme => ({
-    root: {
-        width: '100%',
-        height:'5vh',
-        backgroundColor:'blue',
-    },
-    pathPaper: {
-      
-      width: '100%',
-      height : '5%'
-    }
-  }));
+  root: {
+    width: '100%',
+    height: '5vh',
+    padding : '10px 15px'
+  },
+  pathPaper: {
 
-export default function TableHeader() {
+    width: '100%',
+    height: '5%'
+  }
+}));
+
+const TableHeader = observer((props) => {
   const classes = useStyles();
+  const { store } = useStores()
   return (
     <div className={classes.root}>
-        <Paper className={classes.pathPaper}>
-            sdsfd
-        </Paper>
+        {store.currentClientIP + "/" + store.currentClientPath.replace(/\\/g, "/")}
     </div>
   );
-}
+})
+
+export default TableHeader;

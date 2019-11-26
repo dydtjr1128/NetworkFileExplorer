@@ -5,22 +5,25 @@ import { faDesktop } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDirectores } from "../util/APIUtils"
 import ClientTreeItem from './ClientTreeItem'
-
+import useStores from '../util/useStore'
 
 const ClientHeadItem = observer((props) => {
+    const { store } = useStores()
     const { labelText, ...other } = props
     const path = labelText;
     const [directories, setDirectories] = React.useState([]);
 
     function onClick() {
+        //store.addExpanded(labelText)
         getDirectores(path, "root").then(response => {
-            console.log(response)
             response["here"] = path
-            let tag = document.getElementById(path)
             var array = [];
             response.map((dir, index) => {
                 if (dir.i) {
-                    array.push(dir.f);
+                    array.push({
+                        fname: dir.f,
+                        key: index
+                    });
                 }
             });
             setDirectories(array);
@@ -39,13 +42,11 @@ const ClientHeadItem = observer((props) => {
         }
             onClick={onClick}
             {...other} >
-            {/* <Router> */}
-                {directories.map((row, index) => {
-                    return (
-                        <ClientTreeItem match={{ip:labelText, name:row, absolutePath:row,}} />
+            {directories.map((row, index) => {
+                return (
+                    <ClientTreeItem match={{ ip: labelText, name: row.fname, absolutepath: row.fname, nodeId:path + "\\" + row.fname }} key={path + "\\" + row.fname} />
                 );
-                })}
-            {/* </Router> */}
+            })}
         </TreeItem>
     );
 

@@ -10,6 +10,8 @@ import { ACCESS_TOKEN } from '../util/Constants';
 import { getClients } from '../util/APIUtils';
 import useStores from '../util/useStore'
 import { useHistory } from "react-router-dom";
+import SplitPane from 'react-split-pane';
+import Pane from 'react-split-pane/lib/Pane';
 
 export default function Browser() {
     const [adminRef, setClientRef] = React.useState(null);
@@ -19,14 +21,6 @@ export default function Browser() {
         "authorization": "Bearer " + localStorage.getItem(ACCESS_TOKEN),
     };
     const { store } = useStores()
-
-    store.requestFileList = requestFileList;
-
-
-    function requestFileList(direcotryPath) {
-
-    }
-
 
     function onMessageReceive(msg, topic) {
         //console.log("Chatting Template - onMessageReceive");      
@@ -74,8 +68,9 @@ export default function Browser() {
         alert("연결이 끊겼습니다!\n다른 이용자가 로그인 하였거나 서버에 문제가 발생하였습니다.")
 
     }
-    return (
-        <Grid container>
+
+    return ( 
+        <div style={{height:'100%'}}>
             <SockJsClient url={wsSourceUrl} topics={["/topic/admin"]}
                 headers={customHeaders}
                 subscribeHeaders={customHeaders}
@@ -84,16 +79,22 @@ export default function Browser() {
                 onDisconnect={() => { onDisConnect() }}
                 onConnectFailure={() => { onConnectFailure() }}
                 debug={false} />
-            <Grid item xs={12}>
-                <Header />
-            </Grid>
-            <Grid item xs={2}>
-                <Sidebar />
-            </Grid>
 
-            <Grid item xs={10}>
-                <DirectoryTable />
-            </Grid>
-        </Grid>
+            <SplitPane split="horizontal" maxSize="100%">
+                <Pane initialSize="30px" minSize="40px" maxSize="70px">
+                    <Header />
+                </Pane>
+                <Pane>
+                <SplitPane split="vertical" minSize="10%" maxSize="50%">
+                    <Pane initialSize="25%">
+                        <Sidebar />
+                    </Pane>
+                    <Pane initialSize="75%">
+                        <DirectoryTable />
+                    </Pane>
+                </SplitPane>
+                </Pane>
+            </SplitPane>
+        </div>
     );
 }

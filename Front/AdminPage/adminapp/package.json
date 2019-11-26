@@ -20,6 +20,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-shimmer-effect": "^1.0.9",
+    "react-split-pane": "^2.0.2",
     "react-stomp": "^4.2.0"
   },
   "scripts": {
