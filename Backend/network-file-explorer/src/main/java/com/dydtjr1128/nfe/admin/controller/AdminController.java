@@ -26,6 +26,7 @@ public class AdminController {
     }
     @GetMapping("/directory/{ip}/{path}")
     public ResponseEntity<?> authenticateUser(@PathVariable String ip, @PathVariable String path) throws InterruptedException {
+        long start = System.currentTimeMillis();
         path = path.replace("|","\\");
         if(path.endsWith(":"))
             path += "/";
@@ -33,6 +34,7 @@ public class AdminController {
         Client client = ClientManager.getInstance().clientsHashMap.get(ip);
         client.getDirectoriesByPath(path);
         String result = client.getBlockingQueue().take();
+        System.out.println("!!!!!!!!!!!!!!!" + (System.currentTimeMillis()-start));
 
         return ResponseEntity.ok(result);
     }

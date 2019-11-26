@@ -1,7 +1,5 @@
 package com.dydtjr1128.nfe.network;
 
-import com.dydtjr1128.nfe.network.Client;
-
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
