@@ -1,4 +1,4 @@
-package protocol;
+package protocol.core;
 
 import java.io.IOException;
 import java.nio.channels.AsynchronousSocketChannel;

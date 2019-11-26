@@ -1,24 +1,26 @@
 package network;
 
-import protocol.BindingData;
-import protocol.NFEProtocol;
-import protocol.ProtocolConverter;
-import protocol.ProtocolManager;
+import protocol.core.BindingData;
+import protocol.core.NFEProtocol;
+import protocol.core.ProtocolConverter;
+import protocol.core.ProtocolManager;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncFileExplorer implements Runnable {
     private static final String SEVER_IP = "192.168.190.103";
     private static final int SEVER_PORT = 14411;
+    private final AsynchronousChannelGroup channelGroup;
     private final AsynchronousSocketChannel asc;
     private AtomicInteger sendAtomicInteger = new AtomicInteger(0);
     private AtomicInteger readAtomicInteger = new AtomicInteger(0);
@@ -26,7 +28,9 @@ public class AsyncFileExplorer implements Runnable {
     private boolean isWriting = false;
 
     public AsyncFileExplorer() throws IOException, ExecutionException, InterruptedException {
-
+        channelGroup = AsynchronousChannelGroup.withFixedThreadPool(
+                Runtime.getRuntime().availableProcessors(), Executors.defaultThreadFactory()
+        );
         asc = initClientSocketChannel();
         asc.connect(new InetSocketAddress(SEVER_IP, SEVER_PORT), asc, new CompletionHandler<Void, AsynchronousSocketChannel>() {
             @Override
@@ -42,36 +46,19 @@ public class AsyncFileExplorer implements Runnable {
     }
 
     public AsynchronousSocketChannel initClientSocketChannel() throws IOException {
-        return AsynchronousSocketChannel.open();
+        return AsynchronousSocketChannel.open(channelGroup);
     }
 
     @Override
     public void run() {
-       /* String msg = "hello" + sendAtomicInteger;
+        /*String msg = "hello" + sendAtomicInteger;
         try {
             ByteBuffer byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.GET_LIST, msg);
             sendAtomicInteger.getAndIncrement();
-            sendMessageToClient(byteBuffer);
+            sendMessageToServer(byteBuffer);
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        while (true) {
-            String msg = "hello" + sendAtomicInteger;
-            ByteBuffer buffer = null;
-            try {
-                buffer = NFEProtocol.makeTransferData(NFEProtocol.GET_LIST, msg);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            sendAtomicInteger.getAndIncrement();
-            sendMessageToClient(buffer);
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private void startRead() {
@@ -86,7 +73,7 @@ public class AsyncFileExplorer implements Runnable {
 
             @Override
             public void completed(Integer result, ByteBuffer buffer) {
-                System.out.print("result : " + result + " " + buffer.position() + " ");
+                System.out.println("result : " + result + " " + buffer.position() + " ");
                 if (result < 1) {
                     System.out.println("remain?");
                 } else {
@@ -119,7 +106,7 @@ public class AsyncFileExplorer implements Runnable {
         });
     }
 
-    private void sendMessageToClient(final ByteBuffer buffer) {
+    private void sendMessageToServer(final ByteBuffer buffer) {
         synchronized (messageQueue) {
             messageQueue.add(buffer);
             if (isWriting) {

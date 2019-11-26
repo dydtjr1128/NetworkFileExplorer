@@ -14,7 +14,11 @@ public class FileManager {
     }
 
     public List<ClientFile> getListByPath(String path) {
-        File[] directories = new File(path).listFiles();
+        File[] directories;
+        if(path.equals("root"))
+            directories = File.listRoots();
+        else
+            directories = new File(path).listFiles();
         List<ClientFile> fileList = new ArrayList<>();
         if (directories != null) {
             for (File directory : directories) {

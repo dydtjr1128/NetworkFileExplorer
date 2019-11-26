@@ -1,3 +1,5 @@
+import network.AsyncFileExplorer;
+
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
@@ -6,7 +8,10 @@ public class MainApplication {
         try {
             /*FileExplorer fileExplorer = new FileExplorer();
             fileExplorer.startClient();*/
-            new Thread(new AsyncFileExplorer()).start();
+            for (int i = 0; i <1000 ; i++) {
+                new Thread(new AsyncFileExplorer()).start();
+            }
+
         } catch (IOException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }

@@ -3,6 +3,9 @@ package protocol;
 import com.google.gson.Gson;
 import file.ClientFile;
 import file.FileManager;
+import protocol.core.BindingData;
+import protocol.core.NFEProtocol;
+import protocol.core.Protocol;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

@@ -1,4 +1,4 @@
-package protocol;
+package protocol.core;
 
 import org.xerial.snappy.Snappy;
 
