@@ -1,6 +1,8 @@
 package file;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +27,17 @@ public class FileMapper {
 
     private String getFileType(String file) {
         int idx = file.lastIndexOf(".");
-        String value = file.substring(idx+1);
+        String value = file.substring(idx + 1);
+        if (hashMap.containsKey(value))
+            return hashMap.get(value);
+        return value.toUpperCase() + " 파일";
+    }
+
+    public String getFileType(Path path) {
+        if (Files.isDirectory(path)) return "파일 폴더";
+        String file = path.getFileName().toString();
+        int idx = file.lastIndexOf(".");
+        String value = file.substring(idx + 1);
         if (hashMap.containsKey(value))
             return hashMap.get(value);
         return value.toUpperCase() + " 파일";
@@ -36,4 +48,5 @@ public class FileMapper {
             return "파일 폴더";
         return getFileType(file.getName().toLowerCase());
     }
+
 }

@@ -16,11 +16,14 @@ public class GetListProtocol extends Protocol {
 
     @Override
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
+        long t = System.currentTimeMillis();
         List<ClientFile> clientFiles = FileManager.getInstance().getListByPath(bindingData.getPayload());
         Gson gson = new Gson();
         String json = gson.toJson(clientFiles);
         System.out.println(json);
         ByteBuffer byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.GET_LIST, json);
         asc.write(byteBuffer);
+
+        System.out.println(System.currentTimeMillis() - t + "@@@");
     }
 }

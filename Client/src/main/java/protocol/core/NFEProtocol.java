@@ -23,6 +23,7 @@ public class NFEProtocol {
     public static final int NETWORK_BYTE = 1024*1024;
     public static ByteBuffer makeTransferData(byte protocol, String path) throws IOException {
         ByteBuffer byteBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_BYTE);
+        System.out.println(path.length());
         byte[] compressedData = Snappy.compress(path);
         byteBuffer.putLong(compressedData.length);
         byteBuffer.put(protocol);

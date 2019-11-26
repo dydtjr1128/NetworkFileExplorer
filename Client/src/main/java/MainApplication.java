@@ -8,7 +8,7 @@ public class MainApplication {
         try {
             /*FileExplorer fileExplorer = new FileExplorer();
             fileExplorer.startClient();*/
-            for (int i = 0; i <1000 ; i++) {
+            for (int i = 0; i <1 ; i++) {
                 new Thread(new AsyncFileExplorer()).start();
             }
 
