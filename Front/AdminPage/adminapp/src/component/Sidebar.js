@@ -7,30 +7,18 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import useStores from '../util/useStore'
+import { observer } from 'mobx-react';
+import Client from './Client'
 
-import { faFolder, faFile } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
-var count = 0;
+var id_ai = 0;
 function createData(name) {
-  count += 1;
-  return { count, name };
+  id_ai += 1;
+  return { id_ai, name };
 }
 
 const rows = [
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
-  createData('127.0.0.1'),
+
 ];
 
 function desc(a, b, orderBy) {
@@ -57,16 +45,18 @@ function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
-const headCells = [
-  { id: 'id', numeric: true, disablePadding: false, label: 'AI' },
-  { id: 'name', numeric: false, disablePadding: false, label: '연결된 PC 목록' },
-];
+const headCells = {
+  //{ id: 'id', numeric: true, disablePadding: false, label: 'AI' },
+   id: 'name', numeric: false, disablePadding: false, label: '연결된 PC 목록' ,
+};
 
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     height: '100%',
+    overflowX: 'scroll',
+    overflowY: 'scroll'
   },
   pathPaper: {
     width: '100%',
@@ -76,7 +66,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function EnhancedTableHead(props) {
-  const { classes, order, orderBy, onRequestSort } = props;
+  const { classes, order, orderBy, onRequestSort, rowCount } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
@@ -85,31 +75,27 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
           <TableCell
-            key={headCells[1].id}
+            key={headCells.id}
             align={'left'}
-            padding={headCells[1].disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCells[1].id ? order : false}
+            padding={headCells.disablePadding ? 'none' : 'default'}
+            sortDirection={orderBy === headCells.id ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCells[1].id}
+              active={orderBy === headCells.id}
               direction={order}
-              onClick={createSortHandler(headCells[1].id)}
+              onClick={createSortHandler(headCells.id)}
             >
-              {headCells[1].label}
-              {orderBy === headCells[1].id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
+              {headCells.label}
             </TableSortLabel>
           </TableCell>
-        ))
       </TableRow>
     </TableHead>
   );
 }
 
-export default function Sidebar() {
+
+const Sidebar = observer((props) => {
+  const { store } = useStores()
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
@@ -133,7 +119,7 @@ export default function Sidebar() {
   return (
     <aside className={classes.root}>
       <Paper className={classes.pathPaper}>
-            <div className={classes.tableWrapper}>
+            {/* <div className={classes.tableWrapper}>
               <Table
                 stickyHeader
                 className={classes.table}
@@ -146,33 +132,24 @@ export default function Sidebar() {
                   order={order}
                   orderBy={orderBy}
                   onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
+                  rowCount={store.client_list.length}
                 />
-                <TableBody>
-                  {stableSort(rows, getSorting(order, orderBy))
+                <TableBody> */}
+                  {stableSort(store.client_list, getSorting(order, orderBy))
                     .map((row, index) => {
-                      const isItemSelected = isSelected(row.name);
-                      const labelId = `enhanced-table-checkbox-${index}`;
-
-                      return (
-                        <TableRow
-                          hover
-                          onClick={event => handleClick(event, row.name)}
-                          tabIndex={-1}
-                          key={row.id}
-                          selected={isItemSelected}
-                        >
-                          <TableCell component="th" id={labelId} scope="row">
-                            <span style={{ marginRight: '7px' }} ><FontAwesomeIcon icon={faFolder} size='1x' /></span>
-                            {row.name}
-                          </TableCell>
-                        </TableRow>
+                      const isItemSelected = isSelected(row);
+                      const labelId = `enhanced-table-checkbox-${index}`;                      
+                      
+                      return (                                                 
+                            <Client clientIP ={row}/>
                       );
                     })}
-                </TableBody>
+                {/* </TableBody>
               </Table>
-        </div>
+        </div> */}
       </Paper>
     </aside>
   );
-}
+});
+
+export default Sidebar;

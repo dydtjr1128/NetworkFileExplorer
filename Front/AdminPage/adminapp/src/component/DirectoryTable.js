@@ -11,30 +11,15 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-
+import { observer } from 'mobx-react';
 import {faFolder, faFile, faReply} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import './DirectoryTable.scss'
+import useStores from '../util/useStore'
 
 function createData(name, modifiedDate, type, size) {
   return { name, modifiedDate, type, size };
 }
-
-const rows = [  
-  createData('apple.exe', 305, '응용 프로그램', 6),
-  createData('movie.mp4', 452, 'MP4 파일', 51),
-  createData('Eclair', 262, '파일 폴더', 24),
-  createData('Frozen yoghurt', 159, '파일 폴더', 24),
-  createData('movie2.mp4', 356, 'MP4 파일', 49),
-  createData('Honeycomb', 408, '파일 폴더', 87),
-  createData('Ice cream sandwich', 237, '파일 폴더', 37),
-  createData('Jelly Bean', 375, '파일 폴더', 94),
-  createData('KitKat', 518, '파일 폴더', 65),
-  createData('Lollipop', 392, '파일 폴더', 98),
-  createData('Marshmallow', 318,'파일 폴더', 81),
-  createData('Nougat', 360, '파일 폴더', 9,),
-  createData('Oreo', 437, '파일 폴더', 63),
-];
 
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -89,11 +74,11 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {/* {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
-              ) : null}
+              ) : null} */}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -176,13 +161,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
-export default function DirectoryTable() {
+  
+const DirectoryTable = observer((props) => {
   const classes = useStyles();
+  const { store } = useStores()
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState([]);
-
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
@@ -225,7 +210,7 @@ export default function DirectoryTable() {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={store.currentDirectoriesList.length}
             />
             <TableBody>
               <TableRow
@@ -244,26 +229,26 @@ export default function DirectoryTable() {
                       <TableCell>
                       </TableCell>
                 </TableRow>
-              {stableSort(rows, getSorting(order, orderBy))
+              {stableSort(store.currentDirectoriesList, getSorting(order, orderBy))
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.f);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={event => handleClick(event, row.f)}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.f}
                       selected={isItemSelected}
                     >                     
                       <TableCell component="th" id={labelId} scope="row">
-                        <span style={{marginRight:'7px'}} ><SetIcon type={row.type}/></span>
-                        {row.name}
+                        <span style={{marginRight:'7px'}} ><SetIcon type={row.t}/></span>
+                        {row.f}
                       </TableCell>
-                      <TableCell>{row.modifiedDate}</TableCell>
-                      <TableCell>{row.type}</TableCell>
-                      <TableCell>{(row.size/1024).toFixed(2)}KB</TableCell>
+                      <TableCell>{new Date(row.m).toString()}</TableCell>
+                      <TableCell>{row.t}</TableCell>
+                      <TableCell>{row.s == 0 ? '' : row.s +' KB'}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -273,4 +258,5 @@ export default function DirectoryTable() {
       </Paper>
     </div>
   );
-}
+});
+export default DirectoryTable;
