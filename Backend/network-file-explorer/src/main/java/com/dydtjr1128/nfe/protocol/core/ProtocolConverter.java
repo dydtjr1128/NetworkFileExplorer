@@ -1,5 +1,6 @@
-package com.dydtjr1128.nfe.protocol;
+package com.dydtjr1128.nfe.protocol.core;
 
+import com.dydtjr1128.nfe.protocol.core.BindingData;
 import org.xerial.snappy.Snappy;
 
 import java.io.IOException;

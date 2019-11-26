@@ -1,4 +1,4 @@
-package com.dydtjr1128.nfe.protocol;
+package com.dydtjr1128.nfe.protocol.core;
 
 import org.xerial.snappy.Snappy;
 

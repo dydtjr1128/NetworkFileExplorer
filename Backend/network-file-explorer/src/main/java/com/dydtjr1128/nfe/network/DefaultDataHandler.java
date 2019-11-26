@@ -1,9 +1,10 @@
 package com.dydtjr1128.nfe.network;
 
 import com.dydtjr1128.nfe.file.ClientFile;
-import com.dydtjr1128.nfe.protocol.BindingData;
-import com.dydtjr1128.nfe.protocol.NFEProtocol;
-import com.dydtjr1128.nfe.protocol.ProtocolConverter;
+import com.dydtjr1128.nfe.protocol.core.BindingData;
+import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
+import com.dydtjr1128.nfe.protocol.core.ProtocolConverter;
+import com.dydtjr1128.nfe.protocol.core.ProtocolManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
@@ -19,7 +20,13 @@ public class DefaultDataHandler implements ClientDataHandler {
     @Override
     public void onDataReceive(Client client, ByteBuffer byteBuffer, int result) throws IOException {
         byteBuffer.flip();
-        BindingData bindingData = ProtocolConverter.convertData(byteBuffer);
+        try {
+            BindingData bindingData = ProtocolConverter.convertData(byteBuffer);
+            ProtocolManager.getInstance().executeProtocolToAdmin(client, bindingData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+       /* BindingData bindingData = ProtocolConverter.convertData(byteBuffer);
         Gson gson = new Gson();
         try {
             List<ClientFile> list = gson.fromJson(bindingData.getPayload(), new TypeToken<List<ClientFile>>() {
@@ -38,7 +45,7 @@ public class DefaultDataHandler implements ClientDataHandler {
             i++;
             client.writeStringMessage(NFEProtocol.GET_LIST, message);
         }
-
+        */
 
         //message 받으면 웹소켓으로 전달
     }

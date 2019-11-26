@@ -1,6 +1,6 @@
 package com.dydtjr1128.nfe.network;
 
-import com.dydtjr1128.nfe.protocol.NFEProtocol;
+import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

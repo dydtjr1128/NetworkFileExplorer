@@ -1,9 +1,17 @@
 package com.dydtjr1128.nfe.network;
 
+import com.dydtjr1128.nfe.admin.service.ApplicationContextProvider;
+import com.dydtjr1128.nfe.network.model.AdminMessage;
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
+
 
 public class ClientManager {
     private static final Logger logger = LoggerFactory.getLogger(ClientManager.class);
@@ -20,12 +28,14 @@ public class ClientManager {
         String clientIP = client.getClientIP();
         clientsVector.add(client);
         clientsHashMap.put(clientIP, client);
-
+        AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.ADD, clientIP));
     }
 
     public void removeClient(Client client) {
+        String clientIP = client.getClientIP();
         clientsVector.remove(client);
-        clientsHashMap.remove(client.getClientIP());
+        clientsHashMap.remove(clientIP);
+        AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.REMOVE, clientIP));
     }
 
     public int getClientCount() {

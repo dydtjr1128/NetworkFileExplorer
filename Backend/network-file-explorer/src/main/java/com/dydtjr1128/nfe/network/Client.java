@@ -1,6 +1,6 @@
 package com.dydtjr1128.nfe.network;
 
-import com.dydtjr1128.nfe.protocol.NFEProtocol;
+import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,10 +9,12 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -21,13 +23,17 @@ public class Client {
     private InetSocketAddress inetSocketAddress;
     private static boolean isWriting = false;
     private final static Queue<ByteBuffer> messageQueue = new LinkedList<>();
-
+    private BlockingQueue<String> resultBlockingQueue;
     Client(AsynchronousSocketChannel channel, ClientDataReceiver receiver) throws IOException {
         this.socketChannel = channel;
         this.receiver = receiver;
         if (channel.isOpen()) {
             inetSocketAddress = ((InetSocketAddress) socketChannel.getRemoteAddress());
         }
+        resultBlockingQueue = new LinkedBlockingDeque<>();
+    }
+    public BlockingQueue<String> getBlockingQueue(){
+        return resultBlockingQueue;
     }
 
     private void sendMessageToClient(final ByteBuffer buffer) {
@@ -78,15 +84,24 @@ public class Client {
         });
     }
 
-    public void writeStringMessage(byte protocol, String msg) throws IOException {
-        ByteBuffer byteBuffer = NFEProtocol.makeTransferData(protocol, msg);
-        byteBuffer.flip();
-        sendMessageToClient(byteBuffer/*ByteBuffer.wrap(string.getBytes())*/);
+    public void writeStringMessage(byte protocol, String msg){
+        try {
+            ByteBuffer byteBuffer = NFEProtocol.makeTransferData(protocol, msg);
+            byteBuffer.flip();
+            sendMessageToClient(byteBuffer/*ByteBuffer.wrap(string.getBytes())*/);
+        } catch (IOException e){
+            e.getStackTrace();
+        }
     }
 
-    public String getClientIP() {
+    public String getClientURL() {
 
         return inetSocketAddress.getAddress().toString() + "/" + inetSocketAddress.getPort();
+
+    }
+    public String getClientIP() {
+
+        return inetSocketAddress.getAddress().toString().substring(1);
 
     }
 
@@ -109,5 +124,14 @@ public class Client {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /* requset function */
+
+    public void getDirectoriesByPath(String path){
+        writeStringMessage(NFEProtocol.GET_LIST, path);
+    }
+    public void removeDirectoriesByPath(String path){
+        writeStringMessage(NFEProtocol.DELETE, path);
     }
 }

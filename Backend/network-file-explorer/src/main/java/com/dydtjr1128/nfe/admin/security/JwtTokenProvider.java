@@ -1,6 +1,5 @@
 package com.dydtjr1128.nfe.admin.security;
 
-import com.dydtjr1128.nfe.admin.model.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

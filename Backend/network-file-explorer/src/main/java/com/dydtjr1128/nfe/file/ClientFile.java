@@ -19,7 +19,7 @@ public class ClientFile {
     private int size;//KB
 
     public ClientFile(File file, String type) {
-        this.fileName = file.getName();
+        this.fileName = file.getName().equals("")?file.getAbsolutePath():file.getName();
         this.isDirectory = file.isDirectory();
         this.modifiedDate = file.lastModified();
         this.type = type;

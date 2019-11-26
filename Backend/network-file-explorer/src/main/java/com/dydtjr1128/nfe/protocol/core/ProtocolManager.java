@@ -1,4 +1,7 @@
-package com.dydtjr1128.nfe.protocol;
+package com.dydtjr1128.nfe.protocol.core;
+
+import com.dydtjr1128.nfe.network.Client;
+import com.dydtjr1128.nfe.protocol.*;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.HashMap;
@@ -38,5 +41,8 @@ public class ProtocolManager {
 
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) {
         protocolMap.get(bindingData.getProtocol()).executeProtocol(asc, bindingData);
+    }
+    public void executeProtocolToAdmin(Client client, BindingData bindingData) {
+        protocolMap.get(bindingData.getProtocol()).executeProtocolToAdmin(client, bindingData);
     }
 }
