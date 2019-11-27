@@ -1,5 +1,6 @@
 package com.dydtjr1128.nfe.network;
 
+import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class Client {
     private InetSocketAddress inetSocketAddress;
     private static boolean isWriting = false;
     private final static Queue<ByteBuffer> messageQueue = new LinkedList<>();
-    private BlockingQueue<String> resultBlockingQueue;
+    private BlockingQueue<BindingData> resultBlockingQueue;
     Client(AsynchronousSocketChannel channel, ClientDataReceiver receiver) throws IOException {
         this.socketChannel = channel;
         this.receiver = receiver;
@@ -32,7 +33,7 @@ public class Client {
         }
         resultBlockingQueue = new LinkedBlockingDeque<>();
     }
-    public BlockingQueue<String> getBlockingQueue(){
+    public BlockingQueue<BindingData> getBlockingQueue(){
         return resultBlockingQueue;
     }
 
@@ -134,4 +135,5 @@ public class Client {
     public void removeDirectoriesByPath(String path){
         writeStringMessage(NFEProtocol.DELETE, path);
     }
+    public void changeFileName(String payload) { writeStringMessage(NFEProtocol.CHANGE_NAME, payload);}
 }

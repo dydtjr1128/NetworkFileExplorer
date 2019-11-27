@@ -24,7 +24,7 @@ public class ClientDataReceiver {
         client.read(new CompletionHandler<Integer, ByteBuffer>() {
             @Override
             public void completed(Integer result, ByteBuffer buffer) {
-                // if result is negative or zero the connection has been closed or something gone wrong
+                // 음수나 0이면 연결 종료
                 if (result < 1) {
                     client.close();
                     logger.debug("[Closing connection to ] : " + client);
@@ -36,7 +36,6 @@ public class ClientDataReceiver {
                     } catch (InterruptedException | IOException e) {
                         e.printStackTrace();
                     }
-                    // enqueue next round of actions
                     client.run();
                 }
             }
