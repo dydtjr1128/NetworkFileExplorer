@@ -2,61 +2,62 @@ package file;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileManager {
-
-    private static FileManager INSTANCE = null;
-    private FileMapper fileMapper;
-
     public static FileManager getInstance() {
         return LazyHolder.INSTANCE;
     }
 
     public List<ClientFile> getListByPath(String path) {
-        File[] directories;
-        if (path.equals("root"))
-            directories = File.listRoots();
-        else
-            directories = new File(path).listFiles();
-        List<ClientFile> fileList = new ArrayList<>();
-        if (directories != null) {
-            for (File directory : directories) {
-                fileList.add(new ClientFile(directory, fileMapper.getFileType(directory)));
+        long t = System.currentTimeMillis();
+        final List<ClientFile> result = new ArrayList<>();
+        if(path.equals("root")){
+            for(Path p : FileSystems.getDefault().getRootDirectories()){
+                result.add(new ClientFile(p.toString(),true,0,FileMapper.FOLDER_TYPE,0));
             }
-            return fileList;
+            return result;
         }
-        return null;
-    }
-
-    public List<ClientFile> getListByPath2(String path) throws IOException {
-        if (path.equals("root"))
-            return getListByPath(path);
-        Stream<Path> list = Files.list(Paths.get(path));
-        List<ClientFile> result = list.map(p ->
-        {
-            try {
-                return new ClientFile(p, fileMapper.getFileType(p));
-            } catch (IOException e) {
-                e.printStackTrace();
+        StringBuilder builder = new StringBuilder();
+        Path p = Paths.get(path);
+        try {
+            DirectoryStream<Path> stream;
+            BasicFileAttributes attr;
+            stream = Files.newDirectoryStream(p);
+            for (Path entry : stream) {
+                attr = Files.readAttributes(entry, BasicFileAttributes.class);
+                result.add(new ClientFile(entry.getFileName().toString(), attr));
             }
-            return null;
-        }).collect(Collectors.toList());
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println(System.currentTimeMillis() - t + "@@@");
         return result;
     }
 
+    public boolean changeFileName(String fromPath, String name) {
+        File sourceFile = new File(fromPath);
+
+        File destFile = new File(sourceFile.getParent() + "\\" + name);
+        System.out.println(sourceFile + " " + destFile);
+
+        if (sourceFile.renameTo(destFile)) {
+            System.out.println("File renamed successfully");
+            return true;
+        } else {
+            System.out.println("Failed to rename file");
+            return false;
+        }
+    }
 
     private static class LazyHolder {
         private static final FileManager INSTANCE = new FileManager();
     }
 
     private FileManager() {
-        fileMapper = new FileMapper();
     }
 }

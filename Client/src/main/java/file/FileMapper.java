@@ -1,15 +1,21 @@
 package file;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 public class FileMapper {
+    public static final String FOLDER_TYPE = "파일 폴더";
     private Map<String, String> hashMap;
 
-    public FileMapper() {
+    public static FileMapper getInstance() {
+        return FileMapper.LazyHolder.INSTANCE;
+    }
+
+    public String getFileType(boolean isDirectory, String fileName) {
+        return isDirectory ? FOLDER_TYPE : getFileType(fileName);
+    }
+
+    private FileMapper() {
         hashMap = new HashMap<>();
         init();
     }
@@ -33,20 +39,7 @@ public class FileMapper {
         return value.toUpperCase() + " 파일";
     }
 
-    public String getFileType(Path path) {
-        if (Files.isDirectory(path)) return "파일 폴더";
-        String file = path.getFileName().toString();
-        int idx = file.lastIndexOf(".");
-        String value = file.substring(idx + 1);
-        if (hashMap.containsKey(value))
-            return hashMap.get(value);
-        return value.toUpperCase() + " 파일";
+    private static class LazyHolder {
+        private static final FileMapper INSTANCE = new FileMapper();
     }
-
-    public String getFileType(File file) {
-        if (file.isDirectory())
-            return "파일 폴더";
-        return getFileType(file.getName().toLowerCase());
-    }
-
 }
