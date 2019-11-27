@@ -7,18 +7,18 @@ import { observer } from 'mobx-react';
 import useStores from '../util/useStore'
 import { toJS } from 'mobx';
 
-const Client = observer((props) => {    
-    const { store } = useStores()
+const Client = observer((props) => {
+    //const { store } = useStores()
     function onNodeToggle(event, nodeId) {
-        // console.log("==================")
-        // console.log(store.expanded)
-        // console.log(nodeId)
+        //console.log("==================")
+        //console.log(nodeId)
+        //console.log(event.target)
         //store.removeExpanded(nodeId)        
         //store.expanded = nodeId;
         // console.log(event.target)
         // console.log(event)
-        
-        
+
+
     }
     return (
         <TreeView
@@ -26,9 +26,10 @@ const Client = observer((props) => {
             //expanded={toJS(store.expanded)}
             defaultCollapseIcon={<ArrowDropDownIcon />}
             defaultExpandIcon={<ArrowDropUpIcon />}
+            defaultEndIcon={<div style={{ width: 24 }} />}
         // defaultEndIcon={<ArrowDropDownIcon />}
         >
-            <ClientHeadItem nodeId={props.clientIP} labelText={props.clientIP} id={props.clientIP} />
+            <ClientHeadItem nodeId={props.clientIP} labelText={props.clientIP} id={props.clientIP} className="disable-select" />
 
         </TreeView>
     );

@@ -50,3 +50,11 @@ export function getDirectores(ip, path) {
     return request(url, requestData);
 }
 
+export function changeFileName(ip, fromPath, toName) {
+    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toName;
+    const requestData = {
+        method: 'PUT'
+    }
+    return request(url, requestData);
+}
+

@@ -20,10 +20,7 @@ const ClientHeadItem = observer((props) => {
             var array = [];
             response.map((dir, index) => {
                 if (dir.i) {
-                    array.push({
-                        fname: dir.f,
-                        key: index
-                    });
+                    array.push(dir.f);
                 }
             });
             setDirectories(array);
@@ -36,17 +33,18 @@ const ClientHeadItem = observer((props) => {
         });
     }
 
-    return (
+    return (        
         <TreeItem label={
-            <span><FontAwesomeIcon icon={faDesktop} size='1x' style={{ marginRight: '7px' }} />{labelText}</span>
-        }
+            <span className="disable-select"><FontAwesomeIcon icon={faDesktop} size='1x' style={{ marginRight: '7px' }} />{labelText}</span>
+        }            
             onClick={onClick}
-            {...other} >
+            {...other} >                
             {directories.map((row, index) => {
                 return (
-                    <ClientTreeItem match={{ ip: labelText, name: row.fname, absolutepath: row.fname, nodeId:path + "\\" + row.fname }} key={path + "\\" + row.fname} />
+                    <ClientTreeItem match={{ ip: labelText, name: row, absolutepath: row, nodeId:path + "\\" + row }} key={path + "\\" + row} />
                 );
-            })}
+            })
+        }
         </TreeItem>
     );
 

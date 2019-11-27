@@ -14,6 +14,7 @@ import Paper from '@material-ui/core/Paper';
 import { observer } from 'mobx-react';
 import { faFolder, faFile, faReply } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getDirectores } from "../util/APIUtils"
 import './DirectoryTable.scss'
 import useStores from '../util/useStore'
 
@@ -44,7 +45,7 @@ function getSorting(order, orderBy) {
 const headCells = [
   { id: 'f', numeric: false, disablePadding: false, label: '이름' },
   { id: 'm', numeric: true, disablePadding: false, label: '수정한 날짜' },
-  { id: 't', numeric: true, disablePadding: false, label: '유형' },
+  { id: 't', numeric: false, disablePadding: false, label: '유형' },
   { id: 's', numeric: true, disablePadding: false, label: '크기' },
 ];
 
@@ -124,29 +125,25 @@ const EnhancedTableToolbar = props => {
   );
 };
 
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
-    height:'100%',
+    height: '100%',
   },
   paperRoot: {
     width: '100%',
-    height:'100%',
-    overflow:'scroll',    
+    height: '100%',
+    overflow: 'scroll',
     // overflow: 'scroll',
     //backgroundColor:'green',
   },
   table: {
     width: '100%',
-    height:'100%',
-    paddingBottom : '50px'
+    height: '100%',
+    paddingBottom: '50px'
   },
   tableWrapper: {
-    width: '100%',    
+    width: '100%',
   },
   visuallyHidden: {
     border: 0,
@@ -167,7 +164,7 @@ const DirectoryTable = observer((props) => {
   const { store } = useStores()
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
-  const [selected, setSelected] = React.useState([]);
+  const [selected, setSelected] = React.useState('');
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
@@ -176,20 +173,51 @@ const DirectoryTable = observer((props) => {
   };
 
   const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-
-    console.log(selectedIndex + " " + name)
+    store.selectedPath = store.currentClientPath + "\\" + name;
+    store.selectedIP = store.currentClientIP;
     setSelected(name);
   };
 
-  const moveParentDirectory = (event, name) => {
-    // const selectedIndex = selected.indexOf(name);
+  const moveDirectory = (event, name, type) => {
+    if (type === "파일 폴더") {
+      getDirectores(store.currentClientIP, store.currentClientPath + "\\" + name).then(response => {
+        if (response === null)
+          alert("이동 할 수 없는 경로 입니다!")
+        else {
+          store.currentDirectoriesList = response;
+          store.currentClientPath = store.currentClientPath + "\\" + name;
+        }
+      }).catch(error => {
+        if (error.status === 401) {
+          alert('Not authenticated')
+        } else {
+          alert(error.message || 'Sorry! Something went wrong. Please try again!')
+        }
+      });
+    }
+  }
 
-    // console.log(selectedIndex + " " + name)
-    // setSelected(name);    
+  const moveParentDirectory = (event, name) => {
+    if (!store.isRoot()) {//루트 전까지만 이동
+      getDirectores(store.currentClientIP, store.getParentPath()).then(response => {
+        var array = [];
+        if (response === null)
+          alert("이동 할 수 없는 경로 입니다!")
+        else {
+          store.currentDirectoriesList = response;
+          store.currentClientPath = store.getParentPath();
+        }
+      }).catch(error => {
+        if (error.status === 401) {
+          alert('Not authenticated')
+        } else {
+          alert(error.message || 'Sorry! Something went wrong. Please try again!')
+        }
+      });
+    }
   };
 
-  const isSelected = name => selected.indexOf(name) !== -1;
+  const isSelected = name => selected === name;
 
   function SetIcon(props) {
     const string = props.type;
@@ -203,21 +231,26 @@ const DirectoryTable = observer((props) => {
 
   function numValidation(number) {
     return number.toString().padStart(2, '0')
-  };
+  }
+
   function formatDate(date) {
     var t = date.getHours();
     return date.getFullYear() + '-' +
       numValidation((date.getMonth() + 1)) + '-' +
       numValidation(date.getDate()) + ' ' +
-      (t >= 12 ? '오후 ' : '오전 ') + 
+      (t >= 12 ? '오후 ' : '오전 ') +
       numValidation(t) + ':' +
       numValidation(date.getMinutes());
+  }
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   return (
     <div className={classes.root}>
       <Paper className={classes.paperRoot}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar />
         <div className={classes.tableWrapper}>
           <Table
             stickyHeader
@@ -233,10 +266,10 @@ const DirectoryTable = observer((props) => {
               onRequestSort={handleRequestSort}
               rowCount={store.currentDirectoriesList.length}
             />
-            <TableBody>
+            <TableBody className="disable-select">
               <TableRow
                 hover
-                onClick={event => moveParentDirectory(event, '...')}
+                onDoubleClick={event => moveParentDirectory(event, '...')}
                 tabIndex={-1}
               >
                 <TableCell component="th">
@@ -259,6 +292,7 @@ const DirectoryTable = observer((props) => {
                     <TableRow
                       hover
                       onClick={event => handleClick(event, row.f)}
+                      onDoubleClick={event => moveDirectory(event, row.f, row.t)}
                       tabIndex={-1}
                       key={row.f}
                       selected={isItemSelected}
@@ -269,7 +303,7 @@ const DirectoryTable = observer((props) => {
                       </TableCell>
                       <TableCell>{formatDate(new Date(row.m))}</TableCell>
                       <TableCell>{row.t}</TableCell>
-                      <TableCell>{row.s === 0 ? '' : row.s + ' KB'}</TableCell>
+                      <TableCell align="right">{row.s === 0 ? '' : numberWithCommas(row.s) + 'KB'}</TableCell>
                     </TableRow>
                   );
                 })}

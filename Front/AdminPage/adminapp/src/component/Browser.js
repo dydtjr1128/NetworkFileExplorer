@@ -5,7 +5,6 @@ import Sidebar from './Sidebar';
 import DirectoryTable from './DirectoryTable';
 import SockJsClient from "react-stomp";
 import "./browser_style.scss";
-import Grid from '@material-ui/core/Grid';
 import { ACCESS_TOKEN } from '../util/Constants';
 import { getClients } from '../util/APIUtils';
 import useStores from '../util/useStore'
@@ -22,11 +21,27 @@ export default function Browser() {
     };
     const { store } = useStores()
 
+    function sortedIndex(array, value) {
+        var low = 0,
+            high = array.length;
+
+        while (low < high) {
+            var mid = low + high >>> 1;
+            if (array[mid] < value) low = mid + 1;
+            else high = mid;
+        }
+        return low;
+    }
+
+    function insert(data) {
+        store.client_list.splice(sortedIndex(store.client_list, data), 0, data);
+    }
+
     function onMessageReceive(msg, topic) {
         //console.log("Chatting Template - onMessageReceive");      
         console.log("receive message : " + topic + JSON.stringify(msg));
         if (msg.state === 0) {// add
-            store.client_list.push(msg.ip);
+            insert(msg.ip);
         } else if (msg.state === 1) { // rmove
             var index = store.client_list.indexOf(msg.ip);
             if (index !== -1) {
@@ -46,7 +61,7 @@ export default function Browser() {
 
     function onConnect() {
         getClients().then(response => {
-            store.client_list = store.client_list.concat(response);
+            store.client_list = store.client_list.concat(response).sort();
         }).catch(error => {
             if (error.status === 401) {
                 alert('Not authenticated')
@@ -54,6 +69,9 @@ export default function Browser() {
                 alert(error.message || 'Sorry! Something went wrong. Please try again!')
             }
         });
+        insert("123.123.123.123")
+        insert("123.123.123.123")
+        insert("192.199.199.199")
         console.log("connect!")
     }
 
@@ -69,8 +87,8 @@ export default function Browser() {
 
     }
 
-    return ( 
-        <div style={{height:'100%'}}>
+    return (
+        <div style={{ height: '100%' }}>
             <SockJsClient url={wsSourceUrl} topics={["/topic/admin"]}
                 headers={customHeaders}
                 subscribeHeaders={customHeaders}
@@ -81,18 +99,18 @@ export default function Browser() {
                 debug={false} />
 
             <SplitPane split="horizontal" maxSize="100%">
-                <Pane initialSize="30px" minSize="40px" maxSize="70px">
+                <Pane initialSize="55px" minSize="55px" maxSize="80px">
                     <Header />
                 </Pane>
                 <Pane>
-                <SplitPane split="vertical" minSize="10%" maxSize="50%">
-                    <Pane initialSize="25%">
-                        <Sidebar />
-                    </Pane>
-                    <Pane initialSize="75%">
-                        <DirectoryTable />
-                    </Pane>
-                </SplitPane>
+                    <SplitPane split="vertical" >
+                        <Pane initialSize="25%" minSize="10%" maxSize="50%">
+                            <Sidebar />
+                        </Pane>
+                        <Pane initialSize="75%">
+                            <DirectoryTable />
+                        </Pane>
+                    </SplitPane>
                 </Pane>
             </SplitPane>
         </div>
