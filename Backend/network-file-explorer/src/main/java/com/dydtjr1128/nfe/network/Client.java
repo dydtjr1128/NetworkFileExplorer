@@ -25,6 +25,7 @@ public class Client {
     private static boolean isWriting = false;
     private final static Queue<ByteBuffer> messageQueue = new LinkedList<>();
     private BlockingQueue<BindingData> resultBlockingQueue;
+
     Client(AsynchronousSocketChannel channel, ClientDataReceiver receiver) throws IOException {
         this.socketChannel = channel;
         this.receiver = receiver;
@@ -33,7 +34,8 @@ public class Client {
         }
         resultBlockingQueue = new LinkedBlockingDeque<>();
     }
-    public BlockingQueue<BindingData> getBlockingQueue(){
+
+    public BlockingQueue<BindingData> getBlockingQueue() {
         return resultBlockingQueue;
     }
 
@@ -85,12 +87,11 @@ public class Client {
         });
     }
 
-    public void writeStringMessage(byte protocol, String msg){
+    public void writeStringMessage(byte protocol, String msg) {
         try {
             ByteBuffer byteBuffer = NFEProtocol.makeTransferData(protocol, msg);
-            byteBuffer.flip();
             sendMessageToClient(byteBuffer/*ByteBuffer.wrap(string.getBytes())*/);
-        } catch (IOException e){
+        } catch (IOException e) {
             e.getStackTrace();
         }
     }
@@ -100,6 +101,7 @@ public class Client {
         return inetSocketAddress.getAddress().toString() + "/" + inetSocketAddress.getPort();
 
     }
+
     public String getClientIP() {
 
         return inetSocketAddress.getAddress().toString().substring(1);
@@ -129,11 +131,27 @@ public class Client {
 
     /* requset function */
 
-    public void getDirectoriesByPath(String path){
+    public void getDirectoriesByPath(String path) {
         writeStringMessage(NFEProtocol.GET_LIST, path);
     }
-    public void removeDirectoriesByPath(String path){
+
+    public void removeDirectoriesByPath(String path) {
         writeStringMessage(NFEProtocol.DELETE, path);
     }
-    public void changeFileName(String payload) { writeStringMessage(NFEProtocol.CHANGE_NAME, payload);}
+
+    public void changeFileName(String payload) {
+        writeStringMessage(NFEProtocol.CHANGE_NAME, payload);
+    }
+
+    public void deleteFile(String filePath) {
+        writeStringMessage(NFEProtocol.DELETE, filePath);
+    }
+
+    public void copyFile(String payload) {
+        writeStringMessage(NFEProtocol.COPY, payload);
+    }
+
+    public void moveFile(String payload) {
+        writeStringMessage(NFEProtocol.MOVE, payload);
+    }
 }

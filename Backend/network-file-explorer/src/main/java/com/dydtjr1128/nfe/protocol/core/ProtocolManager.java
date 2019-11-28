@@ -35,8 +35,8 @@ public class ProtocolManager {
         protocolMap.put(NFEProtocol.FILE_UPLOAD, new FileUploadProtocol());
         protocolMap.put(NFEProtocol.FILE_DOWNLOAD, new FileDownloadProtocol());
 
-        protocolMap.put(NFEProtocol.REQUEST_OK, new RequestOKProtocol());
-        protocolMap.put(NFEProtocol.REQUEST_FAIL, new RequestFailProtocol());
+        protocolMap.put(NFEProtocol.REQUEST_OK, new RequsetOKProtocol());
+        protocolMap.put(NFEProtocol.REQUEST_FAIL, new RequsetFailProtocol());
     }
 
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) {

@@ -16,6 +16,6 @@ public class MoveProtocol extends Protocol {
 
     @Override
     public void executeProtocolToAdmin(Client client, BindingData bindingData) {
-
+        client.getBlockingQueue().add(bindingData);
     }
 }

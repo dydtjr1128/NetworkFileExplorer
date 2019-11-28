@@ -28,6 +28,7 @@ public class NFEProtocol {
         byteBuffer.put(protocol);
         System.out.println(compressedData.length + "s@@@@@@");
         byteBuffer.put(compressedData);
+        byteBuffer.flip();
         return byteBuffer;
     }
 }

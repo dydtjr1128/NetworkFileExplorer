@@ -19,7 +19,7 @@ import java.util.List;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-    List<WebSocketSession> lastSession = new ArrayList<>();
+    private List<WebSocketSession> lastSession = new ArrayList<>();
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
         registry.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
