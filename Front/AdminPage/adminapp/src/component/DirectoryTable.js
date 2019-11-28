@@ -11,10 +11,14 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react';
-import { faFolder, faFile, faReply } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faFile, faReply, faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getDirectores } from "../util/APIUtils"
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { getDirectores, copyFile, moveFile } from "../util/APIUtils"
+
 import './DirectoryTable.scss'
 import useStores from '../util/useStore'
 
@@ -165,6 +169,116 @@ const DirectoryTable = observer((props) => {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState('');
+
+  const [contextMenu, setContextMenu] = React.useState({
+    x: 0,
+    y: 0,
+    fileName: '',
+  });
+  const [contextMenuVisible, setContextMenuVisible] = React.useState(false);
+  const [contextMenuAction, setContextMenuAction] = React.useState(1);
+  const [contextMenuNormalClose, setContextMenuNormalClose] = React.useState(1);
+
+  function onContextMenu(event, fileName, index) {
+    event.preventDefault();
+    setContextMenu({
+      x: event.clientX,
+      y: event.clientY,
+      fileName: fileName
+    })
+    setContextMenuVisible(true)
+    console.log(contextMenu)
+  }
+  function onContextMenuFromRoot(event) {
+    event.preventDefault();
+    if (store.copymoveData.ip !== '') {
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        fileName: contextMenu.fileName
+      })
+      setContextMenuVisible(true)
+    }
+  }
+
+  function handleClose() {
+    setContextMenuNormalClose(false)
+    setContextMenuVisible(false)
+  }
+
+  function changeData() {
+    if (contextMenuNormalClose) {
+      const fname = contextMenu.fileName;
+      if (store.copymoveData.ip === '') {//initial setting
+        store.copymoveData.ip = store.currentClientIP;
+        store.copymoveData.fileName = fname;
+        store.copymoveData.path = store.currentClientPath + "\\" + fname;
+        if (contextMenuAction === 1) {// copy          
+          store.copymoveData.action = store.copymoveData.action.splice(0, 1);
+          store.copymoveData.action[0].label = "현재 위치로 복사하기"
+          
+        } else { // move
+          store.copymoveData.action = store.copymoveData.action.splice(1, 1);
+          store.copymoveData.action[0].label = "현재 위치로 붙여넣기"
+        }
+        store.copymoveDataJson = store.currentDirectoriesList.find(element => element.f === fname);
+        if(store.copymoveDataJson === undefined){
+          alert("오류! 파일이 변경 되었을 수 있습니다.")
+          store.clearCopyMoveDatay();
+        }
+      }
+      else {
+        if (store.copymoveData.ip !== store.currentClientIP) {
+          alert("다른 컴퓨터로 이동/복사 할 수 없습니다.")
+          return;
+        }
+        if (contextMenuAction === 1) {// copy          
+          copyFileFromWeb();
+        } else { // move
+          moveFileFromWeb();
+        }
+        store.clearCopyMoveDatay();
+      }
+    }
+  }
+
+  function selectHandleClose(e, action) {
+    setContextMenuNormalClose(true)
+    setContextMenuVisible(false)
+    setContextMenuAction(action);
+  }
+
+  function copyFileFromWeb() {
+    copyFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
+      store.currentDirectoriesList.push(store.copymoveDataJson);
+      alert("복사 성공!")
+      //reload
+    }).catch(error => {
+      if (error.status === 401) {
+        alert('Not authenticated')
+      } else if (error.status === 400) {
+        alert(error.message)
+      } else {
+        alert(error.message || 'Sorry! Something went wrong. Please try again!')
+      }
+    });
+  }
+  function moveFileFromWeb() {
+    moveFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
+      store.currentDirectoriesList.push(store.copymoveDataJson);
+      alert("이동 성공!")
+      //reload
+    }).catch(error => {
+      if (error.status === 401) {
+        alert('Not authenticated')
+      } else if (error.status === 400) {
+        alert(error.message)
+      } else {
+        alert(error.message || 'Sorry! Something went wrong. Please try again!')
+      }
+    });
+  }
+
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
@@ -172,11 +286,18 @@ const DirectoryTable = observer((props) => {
     console.log("sort? " + isDesc + " " + orderBy)
   };
 
-  const handleClick = (event, name) => {
+  const handleClick = (event, name, index) => {
     store.selectedPath = store.currentClientPath + "\\" + name;
     store.selectedIP = store.currentClientIP;
+    store.selectedIndex = index;
     setSelected(name);
   };
+
+  function selectedStoreClear() {
+    store.selectedPath = '';
+    store.selectedIP = '';
+    store.selectedIndex = 0;
+  }
 
   const moveDirectory = (event, name, type) => {
     if (type === "파일 폴더") {
@@ -184,6 +305,7 @@ const DirectoryTable = observer((props) => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
         else {
+          selectedStoreClear();
           store.currentDirectoriesList = response;
           store.currentClientPath = store.currentClientPath + "\\" + name;
         }
@@ -204,6 +326,7 @@ const DirectoryTable = observer((props) => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
         else {
+          selectedStoreClear();
           store.currentDirectoriesList = response;
           store.currentClientPath = store.getParentPath();
         }
@@ -248,7 +371,7 @@ const DirectoryTable = observer((props) => {
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} onContextMenu={event => onContextMenuFromRoot(event)}>
       <Paper className={classes.paperRoot}>
         <EnhancedTableToolbar />
         <div className={classes.tableWrapper}>
@@ -291,7 +414,8 @@ const DirectoryTable = observer((props) => {
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.f)}
+                      onClick={event => handleClick(event, row.f, index)}
+                      onContextMenu={event => onContextMenu(event, row.f, index)}
                       onDoubleClick={event => moveDirectory(event, row.f, row.t)}
                       tabIndex={-1}
                       key={row.f}
@@ -311,6 +435,25 @@ const DirectoryTable = observer((props) => {
           </Table>
         </div>
       </Paper>
+      <Menu
+        keepMounted
+        transitionDuration={200}
+        open={contextMenuVisible}
+        onClose={handleClose}
+        onExited={changeData}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          { top: contextMenu.y, left: contextMenu.x }
+        }
+      >
+        {store.copymoveData.action.map((el, index) => {
+          return (
+            <MenuItem onClick={(e) => selectHandleClose(e, el.act)} key={index}>
+              <span><FontAwesomeIcon icon={el.icon} />{el.label}</span>
+            </MenuItem>
+          )
+        })}
+      </Menu>
     </div>
   );
 });

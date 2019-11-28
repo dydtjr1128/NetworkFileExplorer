@@ -8,7 +8,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
 import { faShareSquare, faPenSquare, faDownload, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CustomModal from './FileNameChangeModal'
+import FileNameChangeModal from './modal/FileNameChangeModal'
+import DeleteFileConfirmModal from './modal/DeleteFileConfirmModal'
 
 import { observer } from 'mobx-react';
 import useStores from '../util/useStore'
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 const TableHeader = observer((props) => {
   const classes = useStyles();
   const [fileNameChangeModalVisible, setFileNameChangeModal] = React.useState(false);
+  const [deleteFileComformModalVisible, setDeleteFileComformModal] = React.useState(false);
   const { store } = useStores()
 
   function validation() {
@@ -46,20 +48,9 @@ const TableHeader = observer((props) => {
     return true;
   }
 
-  function onClickMoveTitem(event) {
-    //validation()
-
-  }
-
   function onClickChangeNameItem(event) {
     if (validation()) {
       setFileNameChangeModal(true);
-    }
-  }
-
-  function onClickFileCopy(event) {
-    if (validation()) {
-
     }
   }
 
@@ -70,12 +61,13 @@ const TableHeader = observer((props) => {
   }
 
   function onClickFileUpload(event) {
-
+    if (validation()) {
+    }
   }
 
   function onClickFileDelete(event) {
     if (validation()) {
-
+      setDeleteFileComformModal(true)
     }
   }
 
@@ -95,25 +87,10 @@ const TableHeader = observer((props) => {
           <ButtonGroup variant="text" size="small" aria-label="small contained button group">
             <Button
               variant="contained"
-              color="primary" aria-label="MOVE" component="span" className={classes.iconbutton} onClick={(event) => onClickMoveTitem(event)} startIcon={
-                <FontAwesomeIcon icon={faShareSquare} />}>
-              파일 이동
-          </Button>
-
-            <Button
-              variant="contained"
               color="primary" aria-label="CHANGE NAME" component="span" className={classes.iconbutton} onClick={(event) => onClickChangeNameItem(event)} startIcon={
                 <FontAwesomeIcon icon={faPenSquare} />}>
               이름 변경
           </Button>
-
-            <Button
-              variant="contained"
-              color="primary" aria-label="FILE_COPY" component="span" className={classes.iconbutton} onClick={(event) => onClickFileCopy(event)} startIcon={
-                <FileCopyIcon />}>
-              복사
-          </Button>
-
             <Button
               variant="contained"
               color="primary" aria-label="FILE_UPLOAD" component="span" className={classes.iconbutton} onClick={(event) => onClickFileDownload(event)} startIcon={
@@ -139,7 +116,8 @@ const TableHeader = observer((props) => {
         </Grid>
 
       </Grid>
-      <CustomModal open={fileNameChangeModalVisible} setOpen={function () { setFileNameChangeModal(false) }} />
+      <FileNameChangeModal open={fileNameChangeModalVisible} setOpen={function () { setFileNameChangeModal(false) }} />
+      <DeleteFileConfirmModal open={deleteFileComformModalVisible} setOpen={function () { setDeleteFileComformModal(false) }} />
     </div>
   );
 })

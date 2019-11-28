@@ -51,10 +51,41 @@ export function getDirectores(ip, path) {
 }
 
 export function changeFileName(ip, fromPath, toName) {
-    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toName;
+    const url = API_BASE_URL + "/admin/directory/change/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toName;
     const requestData = {
         method: 'PUT'
     }
     return request(url, requestData);
 }
+
+export function deleteFile(ip, deleteFilePath) {
+    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + deleteFilePath.replace(/\\/g, "|");
+    const requestData = {
+        method: 'DELETE'
+    }
+    return request(url, requestData);
+}
+export function copyFile(ip, fromPath, toPath) {
+    if (ip === '' || fromPath === '' || toPath === '') {
+        alert("copyFile err")
+    }
+    const url = API_BASE_URL + "/admin/directory/copy/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toPath.replace(/\\/g, "|");
+    const requestData = {
+        method: 'PUT'
+    }
+    return request(url, requestData);
+}
+
+export function moveFile(ip, fromPath, toPath) {
+    if (ip === '' || fromPath === '' || toPath === '') {
+        alert("moveFile err")
+    }
+    const url = API_BASE_URL + "/admin/directory/move/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toPath.replace(/\\/g, "|");
+    const requestData = {
+        method: 'PUT'
+    }
+    return request(url, requestData);
+}
+
+
 

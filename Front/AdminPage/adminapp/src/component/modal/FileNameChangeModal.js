@@ -5,11 +5,10 @@ import {
     Grid,
     TextField,
     Container,
-    FormGroup,
     Button
 } from '@material-ui/core';
-import useStores from '../util/useStore'
-import { changeFileName } from "../util/APIUtils"
+import useStores from '../../util/useStore'
+import { changeFileName } from "../../util/APIUtils"
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -44,7 +43,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function CustomSetupRequestModal(props) {
+export default function FileNameChangeModal(props) {
     const classes = useStyles();
     const { store } = useStores()
     const [name, setName] = React.useState();
@@ -52,10 +51,23 @@ export default function CustomSetupRequestModal(props) {
         setName(event.target.value);
     };
     function requestChangeFileName(event) {
-        alert("request!")
-        changeFileName(store.selectedIP, store.selectedPath, name)
+        changeFileName(store.selectedIP, store.selectedPath, name).then(response => {
+            alert("이름 변경 성공!")
+            store.clearSelectedData();
+            store.currentDirectoriesList[store.selectedIndex].f = name;
+        }).catch(error => {
+            alert(error)
+            if (error.status === 401) {
+                alert('Not authenticated')
+            } else if (error.status === 400) {
+                alert(error.message)
+            } else {
+                alert(error.message || 'Sorry! Something went wrong. Please try again!')
+            }
+        });
         props.setOpen(false);
     }
+
     return (
         <Modal disablePortal
             disableEnforceFocus
