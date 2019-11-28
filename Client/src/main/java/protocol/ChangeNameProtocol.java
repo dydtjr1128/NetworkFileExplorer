@@ -16,13 +16,12 @@ public class ChangeNameProtocol extends Protocol {
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
         String temp[] = bindingData.getPayload().split("\\|");
         String fromPath = temp[0];
-        String toPath = temp[1];
-        boolean success = FileManager.getInstance().changeFileName(fromPath,toPath);
+        String name = temp[1];
         ByteBuffer byteBuffer;
-        if(FileManager.getInstance().changeFileName(fromPath,toPath)){
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.REQUEST_OK, "");
+        if (FileManager.getInstance().changeFileName(fromPath, name)) {
+            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.CHANGE_NAME, "s");
         } else {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.REQUEST_FAIL, "");
+            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.CHANGE_NAME, "f");
         }
         asc.write(byteBuffer);
     }

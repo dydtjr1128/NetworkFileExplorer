@@ -1,14 +1,28 @@
 package protocol;
 
+import file.FileManager;
 import protocol.core.BindingData;
+import protocol.core.NFEProtocol;
 import protocol.core.Protocol;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 
 public class MoveProtocol extends Protocol {
 
     @Override
-    public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) {
-
+    public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
+        String temp[] = bindingData.getPayload().split("\\|");
+        String fromPath = temp[0];
+        String toPath = temp[1];
+        System.out.println(fromPath + " " + toPath);
+        ByteBuffer byteBuffer;
+        if (FileManager.getInstance().moveFile(fromPath, toPath)) {
+            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.MOVE, "s");
+        } else {
+            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.MOVE, "f");
+        }
+        asc.write(byteBuffer);
     }
 }
