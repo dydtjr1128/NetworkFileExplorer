@@ -6,6 +6,7 @@ import file.FileManager;
 import protocol.core.BindingData;
 import protocol.core.NFEProtocol;
 import protocol.core.Protocol;
+import protocol.core.ProtocolConverter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -21,7 +22,7 @@ public class GetListProtocol extends Protocol {
         Gson gson = new Gson();
         String json = gson.toJson(clientFiles);
         System.out.println(json);
-        ByteBuffer byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.GET_LIST, json);
+        ByteBuffer byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.GET_LIST, json);
         asc.write(byteBuffer);
 
         System.out.println(System.currentTimeMillis() - t + "@@@");

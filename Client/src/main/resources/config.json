@@ -1,0 +1,6 @@
+{
+  "serverIp": "192.168.190.103",
+  "serverPort": 14411,
+  "fileServerPort": 14412,
+  "clientCount": 10
+}

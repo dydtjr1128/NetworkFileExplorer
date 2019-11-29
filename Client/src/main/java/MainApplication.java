@@ -1,19 +1,21 @@
-import network.AsyncFileExplorer;
+import com.google.gson.Gson;
+import config.Config;
+import config.ClientStarter;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 public class MainApplication {
-    public static void main(String[] args) {
-        try {
-            /*FileExplorer fileExplorer = new FileExplorer();
-            fileExplorer.startClient();*/
-            for (int i = 0; i <5 ; i++) {
-                new Thread(new AsyncFileExplorer()).start();
-            }
+    public static void main(String[] args) throws IOException {
+        String path = System.getProperty("user.dir");
 
-        } catch (IOException | InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path + "/src/main/resources/config.json"));
+
+        Gson gson = new Gson();
+        Config config = gson.fromJson(bufferedReader, Config.class);
+        ClientStarter serverStarter = new ClientStarter();
+        serverStarter.startClientByConfig(config);
+
     }
 }

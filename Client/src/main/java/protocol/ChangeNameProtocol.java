@@ -5,6 +5,7 @@ import file.FileMapper;
 import protocol.core.BindingData;
 import protocol.core.NFEProtocol;
 import protocol.core.Protocol;
+import protocol.core.ProtocolConverter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,9 +20,9 @@ public class ChangeNameProtocol extends Protocol {
         String name = temp[1];
         ByteBuffer byteBuffer;
         if (FileManager.getInstance().changeFileName(fromPath, name)) {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.CHANGE_NAME, "s");
+            byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.CHANGE_NAME, "s");
         } else {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.CHANGE_NAME, "f");
+            byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.CHANGE_NAME, "f");
         }
         asc.write(byteBuffer);
     }

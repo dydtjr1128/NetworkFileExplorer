@@ -4,6 +4,7 @@ import file.FileManager;
 import protocol.core.BindingData;
 import protocol.core.NFEProtocol;
 import protocol.core.Protocol;
+import protocol.core.ProtocolConverter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -18,9 +19,9 @@ public class CopyProtocol extends Protocol {
         String toPath = temp[1];
         ByteBuffer byteBuffer;
         if (FileManager.getInstance().copyFile(fromPath, toPath)) {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.COPY, "s");
+            byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.COPY, "s");
         } else {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.COPY, "f");
+            byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.COPY, "f");
         }
         asc.write(byteBuffer);
     }

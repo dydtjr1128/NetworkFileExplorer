@@ -4,6 +4,7 @@ import file.FileManager;
 import protocol.core.BindingData;
 import protocol.core.NFEProtocol;
 import protocol.core.Protocol;
+import protocol.core.ProtocolConverter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,9 +20,9 @@ public class MoveProtocol extends Protocol {
         System.out.println(fromPath + " " + toPath);
         ByteBuffer byteBuffer;
         if (FileManager.getInstance().moveFile(fromPath, toPath)) {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.MOVE, "s");
+            byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.MOVE, "s");
         } else {
-            byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.MOVE, "f");
+            byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.MOVE, "f");
         }
         asc.write(byteBuffer);
     }

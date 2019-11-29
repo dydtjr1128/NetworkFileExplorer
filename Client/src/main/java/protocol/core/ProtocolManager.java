@@ -30,13 +30,9 @@ public class ProtocolManager {
         protocolMap.put(NFEProtocol.MOVE, new MoveProtocol());
         protocolMap.put(NFEProtocol.DELETE, new DeleteProtocol());
         protocolMap.put(NFEProtocol.CHANGE_NAME, new ChangeNameProtocol());
-        protocolMap.put(NFEProtocol.CHECK_FILE_PATH, new CheckFilePathProtocol());
         //file
-        protocolMap.put(NFEProtocol.FILE_UPLOAD, new FileUploadProtocol());
-        protocolMap.put(NFEProtocol.FILE_DOWNLOAD, new FileDownloadProtocol());
-
-        protocolMap.put(NFEProtocol.REQUEST_OK, new RequestOKProtocol());
-        protocolMap.put(NFEProtocol.REQUEST_FAIL, new RequestFailProtocol());
+        protocolMap.put(NFEProtocol.FILE_UPLOAD, new FileTransferServer2ClientProtocol());
+        protocolMap.put(NFEProtocol.FILE_DOWNLOAD, new FileTransferClient2ServerProtocol());
     }
 
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
