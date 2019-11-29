@@ -15,4 +15,15 @@ public class ProtocolConverter {
         String path = Snappy.uncompressString(bytes);
         return new BindingData(len, protocol, path);
     }
+
+    public static ByteBuffer makeTransferData(byte protocol, String path) throws IOException {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_BYTE);
+        byte[] compressedData = Snappy.compress(path);
+        byteBuffer.putLong(compressedData.length);
+        byteBuffer.put(protocol);
+        System.out.println(compressedData.length + "s@@@@@@");
+        byteBuffer.put(compressedData);
+        byteBuffer.flip();
+        return byteBuffer;
+    }
 }

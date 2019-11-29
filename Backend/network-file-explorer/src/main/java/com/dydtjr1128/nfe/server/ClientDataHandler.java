@@ -1,4 +1,4 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

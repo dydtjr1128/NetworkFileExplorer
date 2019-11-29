@@ -1,6 +1,6 @@
 package com.dydtjr1128.nfe;
 
-import com.dydtjr1128.nfe.network.ServerManager;
+import com.dydtjr1128.nfe.server.ServerStarter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -16,7 +16,7 @@ public class NetworkFileExplorerApplication {
 
         ConfigurableApplicationContext context = SpringApplication.run(NetworkFileExplorerApplication.class, args);
 
-        ServerManager serverManager = context.getBean(ServerManager.class);
+        ServerStarter serverManager = context.getBean(ServerStarter.class);
         try {
             serverManager.startServer();
         } catch (IOException e) {

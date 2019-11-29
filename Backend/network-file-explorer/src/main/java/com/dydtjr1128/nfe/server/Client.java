@@ -1,7 +1,10 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
 import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
+import com.dydtjr1128.nfe.protocol.core.ProtocolConverter;
+import com.dydtjr1128.nfe.server.fileserver.FileAction;
+import com.dydtjr1128.nfe.server.fileserver.TransferFileMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,15 +14,18 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
     private AsynchronousSocketChannel socketChannel;
+    private final Queue<TransferFileMetaData> filePathQueue; //clientPath,will send server file list
     private ClientDataReceiver receiver;
     private InetSocketAddress inetSocketAddress;
     private static boolean isWriting = false;
@@ -33,10 +39,21 @@ public class Client {
             inetSocketAddress = ((InetSocketAddress) socketChannel.getRemoteAddress());
         }
         resultBlockingQueue = new LinkedBlockingDeque<>();
+        filePathQueue = new LinkedList<>();
     }
 
     public BlockingQueue<BindingData> getBlockingQueue() {
         return resultBlockingQueue;
+    }
+
+    public void setFilePathQueue(String serverPath, String clientPath) {
+        synchronized (filePathQueue) {
+            filePathQueue.add(new TransferFileMetaData(serverPath,clientPath));
+        }
+    }
+
+    public Queue<TransferFileMetaData> getFilePathQueue() {
+        return filePathQueue;
     }
 
     private void sendMessageToClient(final ByteBuffer buffer) {
@@ -89,7 +106,7 @@ public class Client {
 
     public void writeStringMessage(byte protocol, String msg) {
         try {
-            ByteBuffer byteBuffer = NFEProtocol.makeTransferData(protocol, msg);
+            ByteBuffer byteBuffer = ProtocolConverter.makeTransferData(protocol, msg);
             sendMessageToClient(byteBuffer/*ByteBuffer.wrap(string.getBytes())*/);
         } catch (IOException e) {
             e.getStackTrace();
@@ -153,5 +170,14 @@ public class Client {
 
     public void moveFile(String payload) {
         writeStringMessage(NFEProtocol.MOVE, payload);
+    }
+
+    public void uploadToClient(String serverFilePath, String clientFilePath) {
+        setFilePathQueue(serverFilePath,clientFilePath);
+        writeStringMessage(NFEProtocol.FILE_UPLOAD, clientFilePath);
+    }
+
+    public void downloadFromClient(String filePath) {
+        writeStringMessage(NFEProtocol.FILE_DOWNLOAD, filePath);
     }
 }

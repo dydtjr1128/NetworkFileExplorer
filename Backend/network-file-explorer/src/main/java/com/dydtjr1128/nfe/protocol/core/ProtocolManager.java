@@ -1,6 +1,6 @@
 package com.dydtjr1128.nfe.protocol.core;
 
-import com.dydtjr1128.nfe.network.Client;
+import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.protocol.*;
 
 import java.nio.channels.AsynchronousSocketChannel;
@@ -30,13 +30,9 @@ public class ProtocolManager {
         protocolMap.put(NFEProtocol.MOVE, new MoveProtocol());
         protocolMap.put(NFEProtocol.DELETE, new DeleteProtocol());
         protocolMap.put(NFEProtocol.CHANGE_NAME, new ChangeNameProtocol());
-        protocolMap.put(NFEProtocol.CHECK_FILE_PATH, new CheckFilePathProtocol());
         //file
-        protocolMap.put(NFEProtocol.FILE_UPLOAD, new FileUploadProtocol());
-        protocolMap.put(NFEProtocol.FILE_DOWNLOAD, new FileDownloadProtocol());
-
-        protocolMap.put(NFEProtocol.REQUEST_OK, new RequsetOKProtocol());
-        protocolMap.put(NFEProtocol.REQUEST_FAIL, new RequsetFailProtocol());
+        protocolMap.put(NFEProtocol.FILE_UPLOAD, new FileTransferServer2ClientProtocol());
+        protocolMap.put(NFEProtocol.FILE_DOWNLOAD, new FileTransferClient2ServerProtocol());
     }
 
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) {

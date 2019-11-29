@@ -1,6 +1,6 @@
 package com.dydtjr1128.nfe.protocol.core;
 
-import com.dydtjr1128.nfe.network.Client;
+import com.dydtjr1128.nfe.server.Client;
 import com.google.gson.Gson;
 
 import java.nio.channels.AsynchronousSocketChannel;

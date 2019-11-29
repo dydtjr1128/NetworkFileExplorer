@@ -1,18 +1,13 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
-import com.dydtjr1128.nfe.file.ClientFile;
 import com.dydtjr1128.nfe.protocol.core.BindingData;
-import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import com.dydtjr1128.nfe.protocol.core.ProtocolConverter;
 import com.dydtjr1128.nfe.protocol.core.ProtocolManager;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.List;
 
 public class DefaultDataHandler implements ClientDataHandler {
     private static final Logger logger = LoggerFactory.getLogger(DefaultDataHandler.class);

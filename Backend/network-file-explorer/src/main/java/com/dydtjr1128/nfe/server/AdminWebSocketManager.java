@@ -1,7 +1,7 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
 import com.dydtjr1128.nfe.admin.service.ApplicationContextProvider;
-import com.dydtjr1128.nfe.network.model.AdminMessage;
+import com.dydtjr1128.nfe.server.model.AdminMessage;
 import com.google.gson.Gson;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class AdminWebSocketManager {
     private SimpMessagingTemplate template;
 
     private static AdminWebSocketManager INSTANCE = null;
-
+    private static final String ADMIN_TOPIC = "/topic/admin";
     public static AdminWebSocketManager getInstance() {
         return AdminWebSocketManager.LazyHolder.INSTANCE;
     }
@@ -27,6 +27,6 @@ public class AdminWebSocketManager {
     }
 
     public void writeToAdminPage(AdminMessage message){
-        template.convertAndSend("/topic/admin", gson.toJson(message));
+        template.convertAndSend(ADMIN_TOPIC, gson.toJson(message));
     }
 }

@@ -1,14 +1,8 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
-import com.dydtjr1128.nfe.admin.service.ApplicationContextProvider;
-import com.dydtjr1128.nfe.network.model.AdminMessage;
-import com.google.gson.Gson;
+import com.dydtjr1128.nfe.server.model.AdminMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 
@@ -16,8 +10,8 @@ import java.util.*;
 public class ClientManager {
     private static final Logger logger = LoggerFactory.getLogger(ClientManager.class);
     private static ClientManager INSTANCE = null;
-    public List<Client> clientsVector;
-    public Map<String, Client> clientsHashMap;
+    public final List<Client> clientsVector;//If want to use many client one Ip
+    public final Map<String, Client> clientsHashMap;//If want to use one client one IP
 
 
     public static ClientManager getInstance() {

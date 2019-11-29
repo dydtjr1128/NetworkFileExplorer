@@ -1,12 +1,12 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
+import com.dydtjr1128.nfe.server.config.Config;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.net.StandardSocketOptions;
 import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousServerSocketChannel;
@@ -16,20 +16,13 @@ import java.util.concurrent.Executors;
 
 public class AsyncServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(AsyncServer.class);
-    private static int port, threadPoolCount;
     private final AsynchronousServerSocketChannel assc;
     private final AsynchronousChannelGroup channelGroup;
 
-    public AsyncServer() throws IOException {
-        initializeServerConfig();
-
-        channelGroup = AsynchronousChannelGroup.withFixedThreadPool(threadPoolCount, Executors.defaultThreadFactory());
+    AsyncServer() throws IOException {
+        channelGroup = AsynchronousChannelGroup.withFixedThreadPool(Config.DEFAULT_THREAD_POOL_COUNT, Executors.defaultThreadFactory());
         assc = createAsynchronousServerSocketChannel();
-        logger.debug("[Finish server setting with " + threadPoolCount + " thread in thread pool]");
-    }
-
-    public SocketAddress getSocketAddress() throws IOException {
-        return assc.getLocalAddress();
+        logger.debug("[Finish server setting with " + Config.DEFAULT_THREAD_POOL_COUNT + " thread in thread pool]");
     }
 
     @Override
@@ -54,16 +47,10 @@ public class AsyncServer implements Runnable {
         });
     }
 
-    private void initializeServerConfig() throws IOException {
-        port = 14411;
-        threadPoolCount = Runtime.getRuntime().availableProcessors();
-    }
-
-
     private AsynchronousServerSocketChannel createAsynchronousServerSocketChannel() throws IOException {
         final AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
-        serverSocketChannel.bind(new InetSocketAddress(port));
+        serverSocketChannel.bind(new InetSocketAddress(Config.ASYNC_SERVER_PORT));
         return serverSocketChannel;
     }
 

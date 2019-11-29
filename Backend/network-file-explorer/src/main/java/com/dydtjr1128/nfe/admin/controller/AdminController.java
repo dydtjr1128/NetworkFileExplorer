@@ -2,20 +2,16 @@ package com.dydtjr1128.nfe.admin.controller;
 
 
 import com.dydtjr1128.nfe.admin.model.EmptyJsonResponse;
-import com.dydtjr1128.nfe.admin.model.LoginRequest;
-import com.dydtjr1128.nfe.network.Client;
-import com.dydtjr1128.nfe.network.ClientManager;
+import com.dydtjr1128.nfe.server.Client;
+import com.dydtjr1128.nfe.server.ClientManager;
 import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @CrossOrigin
@@ -141,5 +137,32 @@ public class AdminController {
             return ResponseEntity.ok(new EmptyJsonResponse());
         else
             return ResponseEntity.badRequest().body(new EmptyJsonResponse());
+    }
+
+    @PostMapping("/upload/{ip}/{serverFilePath}/{clientFilePath}")
+    public ResponseEntity<?> fileTransferServer2Client(@PathVariable String ip, @PathVariable String serverFilePath, @PathVariable String clientFilePath) {
+        //AsyncFileServer -> TCP -> Client
+
+        serverFilePath = pathPreProcessing(serverFilePath);
+        clientFilePath = pathPreProcessing(clientFilePath);
+        log.debug("[UPLOAD] Upload file : " + ip + "@" + serverFilePath + "@" + clientFilePath);
+
+        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        client.uploadToClient(serverFilePath,clientFilePath);
+
+        return ResponseEntity.ok(new EmptyJsonResponse());
+    }
+
+    @GetMapping("/download/{ip}/{clientFilePath}")
+    public ResponseEntity<?> fileTransferClient2Server(@PathVariable String ip, @PathVariable String clientFilePath) {
+        //Server -> TCP -> Client -> TCP -> AsyncFileServer
+        System.out.println(clientFilePath);
+        clientFilePath = pathPreProcessing(clientFilePath);
+        System.out.println(clientFilePath);
+        log.debug("[Download] Upload file : " + ip + "@" + clientFilePath);
+        //고정된 폴더에 저장
+        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        client.downloadFromClient(clientFilePath);
+        return ResponseEntity.ok(new EmptyJsonResponse());
     }
 }

@@ -1,8 +1,5 @@
-package com.dydtjr1128.nfe.network;
+package com.dydtjr1128.nfe.server;
 
-import com.dydtjr1128.nfe.protocol.core.BindingData;
-import com.dydtjr1128.nfe.protocol.core.ProtocolConverter;
-import com.dydtjr1128.nfe.protocol.core.ProtocolManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

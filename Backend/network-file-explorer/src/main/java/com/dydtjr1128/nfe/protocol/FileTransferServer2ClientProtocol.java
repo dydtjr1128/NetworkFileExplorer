@@ -1,13 +1,13 @@
 package com.dydtjr1128.nfe.protocol;
 
-import com.dydtjr1128.nfe.network.Client;
+import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.Protocol;
 import lombok.NoArgsConstructor;
 
 import java.nio.channels.AsynchronousSocketChannel;
 @NoArgsConstructor
-public class RequsetOKProtocol extends Protocol {
+public class FileTransferServer2ClientProtocol extends Protocol {
 
     @Override
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) {
@@ -16,6 +16,6 @@ public class RequsetOKProtocol extends Protocol {
 
     @Override
     public void executeProtocolToAdmin(Client client, BindingData bindingData) {
-        client.getBlockingQueue().add(bindingData);
+        System.out.println("여기 안들어옴");
     }
 }

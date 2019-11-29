@@ -1,6 +1,6 @@
 package com.dydtjr1128.nfe.protocol;
 
-import com.dydtjr1128.nfe.network.Client;
+import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.Protocol;
 import lombok.NoArgsConstructor;
