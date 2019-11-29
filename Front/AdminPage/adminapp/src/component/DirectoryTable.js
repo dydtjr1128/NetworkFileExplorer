@@ -249,8 +249,13 @@ const DirectoryTable = observer((props) => {
   }
 
   function copyFileFromWeb() {
-    copyFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
+    console.log(store.copymoveData.path +" "+ store.currentClientPath)
+    copyFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {      
+      // if( store.copymoveData.path === store.currentClientPath){
+      //   alert("동일 경로입니다.")
+      // } else {
       store.currentDirectoriesList.push(store.copymoveDataJson);
+      //}
       alert("복사 성공!")
       //reload
     }).catch(error => {
@@ -265,6 +270,7 @@ const DirectoryTable = observer((props) => {
   }
   function moveFileFromWeb() {
     moveFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
+      
       store.currentDirectoriesList.push(store.copymoveDataJson);
       alert("이동 성공!")
       //reload
@@ -286,18 +292,13 @@ const DirectoryTable = observer((props) => {
     console.log("sort? " + isDesc + " " + orderBy)
   };
 
-  const handleClick = (event, name, index) => {
-    store.selectedPath = store.currentClientPath + "\\" + name;
+  const handleClick = (event, row, index) => {
+    store.selectedPath = store.currentClientPath + "\\" + row.f;
     store.selectedIP = store.currentClientIP;
+    store.selectedType = row.t;
     store.selectedIndex = index;
-    setSelected(name);
+    setSelected(row.f);
   };
-
-  function selectedStoreClear() {
-    store.selectedPath = '';
-    store.selectedIP = '';
-    store.selectedIndex = 0;
-  }
 
   const moveDirectory = (event, name, type) => {
     if (type === "파일 폴더") {
@@ -305,7 +306,7 @@ const DirectoryTable = observer((props) => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
         else {
-          selectedStoreClear();
+          store.clearSelectedData();          
           store.currentDirectoriesList = response;
           store.currentClientPath = store.currentClientPath + "\\" + name;
         }
@@ -326,7 +327,7 @@ const DirectoryTable = observer((props) => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
         else {
-          selectedStoreClear();
+          store.clearSelectedData();
           store.currentDirectoriesList = response;
           store.currentClientPath = store.getParentPath();
         }
@@ -414,7 +415,7 @@ const DirectoryTable = observer((props) => {
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.f, index)}
+                      onClick={event => handleClick(event, row, index)}
                       onContextMenu={event => onContextMenu(event, row.f, index)}
                       onDoubleClick={event => moveDirectory(event, row.f, row.t)}
                       tabIndex={-1}

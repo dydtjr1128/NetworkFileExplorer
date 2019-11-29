@@ -87,5 +87,27 @@ export function moveFile(ip, fromPath, toPath) {
     return request(url, requestData);
 }
 
+export function fileTransferServer2Client(ip, serverPath, ClientPath) {
+    if (ip === '' || serverPath === '' || ClientPath === '') {
+        alert("fileTransferServer2Client err")
+    }
+    const url = API_BASE_URL + "/admin/upload/" + ip + "/" + serverPath.replace(/\\/g, "|") + "/" + ClientPath.replace(/\\/g, "|");
+    const requestData = {
+        method: 'POST'
+    }
+    return request(url, requestData);
+}
+
+export function fileTransferClient2Server(ip, clientPath) {
+    if (ip === '' || clientPath === '') {
+        alert("fileTransferClient2Server err")
+    }
+    const url = API_BASE_URL + "/admin/download/" + ip + "/" + clientPath.replace(/\\/g, "|");
+    const requestData = {
+        method: 'GET'
+    }
+    return request(url, requestData);
+}
+
 
 

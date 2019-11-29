@@ -5,12 +5,11 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FileCopyIcon from '@material-ui/icons/FileCopy';
-import { faShareSquare, faPenSquare, faDownload, faUpload } from '@fortawesome/free-solid-svg-icons'
+import { faPenSquare, faDownload, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileNameChangeModal from './modal/FileNameChangeModal'
 import DeleteFileConfirmModal from './modal/DeleteFileConfirmModal'
-
+import {fileTransferServer2Client, fileTransferClient2Server} from '../util/APIUtils'
 import { observer } from 'mobx-react';
 import useStores from '../util/useStore'
 
@@ -56,7 +55,23 @@ const TableHeader = observer((props) => {
 
   function onClickFileDownload(event) {
     if (validation()) {
-
+      if(store.selectedType === '파일 폴더'){
+        alert("폴더가 아닌 파일을 선택하세요.")
+        return;
+      }
+      console.log(store.selectedIP + " " +store.selectedPath)
+      fileTransferClient2Server(store.selectedIP,store.selectedPath).then(response => {        
+        alert(store.selectedPath + " 다운로드 시작!")
+        //reload
+      }).catch(error => {
+        if (error.status === 401) {
+          alert('Not authenticated')
+        } else if (error.status === 400) {
+          alert(error.message)
+        } else {
+          alert(error.message || 'Sorry! Something went wrong. Please try again!')
+        }
+      });
     }
   }
 

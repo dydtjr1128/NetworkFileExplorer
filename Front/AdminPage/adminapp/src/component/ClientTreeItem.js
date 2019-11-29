@@ -8,7 +8,6 @@ import useStores from '../util/useStore'
 
 const ClientTreeItem = observer((props) => {
     const { match } = props;
-    const [directories, setDirectories] = React.useState([]);
     const [responsedData, setResponsedData] = React.useState([]);//지워볼것?
     const ip = match.ip;//192.168.0.0.1
     const path = match.absolutepath;//c://windows/aa
@@ -39,11 +38,7 @@ const ClientTreeItem = observer((props) => {
                     alert("빈 폴더 입니다.!")
                 else {
                     setGlobalData(response);
-                    // response.map((dir, index) => {
-                    //     if (dir.i) {
-                    //         directories.push(dir.f);
-                    //     }
-                    // });
+
                     setResponsedData(response)
                     //setDirectories(array);
                     //store.addExpanded(match.nodeId)

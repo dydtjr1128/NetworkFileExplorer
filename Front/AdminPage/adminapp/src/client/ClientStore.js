@@ -20,11 +20,13 @@ const ClientStore = observable({
     selectedIP: '',
     selectedPath: '',
     selectedIndex: 0,
+    selectedType: '',
     selectedAction: '',
     clearSelectedData: function () {
         this.selectedIP = '';
         this.selectedPath = '';
-        this.selectedInde = 0;
+        this.selectedType = '';
+        this.selectedIndex = 0;
         this.selectedAction = '';
     },
     copymoveDataJson : null,
