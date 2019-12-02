@@ -35,9 +35,6 @@ public class ProtocolManager {
         protocolMap.put(NFEProtocol.FILE_DOWNLOAD, new FileTransferClient2ServerProtocol());
     }
 
-    public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) {
-        protocolMap.get(bindingData.getProtocol()).executeProtocol(asc, bindingData);
-    }
     public void executeProtocolToAdmin(Client client, BindingData bindingData) {
         protocolMap.get(bindingData.getProtocol()).executeProtocolToAdmin(client, bindingData);
     }

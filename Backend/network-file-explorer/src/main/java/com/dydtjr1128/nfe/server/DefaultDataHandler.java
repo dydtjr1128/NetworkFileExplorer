@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 
 public class DefaultDataHandler implements ClientDataHandler {
     private static final Logger logger = LoggerFactory.getLogger(DefaultDataHandler.class);
-    int i=0;
+
     @Override
     public void onDataReceive(Client client, ByteBuffer byteBuffer, int result) throws IOException {
         byteBuffer.flip();
@@ -21,27 +21,5 @@ public class DefaultDataHandler implements ClientDataHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
-       /* BindingData bindingData = ProtocolConverter.convertData(byteBuffer);
-        Gson gson = new Gson();
-        try {
-            List<ClientFile> list = gson.fromJson(bindingData.getPayload(), new TypeToken<List<ClientFile>>() {
-            }.getType());
-            for(ClientFile file : list){
-                System.out.println(file.toString());
-            }
-        }catch (Exception e){
-
-        }
-
-        String message = "C:\\Windows\\Cursors";
-        //System.out.println(bindingData.getPayload());
-        //logger.debug("[Message Receive(" + client.getClientIP() + ")] :\n " + bindingData.getPayload() + " connected : " + ClientManager.getInstance().getClientCount());
-        if(i==0) {
-            i++;
-            client.writeStringMessage(NFEProtocol.GET_LIST, message);
-        }
-        */
-
-        //message 받으면 웹소켓으로 전달
     }
 }

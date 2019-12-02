@@ -1,10 +1,5 @@
 package com.dydtjr1128.nfe.protocol.core;
 
-import org.xerial.snappy.Snappy;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
 public class NFEProtocol {
     /* sever -> client  header */
     public static final byte GET_LIST = 0; // get directory list
@@ -16,5 +11,6 @@ public class NFEProtocol {
     public static final byte FILE_UPLOAD = 5;//upload file path
     public static final byte FILE_DOWNLOAD = 6;//download file path
 
-    public static final int NETWORK_BYTE = 1024*1024; // 1MB
+    public static final int NETWORK_BYTE = 1024 * 1024; // 1MB
+    public static final int NETWORK_FILE_BYTE = 1024 * 1024 * 10; // 10MB
 }

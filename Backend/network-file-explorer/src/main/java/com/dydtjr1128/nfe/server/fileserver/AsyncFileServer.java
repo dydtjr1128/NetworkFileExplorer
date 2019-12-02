@@ -1,12 +1,15 @@
 package com.dydtjr1128.nfe.server.fileserver;
 
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
+import com.dydtjr1128.nfe.server.AdminWebSocketManager;
 import com.dydtjr1128.nfe.server.AsyncServer;
 import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.server.ClientManager;
 import com.dydtjr1128.nfe.server.config.Config;
+import com.dydtjr1128.nfe.server.model.AdminMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xerial.snappy.Snappy;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,9 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Queue;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 public class AsyncFileServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(AsyncServer.class);
@@ -67,14 +68,13 @@ public class AsyncFileServer implements Runnable {
 
     private void handleNewConnection(AsynchronousSocketChannel channel) throws IOException {
         channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
-        final ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_BYTE);
+        ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_FILE_BYTE);
         Future<Integer> operations = channel.read(dataBuffer);
         while (!operations.isDone()) {
         }
         dataBuffer.flip();
         byte action = dataBuffer.get();
         dataBuffer.clear();
-        System.out.println("!!!!!!!!!@#!@$!@$!@$!@$!@$");
         if (action == FileAction.FILE_RECEIVE_FROM_CLIENT) { // 고정 서버 path + filename
             System.out.println("@@@act1");
             readFileFromClient(channel, dataBuffer);
@@ -91,42 +91,48 @@ public class AsyncFileServer implements Runnable {
         }
     }
 
-    public void readFileFromClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer) {
+    public void readFileFromClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer22) {
+        ByteBuffer dataBuffer = ByteBuffer.allocateDirect(NFEProtocol.NETWORK_FILE_BYTE);
         channel.read(dataBuffer, new Attachment(), new CompletionHandler<Integer, Attachment>() {
 
             @Override
             public void completed(final Integer result, final Attachment readData) {
                 if (result > 0) {
-                    System.out.println("111");
                     dataBuffer.flip();
-                    String string = StandardCharsets.UTF_8.decode(dataBuffer).toString();
-                    if (string.contains(Config.END_MESSAGE_MARKER)) {
-                        readData.calcFileData(string);
-                        Path path = Paths.get(Config.FILE_STORE_PATH + readData.getFileName());
-                        if(Files.notExists(Paths.get(Config.FILE_STORE_PATH))){
-                            try {
-                                Files.createDirectories(Paths.get(Config.FILE_STORE_PATH));
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                    //System.out.println(dataBuffer.position() + " @@@ " + dataBuffer.limit());
+                    long messageLen = dataBuffer.getLong();
+                    byte[] bytes = new byte[(int) messageLen];
+                    dataBuffer.get(bytes);
+                    String string = null;
+                    try {
+                        System.out.println(new String(bytes));
+                        string = Snappy.uncompressString(bytes);
+                        if (string.contains(Config.END_MESSAGE_MARKER)) {
+                            readData.calcFileData(string);
+                            Path path = Paths.get(Config.FILE_STORE_PATH + readData.getFileName());
+                            if (Files.notExists(Paths.get(Config.FILE_STORE_PATH))) {
+                                try {
+                                    Files.createDirectories(Paths.get(Config.FILE_STORE_PATH));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                        if (Files.notExists(path) && !Files.isDirectory(path)) {
-                            try {
+                            if (Files.notExists(path) && !Files.isDirectory(path)) {
+
                                 System.out.println(path);
                                 readData.openFileChannel(path);
-                            } catch (IOException e) {
+
+                                dataBuffer.clear();
+                                writeToFile(channel, readData, dataBuffer);
+                            } else {
                                 close(channel, readData.getFileChannel());
-                                System.out.println("File err!");
-                                e.printStackTrace();
+                                System.out.println("Download err!");
                                 return;
                             }
-                            dataBuffer.clear();
-                            writeToFile(channel, readData, dataBuffer);
-                        } else {
-                            close(channel, readData.getFileChannel());
-                            System.out.println("Download err!");
-                            return;
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        close(channel, readData.getFileChannel());
                     }
                 }
 
@@ -141,28 +147,44 @@ public class AsyncFileServer implements Runnable {
     }
 
     public void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) {
-        System.out.println("@@@@@@@@@@키키키");
+        System.out.println(attachment.getReadPosition() + " " + dataBuffer.position() + " " + dataBuffer.limit());
         channel.read(dataBuffer, attachment, new CompletionHandler<Integer, Attachment>() {
 
                     @Override
                     public void completed(Integer result, Attachment attachment) {
-                        if(result>0) {
+                        if (result > 0) {
                             dataBuffer.flip();
-                            Future<Integer> operation = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
-                            while (!operation.isDone()) ;
+                            try {
+                                Future<Integer> operation = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
+                                operation.get(10, TimeUnit.SECONDS);
+                            } catch (Exception e) {
+                                System.out.println("timeout");
+                                e.printStackTrace();
+                            }
                             attachment.addPosition(result);
-                            dataBuffer.clear();
-                            if(attachment.getReadPosition() == attachment.getFileSize()){
-                                System.out.println(attachment.getReadPosition());
+                            if (attachment.getReadPosition() == attachment.getFileSize()) {
+                                AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, attachment.getFileName() + " 다운로드 성공!"));
+                                System.out.println(attachment.getFileName() + "@@@@@ 끝!!");
+                                try {
+                                    channel.close();
+                                    attachment.getFileChannel().close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return;
+                            } else if(attachment.getReadPosition() > attachment.getFileSize()){
+                                AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_FAIL, attachment.getFileName() + " 다운로드 실패!"));
+                                System.out.println("size err");
                                 return;
                             }
+                            dataBuffer.clear();
                             channel.read(dataBuffer, attachment, this);
                         }
                     }
 
                     @Override
                     public void failed(Throwable exc, Attachment attachment) {
-
+                        AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_FAIL, attachment.getFileName() + " 다운로드 실패!"));
                     }
                 }
         );

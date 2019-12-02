@@ -25,5 +25,5 @@ public class AdminMessage implements Serializable {
     public static final int UPLOAD_FAIL = 5;
 
     private int state;
-    private String ip;
+    private String message;
 }
