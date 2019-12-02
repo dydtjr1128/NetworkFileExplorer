@@ -4,25 +4,28 @@ import config.Config;
 import lombok.Getter;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 @Getter
 class Attachment {
-    private StringBuffer buffer;
+    private ByteBuffer buffer;
     private long readPosition;
     private AsynchronousFileChannel fileChannel;
     private String fileName;
     private long fileSize;
 
     Attachment() {
-        buffer = new StringBuffer();
         readPosition = 0;
-        String temp[] = buffer.toString().replace(Config.END_MESSAGE_MARKER, "").split(Config.MESSAGE_DELIMITTER);
+    }
+
+    public void calcFileData(String string) {
+        System.out.println("@ " + string);
+        String temp[] = string.replace(Config.END_MESSAGE_MARKER, "").split(Config.MESSAGE_DELIMITTER.replace("|", "\\|"));
         fileName = temp[0];
         fileSize = Long.parseLong(temp[1]);
-
     }
 
     public void addPosition(int position) {

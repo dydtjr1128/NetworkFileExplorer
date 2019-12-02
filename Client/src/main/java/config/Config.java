@@ -11,7 +11,7 @@ public class Config {
     private int clientCount;
 
     @Expose(serialize = false, deserialize = false)
-    public static final String END_MESSAGE_MARKER = "@END";
+    public static final String END_MESSAGE_MARKER = "|END";
     @Expose(serialize = false, deserialize = false)
-    public static final String MESSAGE_DELIMITTER = "#";
+    public static final String MESSAGE_DELIMITTER = "|||";
 }

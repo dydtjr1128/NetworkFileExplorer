@@ -2,6 +2,7 @@ package file.receiver;
 
 import config.Config;
 import file.FileAction;
+import org.xerial.snappy.Snappy;
 import protocol.core.NFEProtocol;
 
 import java.io.File;
@@ -62,25 +63,39 @@ public class FileReceiver {
             public void completed(final Integer result, final Attachment readData) {
                 if (result > 0) {
                     dataBuffer.flip();
-                    readData.getBuffer().append(new String(dataBuffer.array()).trim());
-                    if (readData.getBuffer().toString().contains(Config.END_MESSAGE_MARKER)) {
-                        Path path = Paths.get(storePath + readData.getFileName());
-                        if (Files.notExists(path) && !Files.isDirectory(path)) {
-                            try {
-                                readData.openFileChannel(path);
-                            } catch (IOException e) {
-                                close(channel, readData.getFileChannel());
-                                System.out.println("File err!");
-                                e.printStackTrace();
-                                return;
+                    long messageLen = dataBuffer.getLong();
+                    byte[] bytes = new byte[(int) messageLen];
+                    dataBuffer.get(bytes);
+                    String string = null;
+                    try {
+                        string = Snappy.uncompressString(bytes);
+                        if (string.contains(Config.END_MESSAGE_MARKER)) {
+                            readData.calcFileData(string);
+                            /*Path path = Paths.get(Config.FILE_STORE_PATH + readData.getFileName());
+                            if (Files.notExists(Paths.get(Config.FILE_STORE_PATH))) {
+                                try {
+                                    Files.createDirectories(Paths.get(Config.FILE_STORE_PATH));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                            if (Files.notExists(path) && !Files.isDirectory(path)) {
+
+                                System.out.println(path);
+                                readData.openFileChannel(path);
+
+                                dataBuffer.clear();
+                                writeToFile(channel, readData, dataBuffer);
+                            } else {
+                                close(channel, readData.getFileChannel());
+                                System.out.println("Download err!");
+                                return;
+                            }*/
                         } else {
-                            close(channel, readData.getFileChannel());
-                            System.out.println("Download err!");
-                            return;
+                            writeToFile(readData, dataBuffer, result);
                         }
-                    } else {
-                        writeToFile(readData, dataBuffer, result);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
                 dataBuffer.clear();
@@ -94,6 +109,7 @@ public class FileReceiver {
             }
         });
     }
+
     public void writeToFile(Attachment attachment, ByteBuffer buffer, int result) {
         Future<Integer> operation = attachment.getFileChannel().write(buffer, attachment.getReadPosition());
         while (!operation.isDone()) ;
