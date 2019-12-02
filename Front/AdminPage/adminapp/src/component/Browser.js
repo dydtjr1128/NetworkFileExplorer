@@ -41,12 +41,14 @@ export default function Browser() {
         //console.log("Chatting Template - onMessageReceive");      
         console.log("receive message : " + topic + JSON.stringify(msg));
         if (msg.state === 0) {// add
-            insert(msg.ip);
+            insert(msg.message);
         } else if (msg.state === 1) { // rmove
-            var index = store.client_list.indexOf(msg.ip);
+            var index = store.client_list.indexOf(msg.message);
             if (index !== -1) {
                 store.client_list.splice(index, 1);
             }
+        } else if(msg.state === 2 || msg.state ===3) { // download success or fail
+            alert(msg.message)
         }
     }
 

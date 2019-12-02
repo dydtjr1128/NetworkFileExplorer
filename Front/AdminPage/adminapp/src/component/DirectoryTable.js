@@ -11,7 +11,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import { toJS } from 'mobx';
+import {fileTransferServer2Client, fileTransferClient2Server} from '../util/APIUtils'
 import { observer } from 'mobx-react';
 import { faFolder, faFile, faReply, faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -216,13 +216,13 @@ const DirectoryTable = observer((props) => {
         if (contextMenuAction === 1) {// copy          
           store.copymoveData.action = store.copymoveData.action.splice(0, 1);
           store.copymoveData.action[0].label = "현재 위치로 복사하기"
-          
+
         } else { // move
           store.copymoveData.action = store.copymoveData.action.splice(1, 1);
           store.copymoveData.action[0].label = "현재 위치로 붙여넣기"
         }
         store.copymoveDataJson = store.currentDirectoriesList.find(element => element.f === fname);
-        if(store.copymoveDataJson === undefined){
+        if (store.copymoveDataJson === undefined) {
           alert("오류! 파일이 변경 되었을 수 있습니다.")
           store.clearCopyMoveDatay();
         }
@@ -249,8 +249,8 @@ const DirectoryTable = observer((props) => {
   }
 
   function copyFileFromWeb() {
-    console.log(store.copymoveData.path +" "+ store.currentClientPath)
-    copyFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {      
+    console.log(store.copymoveData.path + " " + store.currentClientPath)
+    copyFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
       // if( store.copymoveData.path === store.currentClientPath){
       //   alert("동일 경로입니다.")
       // } else {
@@ -270,7 +270,7 @@ const DirectoryTable = observer((props) => {
   }
   function moveFileFromWeb() {
     moveFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
-      
+
       store.currentDirectoriesList.push(store.copymoveDataJson);
       alert("이동 성공!")
       //reload
@@ -306,13 +306,47 @@ const DirectoryTable = observer((props) => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
         else {
-          store.clearSelectedData();          
+          store.clearSelectedData();
           store.currentDirectoriesList = response;
           store.currentClientPath = store.currentClientPath + "\\" + name;
         }
       }).catch(error => {
         if (error.status === 401) {
           alert('Not authenticated')
+        } else {
+          alert(error.message || 'Sorry! Something went wrong. Please try again!')
+        }
+      });
+    } else {
+      var isFileDownload = window.confirm("해당 파일을 다운로드 하시겠습니까?");
+      if (isFileDownload) {
+        onClickFileDownload()
+      }
+    }
+  }
+
+  function validation() {
+    if (store.selectedPath === '') {
+      alert("선택된 파일이 없습니다.")
+      return false;
+    }
+    return true;
+  }
+  function onClickFileDownload() {
+    if (validation()) {
+      if (store.selectedType === '파일 폴더') {
+        alert("폴더가 아닌 파일을 선택하세요.")
+        return;
+      }
+      console.log(store.selectedIP + " " + store.selectedPath)
+      fileTransferClient2Server(store.selectedIP, store.selectedPath).then(response => {
+        alert(store.selectedPath + " 다운로드 시작!")
+        //reload
+      }).catch(error => {
+        if (error.status === 401) {
+          alert('Not authenticated')
+        } else if (error.status === 400) {
+          alert(error.message)
         } else {
           alert(error.message || 'Sorry! Something went wrong. Please try again!')
         }
