@@ -5,10 +5,8 @@ import { faDesktop } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDirectores } from "../util/APIUtils"
 import ClientTreeItem from './ClientTreeItem'
-import useStores from '../util/useStore'
 
 const ClientHeadItem = observer((props) => {
-    const { store } = useStores()
     const { labelText, ...other } = props
     const path = labelText;
     const [directories, setDirectories] = React.useState([]);

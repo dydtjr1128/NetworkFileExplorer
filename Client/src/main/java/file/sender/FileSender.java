@@ -27,29 +27,6 @@ public class FileSender {
         this.ip = ip;
         this.port = port;
     }
-
-   /* void send(final String path) throws IOException {
-        SocketChannel channel = SocketChannel.open(new InetSocketAddress(ip, port));
-        FileChannel fileChannel = FileChannel.open(Paths.get(path), StandardOpenOption.READ);
-        final ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_FILE_BYTE);
-        final File srcFile = new File(path);
-        if (srcFile.exists() && !srcFile.isDirectory()) {
-            final String message = srcFile.getName() + Config.MESSAGE_DELIMITTER + srcFile.length() + Config.END_MESSAGE_MARKER;
-            dataBuffer.put(message.getBytes());
-            dataBuffer.flip();
-            while (dataBuffer.hasRemaining()) {
-                channel.write(dataBuffer);
-            }
-            long position = 0;
-            while (position < srcFile.length()) {
-                position += fileChannel.transferTo(position, NFEProtocol.NETWORK_FILE_BYTE, channel);//Send data using DMA
-            }
-            System.out.println("전송 완료!");
-        }
-        channel.close();
-        fileChannel.close();
-    }*/
-
     public void send(final String path) {
         System.out.println(path + "@ start!!");
         new Thread(() -> {
@@ -118,7 +95,7 @@ public class FileSender {
                             sendData.addPosition(result);
                             try {
                                 sendData.getBuffer().flip();
-                                //System.out.println(sendData.getReadPosition() + " " + sendData.getBuffer().position() + " " + sendData.getBuffer().limit());
+
                                 Future<Integer> operation = channel.write(sendData.getBuffer());
                                 operation.get(100, TimeUnit.SECONDS);
                                 Thread.sleep(10);
@@ -146,7 +123,6 @@ public class FileSender {
                             }
                         }
                     });
-            System.in.read();
         }
 
 

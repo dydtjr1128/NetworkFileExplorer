@@ -17,11 +17,9 @@ public class ProtocolConverter {
 
     public static ByteBuffer makeTransferData(byte protocol, String path) throws IOException {
         ByteBuffer byteBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_BYTE);
-        System.out.println(path.length());
         byte[] compressedData = Snappy.compress(path);
         byteBuffer.putLong(compressedData.length);
         byteBuffer.put(protocol);
-        System.out.println(compressedData.length + "s@@@@@@");
         byteBuffer.put(compressedData);
         byteBuffer.flip();
         return byteBuffer;

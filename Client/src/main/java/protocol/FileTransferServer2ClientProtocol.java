@@ -11,6 +11,7 @@ public class FileTransferServer2ClientProtocol extends Protocol {
 
     @Override
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
+        System.out.println(bindingData.getPayload());
         AsyncFileTransferFactory.getInstance().getReceiver().receive(bindingData.getPayload());
     }
 }

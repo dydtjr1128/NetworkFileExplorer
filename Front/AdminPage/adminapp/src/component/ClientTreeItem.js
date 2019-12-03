@@ -33,7 +33,6 @@ const ClientTreeItem = observer((props) => {
         else {
             //console.log("request!")
             getDirectores(ip, path).then(response => {
-                var array = [];
                 if (response === null)
                     alert("빈 폴더 입니다.!")
                 else {

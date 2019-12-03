@@ -21,10 +21,8 @@ public class GetListProtocol extends Protocol {
         List<ClientFile> clientFiles = FileManager.getInstance().getListByPath(bindingData.getPayload());
         Gson gson = new Gson();
         String json = gson.toJson(clientFiles);
-        System.out.println(json);
         ByteBuffer byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.GET_LIST, json);
         asc.write(byteBuffer);
-
-        System.out.println(System.currentTimeMillis() - t + "@@@");
+        System.out.println(System.currentTimeMillis() - t + "ms");
     }
 }

@@ -17,7 +17,6 @@ public class MoveProtocol extends Protocol {
         String temp[] = bindingData.getPayload().split("\\|");
         String fromPath = temp[0];
         String toPath = temp[1];
-        System.out.println(fromPath + " " + toPath);
         ByteBuffer byteBuffer;
         if (FileManager.getInstance().moveFile(fromPath, toPath)) {
             byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.MOVE, "s");

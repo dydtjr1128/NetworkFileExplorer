@@ -1,11 +1,10 @@
 import { observable } from 'mobx';
 import { faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ClientStore = observable({
     client_list: [],
     currentClientIP: '',
-    currentClientPath: 'C:\\',
+    currentClientPath: '',
     getParentPath: function () {
         if (this.isRoot()) {
             return this.currentClientPath;

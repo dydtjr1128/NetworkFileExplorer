@@ -15,7 +15,7 @@ public class FileManager {
     }
 
     public List<ClientFile> getListByPath(String path) {
-        long t = System.currentTimeMillis();
+        System.out.println("getListByPath : " + path);
         final List<ClientFile> result = new ArrayList<>();
         if (path.equals("root")) {
             for (Path p : FileSystems.getDefault().getRootDirectories()) {
@@ -37,7 +37,6 @@ public class FileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println(System.currentTimeMillis() - t + "@@@");
         return result;
     }
 
@@ -45,7 +44,7 @@ public class FileManager {
         File sourceFile = new File(fromPath);
 
         File destFile = new File(sourceFile.getParent() + "\\" + name);
-        System.out.println(sourceFile + " " + destFile);
+        System.out.println("changeFileName : " + sourceFile + " " + destFile);
 
         if (sourceFile.renameTo(destFile)) {
             System.out.println("File renamed successfully");
@@ -111,7 +110,6 @@ public class FileManager {
     }
 
     public boolean moveFile(String fromPath, String toPath) {
-        System.out.println(fromPath + " " + toPath);
         int idx = fromPath.lastIndexOf("\\");
         String filename = fromPath.substring(idx + 1);
         Path sourcePath = Paths.get(fromPath);

@@ -5,7 +5,6 @@ import file.FileAction;
 import org.xerial.snappy.Snappy;
 import protocol.core.NFEProtocol;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -15,9 +14,9 @@ import java.nio.channels.CompletionHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class FileReceiver {
     private final String ip;
@@ -28,9 +27,9 @@ public class FileReceiver {
         this.port = port;
     }
 
-
     public void receive(final String storePath) throws IOException {
-        final ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_BYTE);
+        System.out.println("Receive file to" + storePath);
+        final ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_FILE_BYTE);
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
         channel.connect(new InetSocketAddress(ip, port), channel, new CompletionHandler<Void, AsynchronousSocketChannel>() {
             @Override
@@ -45,7 +44,7 @@ public class FileReceiver {
                     e.printStackTrace();
                 }
                 dataBuffer.clear();
-                writeToFile(channel, dataBuffer, storePath);
+                readFileFromServer(channel, dataBuffer, storePath);
             }
 
             @Override
@@ -56,7 +55,7 @@ public class FileReceiver {
 
     }
 
-    public void writeToFile(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, String storePath) {
+    public void readFileFromServer(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, String storePath) {
         channel.read(dataBuffer, new Attachment(), new CompletionHandler<Integer, Attachment>() {
 
             @Override
@@ -71,10 +70,10 @@ public class FileReceiver {
                         string = Snappy.uncompressString(bytes);
                         if (string.contains(Config.END_MESSAGE_MARKER)) {
                             readData.calcFileData(string);
-                            /*Path path = Paths.get(Config.FILE_STORE_PATH + readData.getFileName());
-                            if (Files.notExists(Paths.get(Config.FILE_STORE_PATH))) {
+                            Path path = Paths.get(storePath + "\\" + readData.getFileName());
+                            if (Files.notExists(Paths.get(storePath))) {
                                 try {
-                                    Files.createDirectories(Paths.get(Config.FILE_STORE_PATH));
+                                    Files.createDirectories(Paths.get(storePath));
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -89,31 +88,63 @@ public class FileReceiver {
                             } else {
                                 close(channel, readData.getFileChannel());
                                 System.out.println("Download err!");
-                                return;
-                            }*/
-                        } else {
-                            writeToFile(readData, dataBuffer, result);
+                            }
                         }
-                    } catch (Exception e) {
+                    } catch (IOException e) {
                         e.printStackTrace();
+                        close(channel, readData.getFileChannel());
                     }
                 }
-                dataBuffer.clear();
-                channel.read(dataBuffer, readData, this);
+
             }
 
             @Override
             public void failed(final Throwable exc, final Attachment attachment) {
                 close(channel, null);
-                System.out.println("file client exit");
+                System.out.println("fail!");
             }
         });
     }
 
-    public void writeToFile(Attachment attachment, ByteBuffer buffer, int result) {
-        Future<Integer> operation = attachment.getFileChannel().write(buffer, attachment.getReadPosition());
-        while (!operation.isDone()) ;
-        attachment.addPosition(result);
+    public void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) {
+        channel.read(dataBuffer, attachment, new CompletionHandler<Integer, Attachment>() {
+
+                    @Override
+                    public void completed(Integer result, Attachment attachment) {
+                        if (result > 0) {
+                            dataBuffer.flip();
+                            try {
+                                Future<Integer> operation = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
+                                operation.get(10, TimeUnit.SECONDS);
+                            } catch (Exception e) {
+                                System.out.println("timeout");
+                                e.printStackTrace();
+                            }
+                            attachment.addPosition(result);
+                            if (attachment.getReadPosition() == attachment.getFileSize()) {
+                                System.out.println("[Download success!] : " + attachment.getFileName());
+                                try {
+                                    channel.close();
+                                    attachment.getFileChannel().close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                return;
+                            } else if (attachment.getReadPosition() > attachment.getFileSize()) {
+                                System.out.println("err!");
+                                return;
+                            }
+                            dataBuffer.clear();
+                            channel.read(dataBuffer, attachment, this);
+                        }
+                    }
+
+                    @Override
+                    public void failed(Throwable exc, Attachment attachment) {
+                        System.out.println("err!");
+                    }
+                }
+        );
     }
 
     public void close(AsynchronousSocketChannel channel, AsynchronousFileChannel fileChannel) {
@@ -127,5 +158,6 @@ public class FileReceiver {
             System.out.println("FileServer close err!");
         }
     }
+
 
 }

@@ -91,6 +91,9 @@ export function fileTransferServer2Client(ip, serverPath, ClientPath) {
     if (ip === '' || serverPath === '' || ClientPath === '') {
         alert("fileTransferServer2Client err")
     }
+    if(serverPath.charAt(0) === "\\"){
+        serverPath = serverPath.substring(1);
+    }
     const url = API_BASE_URL + "/admin/upload/" + ip + "/" + serverPath.replace(/\\/g, "|") + "/" + ClientPath.replace(/\\/g, "|");
     const requestData = {
         method: 'POST'

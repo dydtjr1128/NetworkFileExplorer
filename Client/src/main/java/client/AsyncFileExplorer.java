@@ -14,10 +14,11 @@ import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AsyncFileExplorer implements Runnable {
+public class AsyncFileExplorer {
     private final AsynchronousChannelGroup channelGroup;
     private final AsynchronousSocketChannel asc;
     private AtomicInteger readAtomicInteger = new AtomicInteger(0);
+
     public AsyncFileExplorer(String ip, int port) throws IOException {
         channelGroup = AsynchronousChannelGroup.withFixedThreadPool(
                 Runtime.getRuntime().availableProcessors(), Executors.defaultThreadFactory()
@@ -40,17 +41,6 @@ public class AsyncFileExplorer implements Runnable {
         return AsynchronousSocketChannel.open(channelGroup);
     }
 
-    @Override
-    public void run() {
-        /*String msg = "hello" + sendAtomicInteger;
-        try {
-            ByteBuffer byteBuffer = NFEProtocol.makeTransferData(NFEProtocol.GET_LIST, msg);
-            sendAtomicInteger.getAndIncrement();
-            sendMessageToServer(byteBuffer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-    }
 
     private void startRead() {
         ByteBuffer input = ByteBuffer.allocate(NFEProtocol.NETWORK_BYTE);
@@ -64,7 +54,6 @@ public class AsyncFileExplorer implements Runnable {
 
             @Override
             public void completed(Integer result, ByteBuffer buffer) {
-                System.out.println("result : " + result + " " + buffer.position() + " ");
                 if (result < 1) {
                     System.out.println("remain?");
                 } else {

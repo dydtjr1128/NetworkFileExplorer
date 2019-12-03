@@ -9,7 +9,8 @@ import { faPenSquare, faDownload, faUpload } from '@fortawesome/free-solid-svg-i
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileNameChangeModal from './modal/FileNameChangeModal'
 import DeleteFileConfirmModal from './modal/DeleteFileConfirmModal'
-import { fileTransferServer2Client, fileTransferClient2Server } from '../util/APIUtils'
+import FileUploadModal from './modal/FileUploadModal'
+import { fileTransferClient2Server } from '../util/APIUtils'
 import { observer } from 'mobx-react';
 import useStores from '../util/useStore'
 
@@ -21,25 +22,14 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  // headerPaper: {
-  //   display: 'flex',
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   padding: '0px 10px',
-  //   width: '100%',
-  //   height: '100%'
-  // },
-  iconbutton: {
-  }
 }));
 
 const TableHeader = observer((props) => {
   const classes = useStyles();
   const [fileNameChangeModalVisible, setFileNameChangeModal] = React.useState(false);
   const [deleteFileComformModalVisible, setDeleteFileComformModal] = React.useState(false);
-  const [selectedFileName, setSelectedFileName] = React.useState(null);
+  const [fileUploadModalVisible, setFileUploadModalVisible] = React.useState(false);
   const { store } = useStores()
-  let fileUploader = null;
 
   function validation() {
     if (store.selectedPath === '') {
@@ -77,8 +67,12 @@ const TableHeader = observer((props) => {
     }
   }
 
-  function onClickFileUpload(event) {    
-      fileUploader.click();    
+  function onClickFileUpload(event) {
+    if (store.currentClientPath === '') {
+      alert("선택된 파일이 없습니다.")
+      return false;
+    }
+    setFileUploadModalVisible(true);
   }
 
   function onClickFileDelete(event) {
@@ -86,12 +80,6 @@ const TableHeader = observer((props) => {
       setDeleteFileComformModal(true)
     }
   }
-
-  function onFileChange(event){
-    setSelectedFileName(event.target.files[0]);
-    console.log('file!!', event.target.files[0], selectedFileName);
-    //fileUpload(e.target.files);
-  };
 
   return (
     <div className={classes.headerroot}>
@@ -113,6 +101,7 @@ const TableHeader = observer((props) => {
                 <FontAwesomeIcon icon={faPenSquare} />}>
               이름 변경
           </Button>
+
             <Button
               variant="contained"
               color="primary" aria-label="FILE_UPLOAD" component="span" className={classes.iconbutton} onClick={(event) => onClickFileDownload(event)} startIcon={
@@ -120,12 +109,10 @@ const TableHeader = observer((props) => {
               다운로드
           </Button>
 
-
             <Button
               variant="contained"
               color="primary" aria-label="FILE_DOWNLOAD" component="span" className={classes.iconbutton} onClick={(event) => onClickFileUpload(event)} startIcon={
                 <FontAwesomeIcon icon={faUpload} />}>
-
               업로드
           </Button>
 
@@ -140,14 +127,9 @@ const TableHeader = observer((props) => {
         </Grid>
 
       </Grid>
-      <input
-        ref={(input) => { fileUploader = input; }}
-        type="file"
-        onChange={onFileChange}
-        style={{ display: "none" }}
-      />
       <FileNameChangeModal open={fileNameChangeModalVisible} setOpen={function () { setFileNameChangeModal(false) }} />
       <DeleteFileConfirmModal open={deleteFileComformModalVisible} setOpen={function () { setDeleteFileComformModal(false) }} />
+      <FileUploadModal open={fileUploadModalVisible} setOpen={function () { setFileUploadModalVisible(false) }} />
     </div>
   );
 })

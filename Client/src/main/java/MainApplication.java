@@ -8,9 +8,13 @@ import java.io.IOException;
 
 public class MainApplication {
     public static void main(String[] args) throws IOException {
-        String path = System.getProperty("user.dir");
-
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(path + "/src/main/resources/config.json"));
+        BufferedReader bufferedReader;
+        if(args.length == 1){
+            bufferedReader = new BufferedReader(new FileReader(args[0]));
+        } else {
+            String path = System.getProperty("user.dir");
+            bufferedReader = new BufferedReader(new FileReader(path + "/src/main/resources/config.json"));
+        }
 
         Gson gson = new Gson();
         Config config = gson.fromJson(bufferedReader, Config.class);

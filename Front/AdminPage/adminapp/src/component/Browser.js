@@ -52,15 +52,6 @@ export default function Browser() {
         }
     }
 
-    const sendMessage = (newMessage) => {
-        try {
-            adminRef.sendMessage("/app/message", JSON.stringify(newMessage));
-            return true;
-        } catch (e) {
-            return false;
-        }
-    }
-
     function onConnect() {
         getClients().then(response => {
             store.client_list = store.client_list.concat(response).sort();

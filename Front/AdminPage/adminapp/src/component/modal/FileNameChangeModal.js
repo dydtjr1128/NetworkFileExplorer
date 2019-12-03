@@ -52,9 +52,9 @@ export default function FileNameChangeModal(props) {
     };
     function requestChangeFileName(event) {
         changeFileName(store.selectedIP, store.selectedPath, name).then(response => {
-            alert("이름 변경 성공!")
+            alert("이름 변경 성공!")            
+            store.currentDirectoriesList[store.selectedIndex].f = name;            
             store.clearSelectedData();
-            store.currentDirectoriesList[store.selectedIndex].f = name;
         }).catch(error => {
             alert(error)
             if (error.status === 401) {

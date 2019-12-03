@@ -11,9 +11,9 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import {fileTransferServer2Client, fileTransferClient2Server} from '../util/APIUtils'
+import { fileTransferClient2Server } from '../util/APIUtils'
 import { observer } from 'mobx-react';
-import { faFolder, faFile, faReply, faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faFile, faReply} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -297,6 +297,7 @@ const DirectoryTable = observer((props) => {
     store.selectedIP = store.currentClientIP;
     store.selectedType = row.t;
     store.selectedIndex = index;
+    console.log(index)
     setSelected(row.f);
   };
 
@@ -357,7 +358,6 @@ const DirectoryTable = observer((props) => {
   const moveParentDirectory = (event, name) => {
     if (!store.isRoot()) {//루트 전까지만 이동
       getDirectores(store.currentClientIP, store.getParentPath()).then(response => {
-        var array = [];
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
         else {
