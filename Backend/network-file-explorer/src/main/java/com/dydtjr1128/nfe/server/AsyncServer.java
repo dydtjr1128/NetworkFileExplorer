@@ -1,7 +1,8 @@
 package com.dydtjr1128.nfe.server;
 
-import com.dydtjr1128.nfe.server.config.Config;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
+import com.dydtjr1128.nfe.server.config.Config;
+import com.dydtjr1128.nfe.server.fileserver.SendData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +61,7 @@ public class AsyncServer implements Runnable {
         try {
             channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
         } catch (IOException e) {
+            logger.debug("",e);
             // ignore
         }
         ClientManager.getInstance().addClient(client);

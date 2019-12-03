@@ -19,18 +19,18 @@ class Attachment {
         readPosition = 0;
     }
 
-    public void calcFileData(String string) {
+    void calcFileData(String string) {
         System.out.println("@ " + string);
         String temp[] = string.replace(Config.END_MESSAGE_MARKER, "").split(Config.MESSAGE_DELIMITTER.replace("|", "\\|"));
         fileName = temp[0];
         fileSize = Long.parseLong(temp[1]);
     }
 
-    public void addPosition(int position) {
+    void addPosition(int position) {
         readPosition += position;
     }
 
-    public void openFileChannel(Path path) throws IOException {
+    void openFileChannel(Path path) throws IOException {
         System.out.println("openFileChannel!");
         fileChannel = AsynchronousFileChannel.open(
                 path,

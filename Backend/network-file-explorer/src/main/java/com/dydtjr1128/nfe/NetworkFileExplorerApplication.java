@@ -20,8 +20,7 @@ public class NetworkFileExplorerApplication {
         try {
             serverManager.startServer();
         } catch (IOException e) {
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            logger.error("",e);
         }
     }
 

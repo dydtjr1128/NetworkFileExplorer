@@ -39,11 +39,8 @@ public class ClientDataReceiver {
 
             @Override
             public void failed(Throwable exc, ByteBuffer buffer) {
-                System.out.println("1");
                 client.close();
-                System.out.println("2");
                 ClientManager.getInstance().removeClient(client);
-                System.out.println("3");
 
             }
         });

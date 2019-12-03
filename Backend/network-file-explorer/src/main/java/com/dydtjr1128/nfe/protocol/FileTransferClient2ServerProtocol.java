@@ -16,6 +16,6 @@ public class FileTransferClient2ServerProtocol extends Protocol {
 
     @Override
     public void executeProtocolToAdmin(Client client, BindingData bindingData) {
-        System.out.println("여기 안들어옴");
+
     }
 }

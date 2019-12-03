@@ -26,6 +26,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
 
         return Jwts.builder()
+                .setHeaderParam("typ", "JWT")
                 .setSubject(Long.toString(123))
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)

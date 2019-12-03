@@ -3,7 +3,6 @@ package com.dydtjr1128.nfe.server;
 import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import com.dydtjr1128.nfe.protocol.core.ProtocolConverter;
-import com.dydtjr1128.nfe.server.fileserver.FileAction;
 import com.dydtjr1128.nfe.server.fileserver.TransferFileMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +13,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -48,7 +44,7 @@ public class Client {
 
     public void setFilePathQueue(String serverPath, String clientPath) {
         synchronized (filePathQueue) {
-            filePathQueue.add(new TransferFileMetaData(serverPath,clientPath));
+            filePathQueue.add(new TransferFileMetaData(serverPath, clientPath));
         }
     }
 
@@ -74,28 +70,21 @@ public class Client {
             isWriting = byteBuffer != null;
         }
         if (isWriting) {
-            //System.out.println("가능");
             writeData(byteBuffer);
-        } else {
-            //System.out.println("불가능");
         }
     }
 
     private void writeData(ByteBuffer buffer) {
-        //buffer.flip();
-        System.out.println("@@" + new String(buffer.array()));
         socketChannel.write(buffer, buffer, new CompletionHandler<Integer, ByteBuffer>() {
             @Override
             public void completed(Integer result, ByteBuffer resultBuffer) {
                 if (buffer.hasRemaining()) {
-                    System.out.println("@@@" + StandardCharsets.UTF_8.decode(resultBuffer).toString());
+                    logger.debug("[Message write] : " + StandardCharsets.UTF_8.decode(resultBuffer).toString());
                     socketChannel.write(buffer, resultBuffer, this);
                 } else {
-                    System.out.println("@@@!" + StandardCharsets.UTF_8.decode(resultBuffer).toString());
                     loadAndWriteMessage();
                     // Go back and check if there is new data to write
                 }
-
             }
 
             @Override
@@ -107,22 +96,18 @@ public class Client {
     public void writeStringMessage(byte protocol, String msg) {
         try {
             ByteBuffer byteBuffer = ProtocolConverter.makeTransferData(protocol, msg);
-            sendMessageToClient(byteBuffer/*ByteBuffer.wrap(string.getBytes())*/);
+            sendMessageToClient(byteBuffer);
         } catch (IOException e) {
             e.getStackTrace();
         }
     }
 
     public String getClientURL() {
-
         return inetSocketAddress.getAddress().toString() + "/" + inetSocketAddress.getPort();
-
     }
 
     public String getClientIP() {
-
         return inetSocketAddress.getAddress().toString().substring(1);
-
     }
 
     public void run() {
@@ -173,7 +158,7 @@ public class Client {
     }
 
     public void uploadToClient(String serverFilePath, String clientFilePath) {
-        setFilePathQueue(serverFilePath,clientFilePath);
+        setFilePathQueue(serverFilePath, clientFilePath);
         writeStringMessage(NFEProtocol.FILE_UPLOAD, clientFilePath);
     }
 
