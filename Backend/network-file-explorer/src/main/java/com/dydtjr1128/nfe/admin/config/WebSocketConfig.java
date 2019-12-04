@@ -20,6 +20,7 @@ import java.util.List;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private List<WebSocketSession> lastSession = new ArrayList<>();
+
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
         registry.addDecoratorFactory(new WebSocketHandlerDecoratorFactory() {
@@ -29,7 +30,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     @Override
                     public void afterConnectionEstablished(final WebSocketSession session) throws Exception {
                         for (WebSocketSession webSocketSession : lastSession) {
-                            if(webSocketSession.isOpen())
+                            if (webSocketSession.isOpen())
                                 webSocketSession.close(CloseStatus.NOT_ACCEPTABLE);
                         }
                         lastSession.add(session);

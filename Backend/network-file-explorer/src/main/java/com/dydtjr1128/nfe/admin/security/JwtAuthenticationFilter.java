@@ -29,31 +29,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+    private static final String JWT_HEADER = "Authorization";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = getJwtFromRequest(request);
+            String jwt = tokenProvider.getJwtFromRequest(request, JWT_HEADER);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 logger.debug("[Get JWT]");
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("admin", "password");
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else if(jwt != null){
+                logger.debug("[Excepted JWT]" + jwt);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, jwt);
             }
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);
         }
 
         filterChain.doFilter(request, response);
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String splitToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(splitToken) && splitToken.startsWith("Bearer ")) {
-            return splitToken.substring(7, splitToken.length());
-        }
-        return null;
     }
 }

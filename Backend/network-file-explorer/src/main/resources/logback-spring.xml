@@ -28,24 +28,16 @@
         <!-- 파일을 덮어쓰는 정책 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
             <FileNamePattern>C:\NFE_LOG\NFE_log.%i.log.zip</FileNamePattern>
-            <!--
-                MinIndex가 1이고, MaxIndex가 10이므로, 위의 파일 이름 패턴에 따라 아래의 로그 파일이 생길 것이다.
-                logexample2.1.log.zip   logexample2.2.log.zip  .... logexample2.10.log.zip
-                이 상태에서 또 10KB가 넘으면 logexample2.1.log.zip이 된다.-->
             <MinIndex>1</MinIndex>
             <MaxIndex>10</MaxIndex>
         </rollingPolicy>
     </appender>
-    <!--
-             com.victolee.logExample 아래 패키지 로그들만  consoleAppender, fileAppender 방법으로 로그를 남긴다.
-             물론 <appender-ref ref="consoleAppender" />를 추가하여 콘솔로도 로그를 남길 수 있다.
-    -->
 
     <logger name="com.dydtjr1128.nfe"  level="debug" additivity="false">
         <appender-ref ref="consoleAppender" />
         <appender-ref ref="fileAppender" />
     </logger>
-    <!-- root는 글로벌 로거를 의미하며, 위의 logger에 해당하지 않으면 root 로거가 실행된다. -->
+
     <root level="debug">
         <appender-ref ref="consoleAppender" />
     </root>

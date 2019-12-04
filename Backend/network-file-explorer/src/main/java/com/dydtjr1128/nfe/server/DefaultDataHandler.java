@@ -11,12 +11,10 @@ import java.nio.ByteBuffer;
 
 public class DefaultDataHandler implements ClientDataHandler {
     private static final Logger logger = LoggerFactory.getLogger(DefaultDataHandler.class);
-
     @Override
     public void onDataReceive(Client client, ByteBuffer byteBuffer, int result) throws IOException {
-        byteBuffer.flip();
         try {
-            BindingData bindingData = ProtocolConverter.convertData(byteBuffer);
+            BindingData bindingData = ProtocolConverter.convertData(byteBuffer,result);
             ProtocolManager.getInstance().executeProtocolToAdmin(client, bindingData);
         } catch (IOException e) {
             e.printStackTrace();

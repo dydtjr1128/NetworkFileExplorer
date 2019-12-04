@@ -3,44 +3,50 @@ package com.dydtjr1128.nfe.admin.security;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+    private static final String jwtSecret = "JWTSuperSecretKey";
+    private static final int jwtExpirationSecond = 60 * 60;
 
-    @Value("${app.jwtSecret}")
-    private String jwtSecret;
-
-    @Value("${app.jwtExpirationInMs}")
-    private int jwtExpirationInMs;
-
-    public String generateToken(Authentication authentication) {
-
+    public String generateToken() {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+        Date expiryDate = new Date(now.getTime() + (jwtExpirationSecond * 1000));
 
         return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
-                .setSubject(Long.toString(123))
-                .setIssuedAt(new Date())
+                .setSubject("Admin access token")
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
-    public Long getUserIdFromJWT(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
+    public Boolean isTokenExpired(String jwt) {
+        try {
+            Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody();
+            Date exp = claims.getExpiration();
+            Date now = new Date();
+            System.out.println("@@ " + exp + " " + now);
+            if (exp.after(now))
+                return false;
 
-        return Long.parseLong(claims.getSubject());
+        } catch (ExpiredJwtException exception) {
+            logger.info("Token is expired", exception);
+            return true;
+        } catch (JwtException exception) {
+            logger.info("Token is different", exception);
+            return true;
+        }
+        logger.error("Token is null");
+        return true;
     }
 
     public boolean validateToken(String authToken) {
@@ -59,5 +65,20 @@ public class JwtTokenProvider {
             logger.error("JWT claims string is empty.");
         }
         return false;
+    }
+
+    public String getJwtFromString(String fullToken) {
+        if (StringUtils.hasText(fullToken) && fullToken.startsWith("Bearer ")) {
+            return fullToken.substring(7);
+        }
+        return null;
+    }
+
+    String getJwtFromRequest(HttpServletRequest request, String headerKey) {
+        String splitToken = request.getHeader(headerKey);
+        if (StringUtils.hasText(splitToken) && splitToken.startsWith("Bearer ")) {
+            return splitToken.substring(7);
+        }
+        return null;
     }
 }

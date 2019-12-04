@@ -56,7 +56,7 @@ public class AsyncServer implements Runnable {
     }
 
     private void handleNewConnection(AsynchronousSocketChannel channel) throws IOException {
-        Client client = new Client(channel, new ClientDataReceiver(this, new DefaultDataHandler()));
+        Client client = new Client(channel,  new DefaultDataHandler());
         logger.debug("[New client connected] : " + client.getClientIP());
         try {
             channel.setOption(StandardSocketOptions.TCP_NODELAY, true);

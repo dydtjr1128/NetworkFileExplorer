@@ -13,7 +13,7 @@ public class SendData {
     long readPosition;
     ByteBuffer buffer;
 
-    public void addPosition(int position) {
+    void addPosition(int position) {
         readPosition += position;
     }
 }

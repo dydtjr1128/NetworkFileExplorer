@@ -7,7 +7,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 
 public abstract class Protocol {
     private Gson gson;
-    public Protocol(){
+    protected Protocol(){
         gson = new Gson();;
     }
 
