@@ -9,6 +9,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import useStores from '../util/useStore'
+import { validationToken } from '../util/APIUtils'
+import { useHistory } from "react-router-dom";
+import { ACCESS_TOKEN } from '../util/Constants';
 
 const useStyles = makeStyles(theme => ({
   '@global': {
@@ -36,16 +40,28 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignIn(props) {
-  const classes = useStyles();  
+  const classes = useStyles();
   const [userID, setUserID] = React.useState();
   const [userPassword, setUserPassword] = React.useState();
-  
+  const { store } = useStores();
+  const history = useHistory();
 
-  function onSubmit(e){
+  function onSubmit(e) {
     e.preventDefault()
-       
+
     props.handleLogin(userID, userPassword)
   }
+  React.useEffect(() => {
+    if (localStorage.getItem(ACCESS_TOKEN)) {
+      validationToken().then(response => {
+        console.log("token valid!")
+        history.push('/explorer')
+      }).catch(error => {
+        console.log(error.status + " not authenticated")
+      });
+    }
+  });
+  store.reset();
 
   return (
     <Container component="main" maxWidth="xs">
@@ -67,7 +83,7 @@ export default function SignIn(props) {
             label="Admin ID"
             name="id"
             autoComplete="ID"
-            onChange={e => setUserID(e.target.value)}            
+            onChange={e => setUserID(e.target.value)}
             autoFocus
           />
           <TextField
@@ -79,7 +95,7 @@ export default function SignIn(props) {
             label="Password"
             type="password"
             id="password"
-            onChange={e => setUserPassword(e.target.value)}            
+            onChange={e => setUserPassword(e.target.value)}
             autoComplete="current-password"
           />
           <FormControlLabel

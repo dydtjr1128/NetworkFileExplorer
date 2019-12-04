@@ -33,6 +33,8 @@ function desc(a, b, orderBy) {
 }
 
 function stableSort(array, cmp) {
+  if(array === undefined) 
+      return [];
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -422,7 +424,7 @@ const DirectoryTable = observer((props) => {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={store.currentDirectoriesList.length}
+              rowCount={store.currentDirectoriesList === [] ? store.currentDirectoriesList.length : 0}
             />
             <TableBody className="disable-select">
               <TableRow
@@ -462,7 +464,7 @@ const DirectoryTable = observer((props) => {
                       </TableCell>
                       <TableCell>{formatDate(new Date(row.m))}</TableCell>
                       <TableCell>{row.t}</TableCell>
-                      <TableCell align="right">{row.s === 0 ? '' : numberWithCommas(row.s) + 'KB'}</TableCell>
+                      <TableCell align="right">{row.t === '파일 폴더' ? '' : numberWithCommas(row.s) + 'KB'}</TableCell>
                     </TableRow>
                   );
                 })}

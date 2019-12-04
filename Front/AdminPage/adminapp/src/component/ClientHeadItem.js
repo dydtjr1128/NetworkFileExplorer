@@ -5,23 +5,21 @@ import { faDesktop } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDirectores } from "../util/APIUtils"
 import ClientTreeItem from './ClientTreeItem'
+import useStores from '../util/useStore'
 
 const ClientHeadItem = observer((props) => {
-    const { labelText, ...other } = props
-    const path = labelText;
+    const { path, ...other } = props
     const [directories, setDirectories] = React.useState([]);
+    const { store } = useStores();
 
     function onClick() {
-        //store.addExpanded(labelText)
         getDirectores(path, "root").then(response => {
-            response["here"] = path
-            var array = [];
+            //response["here"] = path
+            // var array = [];
             response.map((dir, index) => {
-                if (dir.i) {
-                    array.push(dir.f);
-                }
+                store.root_drive.push(dir.f);
             });
-            setDirectories(array);
+            setDirectories(response);
         }).catch(error => {
             if (error.status === 401) {
                 alert('Not authenticated')
@@ -31,18 +29,18 @@ const ClientHeadItem = observer((props) => {
         });
     }
 
-    return (        
+    return (
         <TreeItem label={
-            <span className="disable-select"><FontAwesomeIcon icon={faDesktop} size='1x' style={{ marginRight: '7px' }} />{labelText}</span>
-        }            
+            <span className="disable-select"><FontAwesomeIcon icon={faDesktop} size='1x' style={{ marginRight: '7px' }} />{path}</span>
+        }
             onClick={onClick}
-            {...other} >                
+            {...other} >
             {directories.map((row, index) => {
                 return (
-                    <ClientTreeItem match={{ ip: labelText, name: row, absolutepath: row, nodeId:path + "\\" + row }} key={path + "\\" + row} />
+                    <ClientTreeItem match={{ ip: path, name: row.f, absolutepath: row.f, nodeId: path + "\\" + row.f }} key={path + "\\" + row.f} />
                 );
             })
-        }
+            }
         </TreeItem>
     );
 

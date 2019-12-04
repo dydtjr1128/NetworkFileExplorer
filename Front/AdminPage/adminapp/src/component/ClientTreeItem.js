@@ -21,17 +21,12 @@ const ClientTreeItem = observer((props) => {
         store.currentDirectoriesList = res;
     }
 
-    function onClickClient(e) {
-        //console.log(match.nodeId + "@@@" + ip + "@" + path + "@" + name);
-        // console.log("=========")
-        // console.log(e.target.parentElement.parentElement)
-        if (responsedData.length > 0) {
+    function onClickClient(e) {        
+        if(responsedData === undefined) return;
+        else if (responsedData.length > 0) {
             setGlobalData(responsedData);
-            //store.addExpanded(match.nodeId)       
-            //console.log("로컬!")
         }
         else {
-            //console.log("request!")
             getDirectores(ip, path).then(response => {
                 if (response === null)
                     alert("빈 폴더 입니다.!")

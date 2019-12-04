@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 import { faShareSquare, faCopy } from '@fortawesome/free-solid-svg-icons'
 
 const ClientStore = observable({
+    root_drive: [],
     client_list: [],
     currentClientIP: '',
     currentClientPath: '',
@@ -13,9 +14,15 @@ const ClientStore = observable({
         }
     },
     isRoot: function () {
-        return this.currentClientPath.substring(1) === ":\\";
+        return this.root_drive.includes(this.currentClientPath);
     },
     currentDirectoriesList: [],//data
+    clearClient: function () {
+        this.currentClientIP = '';
+        this.currentClientPath = '';
+        this.currentDirectoriesList = [];
+        this.clearSelectedData();
+    },
     selectedIP: '',
     selectedPath: '',
     selectedIndex: 0,
@@ -28,7 +35,7 @@ const ClientStore = observable({
         this.selectedIndex = 0;
         this.selectedAction = '';
     },
-    copymoveDataJson : null,
+    copymoveDataJson: null,
     copymoveData: {
         path: '',
         fileName: '',
@@ -71,6 +78,20 @@ const ClientStore = observable({
             this.expanded.splice(index, 1);
         }
     },
+    reset: function (data) {
+        this.root_drive = [];
+        this.client_list = [];
+        this.currentClientIP = '';
+        this.currentClientPath = '';
+        this.currentDirectoriesList = [];//data
+        this.selectedIP = '';
+        this.selectedPath = '';
+        this.selectedIndex = 0;
+        this.selectedType = '';
+        this.selectedAction = '';
+        this.copymoveDataJson = null;
+        this.expanded = [];
+    }
 });
 // class ClientStore2 {
 //     @observable client_list = [];

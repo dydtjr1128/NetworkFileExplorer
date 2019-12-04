@@ -45,6 +45,9 @@ export default function Browser() {
         } else if (msg.state === 1) { // rmove
             var index = store.client_list.indexOf(msg.message);
             if (index !== -1) {
+                if(msg.message === store.currentClientIP){
+                    store.clearClient();
+                }
                 store.client_list.splice(index, 1);
             }
         } else if(msg.state === 2 || msg.state ===3) { // download success or fail
@@ -61,10 +64,7 @@ export default function Browser() {
             } else {
                 alert(error.message || 'Sorry! Something went wrong. Please try again!')
             }
-        });
-        insert("123.123.123.123")
-        insert("123.123.123.123")
-        insert("192.199.199.199")
+        });        
         console.log("connect!")
     }
 
@@ -75,7 +75,7 @@ export default function Browser() {
     function onConnectFailure() {
         console.log("onConnectFailure!")
         adminRef.disconnect()
-        history.push('/')
+        document.location.href = "/"
         alert("연결이 끊겼습니다!\n다른 이용자가 로그인 하였거나 서버에 문제가 발생하였습니다.")
 
     }

@@ -13,7 +13,7 @@ const Client = observer((props) => {
             defaultExpandIcon={<ArrowDropUpIcon />}
             defaultEndIcon={<div style={{ width: 24 }} />}
         >
-            <ClientHeadItem nodeId={props.clientIP} labelText={props.clientIP} id={props.clientIP} className="disable-select" />
+            <ClientHeadItem nodeId={props.clientIP} path={props.clientIP} id={props.clientIP} className="disable-select" />
 
         </TreeView>
     );

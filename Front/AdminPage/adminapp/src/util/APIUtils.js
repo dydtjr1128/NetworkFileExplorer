@@ -13,12 +13,19 @@ const request = (url, options) => {
     return fetch(url, options)
         .then(response =>
             response.json().then(json => {
+                console.log(response)
                 if (!response.ok) {
                     return Promise.reject(json);
                 }
                 return json;
             })
-        );
+        ).catch(error => {
+            if (error.status === 401) {
+                localStorage.removeItem(ACCESS_TOKEN)
+                document.location.href = "/"
+                alert('Not authenticated')
+            }
+        });
 
 };
 
@@ -34,6 +41,15 @@ export function login(id, pw) {
     return request(url, requestData);
 }
 
+export function validationToken() {
+    const url = API_BASE_URL + "/auth/token"
+    const requestData = {
+        method: 'GET'
+    }
+    return request(url, requestData);
+}
+
+
 export function getClients() {
     const url = API_BASE_URL + "/admin/clients"
     const requestData = {
@@ -42,8 +58,17 @@ export function getClients() {
     return request(url, requestData);
 }
 
+function ipPortToIp(ipPort){
+    return ipPort//.substring(0,ipPort.indexOf(":"))
+}
+
+function pathFormatting(path){
+    return path.replace(/\\/g, "|").replace(/\//g,"|");
+}
+
 export function getDirectores(ip, path) {
-    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + path.replace(/\\/g, "|");
+    const url = API_BASE_URL + "/admin/directory/" + ipPortToIp(ip) + "/" + pathFormatting(path);
+    console.log("get d ! : " + path + " " + url)
     const requestData = {
         method: 'GET'
     }
@@ -51,7 +76,7 @@ export function getDirectores(ip, path) {
 }
 
 export function changeFileName(ip, fromPath, toName) {
-    const url = API_BASE_URL + "/admin/directory/change/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toName;
+    const url = API_BASE_URL + "/admin/directory/change/" + ipPortToIp(ip) + "/" + pathFormatting(fromPath) + "/" + toName;
     const requestData = {
         method: 'PUT'
     }
@@ -59,17 +84,18 @@ export function changeFileName(ip, fromPath, toName) {
 }
 
 export function deleteFile(ip, deleteFilePath) {
-    const url = API_BASE_URL + "/admin/directory/" + ip + "/" + deleteFilePath.replace(/\\/g, "|");
+    const url = API_BASE_URL + "/admin/directory/" + ipPortToIp(ip) + "/" + pathFormatting(deleteFilePath);
     const requestData = {
         method: 'DELETE'
     }
     return request(url, requestData);
 }
 export function copyFile(ip, fromPath, toPath) {
+    ip = ipPortToIp(ip);
     if (ip === '' || fromPath === '' || toPath === '') {
         alert("copyFile err")
     }
-    const url = API_BASE_URL + "/admin/directory/copy/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toPath.replace(/\\/g, "|");
+    const url = API_BASE_URL + "/admin/directory/copy/" + ip + "/" + pathFormatting(fromPath) + "/" + pathFormatting(toPath);
     const requestData = {
         method: 'PUT'
     }
@@ -77,24 +103,26 @@ export function copyFile(ip, fromPath, toPath) {
 }
 
 export function moveFile(ip, fromPath, toPath) {
+    ip = ipPortToIp(ip);
     if (ip === '' || fromPath === '' || toPath === '') {
         alert("moveFile err")
     }
-    const url = API_BASE_URL + "/admin/directory/move/" + ip + "/" + fromPath.replace(/\\/g, "|") + "/" + toPath.replace(/\\/g, "|");
+    const url = API_BASE_URL + "/admin/directory/move/" + ip + "/" + pathFormatting(fromPath) + "/" + pathFormatting(toPath);
     const requestData = {
         method: 'PUT'
     }
     return request(url, requestData);
 }
 
-export function fileTransferServer2Client(ip, serverPath, ClientPath) {
-    if (ip === '' || serverPath === '' || ClientPath === '') {
+export function fileTransferServer2Client(ip, serverPath, clientPath) {
+    ip = ipPortToIp(ip);
+    if (ip === '' || serverPath === '' || clientPath === '') {
         alert("fileTransferServer2Client err")
     }
-    if(serverPath.charAt(0) === "\\"){
+    if (serverPath.charAt(0) === "\\") {
         serverPath = serverPath.substring(1);
     }
-    const url = API_BASE_URL + "/admin/upload/" + ip + "/" + serverPath.replace(/\\/g, "|") + "/" + ClientPath.replace(/\\/g, "|");
+    const url = API_BASE_URL + "/admin/upload/" + ip + "/" + pathFormatting(serverPath) + "/" + pathFormatting(clientPath);
     const requestData = {
         method: 'POST'
     }
@@ -102,10 +130,11 @@ export function fileTransferServer2Client(ip, serverPath, ClientPath) {
 }
 
 export function fileTransferClient2Server(ip, clientPath) {
+    ip = ipPortToIp(ip);
     if (ip === '' || clientPath === '') {
         alert("fileTransferClient2Server err")
     }
-    const url = API_BASE_URL + "/admin/download/" + ip + "/" + clientPath.replace(/\\/g, "|");
+    const url = API_BASE_URL + "/admin/download/" + ip + "/" + pathFormatting(clientPath);
     const requestData = {
         method: 'GET'
     }
