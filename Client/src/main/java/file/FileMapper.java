@@ -28,7 +28,7 @@ public class FileMapper {
         hashMap.put("scr", "화면 보호기");
         hashMap.put("exe", "응용 프로그램");
         hashMap.put("txt", "텍스트 문서");
-        hashMap.put("log", "텍스트 문서");
+        hashMap.put("log", "로그 파일");
     }
 
     private String getFileType(String file) {

@@ -23,6 +23,6 @@ public class ClientFile {
         this.isDirectory = attributes.isDirectory();
         this.modifiedDate = attributes.lastModifiedTime().toMillis();
         this.type = FileMapper.getInstance().getFileType(isDirectory, fileName);
-        this.size = isDirectory ? 0 : (int) (attributes.size() / 1024);
+        this.size = isDirectory ? -1 : (int) (attributes.size() / 1024);
     }
 }

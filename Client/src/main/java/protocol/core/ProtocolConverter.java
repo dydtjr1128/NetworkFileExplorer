@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class ProtocolConverter {
-    public static BindingData convertData(ByteBuffer buffer) throws IOException {
-        long len = buffer.getLong();
+    public static BindingData convertData(ByteBuffer buffer, int result) throws IOException {
         byte protocol = buffer.get();
-        byte[] bytes = new byte[(int) len];
-        buffer.get(bytes);
+        byte[] bytes = new byte[result];
+        buffer.get(bytes, 0, result);
+        buffer.compact();
         String path = Snappy.uncompressString(bytes);
-        return new BindingData(len, protocol, path);
+        return new BindingData(result, protocol, path);
     }
 
     public static ByteBuffer makeTransferData(byte protocol, String path) throws IOException {

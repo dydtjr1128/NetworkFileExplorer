@@ -70,7 +70,7 @@ public class FileReceiver {
                         string = Snappy.uncompressString(bytes);
                         if (string.contains(Config.END_MESSAGE_MARKER)) {
                             readData.calcFileData(string);
-                            Path path = Paths.get(storePath + "\\" + readData.getFileName());
+                            Path path = Paths.get(storePath + "/" + readData.getFileName());
                             if (Files.notExists(Paths.get(storePath))) {
                                 try {
                                     Files.createDirectories(Paths.get(storePath));

@@ -43,7 +43,7 @@ public class FileManager {
     public boolean changeFileName(String fromPath, String name) {
         File sourceFile = new File(fromPath);
 
-        File destFile = new File(sourceFile.getParent() + "\\" + name);
+        File destFile = new File(sourceFile.getParent() + "/" + name);
         System.out.println("changeFileName : " + sourceFile + " " + destFile);
 
         if (sourceFile.renameTo(destFile)) {
@@ -69,10 +69,10 @@ public class FileManager {
     }
 
     public boolean copyFile(String fromPath, String toPath) {
-        int idx = fromPath.lastIndexOf("\\");
+        int idx = fromPath.lastIndexOf("/");
         String filename = fromPath.substring(idx + 1);
         Path sourcePath = Paths.get(fromPath);
-        Path destinationPath = Paths.get(toPath + "\\" + filename);
+        Path destinationPath = Paths.get(toPath + "/" + filename);
         if (sourcePath.toString().equals(destinationPath.toString())) return false;
         if (Files.isDirectory(sourcePath)) {
             try {
@@ -110,10 +110,10 @@ public class FileManager {
     }
 
     public boolean moveFile(String fromPath, String toPath) {
-        int idx = fromPath.lastIndexOf("\\");
+        int idx = fromPath.lastIndexOf("/");
         String filename = fromPath.substring(idx + 1);
         Path sourcePath = Paths.get(fromPath);
-        Path destinationPath = Paths.get(toPath + "\\" + filename);
+        Path destinationPath = Paths.get(toPath + "/" + filename);
         if(sourcePath.toString().equals(destinationPath.toString())) return false;
         try {
             Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);

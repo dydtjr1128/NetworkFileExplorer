@@ -50,32 +50,42 @@ public class AsyncFileExplorer {
     private void readDataFromServer(ByteBuffer input) {
         if (!asc.isOpen())
             return;
-        asc.read(input, input, new CompletionHandler<Integer, ByteBuffer>() {
+        int len = 0;
+        asc.read(input, len, new CompletionHandler<Integer, Integer>() {
 
             @Override
-            public void completed(Integer result, ByteBuffer buffer) {
+            public void completed(Integer result, Integer length) {
                 if (result < 1) {
-                    System.out.println("remain?");
-                } else {
-                    buffer.flip();
-                    //message is read from server
-
-                    BindingData bindingData = null;
                     try {
-                        bindingData = ProtocolConverter.convertData(buffer);
-                        ProtocolManager.getInstance().executeProtocol(asc, bindingData);
+                        asc.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    buffer.clear();
-                    asc.read(buffer, buffer, this);
-
+                    System.out.println("Socket closed!");
+                } else {
+                    if (length == 0) {
+                        input.flip();
+                        length = (int)input.getLong();
+                        input.compact();
+                    }
+                    if (length + 1 <= input.position()) {
+                        input.flip();
+                        BindingData bindingData = null;
+                        try {
+                            bindingData = ProtocolConverter.convertData(input,length);
+                            ProtocolManager.getInstance().executeProtocol(asc, bindingData);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        input.clear();
+                        length = 0;
+                    }
+                    asc.read(input, length, this);
                 }
             }
 
             @Override
-            public void failed(Throwable exc, ByteBuffer buffer) {
+            public void failed(Throwable exc, Integer buffer) {
                 System.out.println("Connection closed from server");
             }
 

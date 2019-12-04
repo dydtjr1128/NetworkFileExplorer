@@ -12,5 +12,5 @@ public class NFEProtocol {
     public static final byte FILE_DOWNLOAD = 6;//download file path
 
     public static final int NETWORK_BYTE = 1024 * 1024;
-    public static final int NETWORK_FILE_BYTE = 1024 * 1024 * 10; // 10MB
+    public static final int NETWORK_FILE_BYTE = 1024 ; // 10MB
 }
