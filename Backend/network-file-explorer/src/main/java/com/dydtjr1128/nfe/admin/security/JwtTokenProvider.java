@@ -11,8 +11,8 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
+    private static final String JWT_HEADER = "Authorization";
     private static final String jwtSecret = "JWTSuperSecretKey";
     private static final int jwtExpirationSecond = 60 * 60;
 
@@ -73,8 +73,8 @@ public class JwtTokenProvider {
         return null;
     }
 
-    String getJwtFromRequest(HttpServletRequest request, String headerKey) {
-        String splitToken = request.getHeader(headerKey);
+    String getJwtFromRequest(HttpServletRequest request) {
+        String splitToken = request.getHeader(JWT_HEADER);
         if (StringUtils.hasText(splitToken) && splitToken.startsWith("Bearer ")) {
             return splitToken.substring(7);
         }

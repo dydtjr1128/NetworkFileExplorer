@@ -7,6 +7,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class FileManager {
@@ -62,7 +63,7 @@ public class FileManager {
                     .map(Path::toFile)
                     .peek(System.out::println)
                     .forEach(File::delete);
-        } catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -83,15 +84,35 @@ public class FileManager {
         } else {
             try {
                 Files.copy(sourcePath, destinationPath);
-            } catch (FileAlreadyExistsException e) {
-                e.printStackTrace();
-                return false;
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
             }
         }
         return true;
+    }
+
+    public boolean copyFile2(String fromPath, String toPath) {
+        int idx = fromPath.lastIndexOf("/");
+        String filename = fromPath.substring(idx + 1);
+        Path sourcePath = Paths.get(fromPath);
+        Path destinationPath = Paths.get(toPath + "/" + filename);
+        AtomicBoolean isSuccess = new AtomicBoolean(true);
+        try {
+            Files.walk(sourcePath)
+                    .forEach(source -> {
+                        try {
+                            copy(source, destinationPath.resolve(sourcePath.relativize(source)));
+                        } catch (IOException e) {
+                            isSuccess.set(false);
+                            e.printStackTrace();
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return isSuccess.get();
     }
 
     private void copyFolder(Path sourcePath, Path destinationPath) throws IOException {
@@ -114,7 +135,7 @@ public class FileManager {
         String filename = fromPath.substring(idx + 1);
         Path sourcePath = Paths.get(fromPath);
         Path destinationPath = Paths.get(toPath + "/" + filename);
-        if(sourcePath.toString().equals(destinationPath.toString())) return false;
+        if (sourcePath.toString().equals(destinationPath.toString())) return false;
         try {
             Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
         } catch (FileAlreadyExistsException e) {

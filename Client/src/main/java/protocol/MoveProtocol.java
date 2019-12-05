@@ -14,7 +14,7 @@ public class MoveProtocol extends Protocol {
 
     @Override
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
-        String temp[] = bindingData.getPayload().split("\\|");
+        String[] temp = bindingData.getPayload().split("\\|");
         String fromPath = temp[0];
         String toPath = temp[1];
         ByteBuffer byteBuffer;

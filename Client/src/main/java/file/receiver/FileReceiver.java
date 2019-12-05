@@ -21,6 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class FileReceiver {
     private final String ip;
     private final int port;
+    private long st;
 
     public FileReceiver(final String ip, final int port) {
         this.ip = ip;
@@ -28,6 +29,7 @@ public class FileReceiver {
     }
 
     public void receive(final String storePath) throws IOException {
+        st = System.currentTimeMillis();
         final ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_FILE_BYTE);
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
         channel.connect(new InetSocketAddress(ip, port), channel, new CompletionHandler<Void, AsynchronousSocketChannel>() {
@@ -56,7 +58,7 @@ public class FileReceiver {
 
     }
 
-    public void readFileFromServer(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, String storePath) {
+    private void readFileFromServer(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, String storePath) {
         channel.read(dataBuffer, new Attachment(), new CompletionHandler<Integer, Attachment>() {
 
             @Override
@@ -139,6 +141,7 @@ public class FileReceiver {
                             dataBuffer.clear();
                             if (attachment.getReadPosition() == attachment.getFileSize()) {
                                 System.out.println("[Download success!] : " + attachment.getFileName());
+                                System.out.println(System.currentTimeMillis()-st + "ms");
                                 try {
                                     channel.close();
                                     attachment.getFileChannel().close();
@@ -162,7 +165,7 @@ public class FileReceiver {
         );
     }
 
-    public void close(AsynchronousSocketChannel channel, AsynchronousFileChannel fileChannel) {
+    private void close(AsynchronousSocketChannel channel, AsynchronousFileChannel fileChannel) {
         try {
             if (fileChannel != null && fileChannel.isOpen())
                 fileChannel.close();

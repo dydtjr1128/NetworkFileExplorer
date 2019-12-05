@@ -1,25 +1,15 @@
 package com.dydtjr1128.nfe.protocol.core;
 
-import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.protocol.*;
+import com.dydtjr1128.nfe.server.Client;
 
-import java.nio.channels.AsynchronousSocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ProtocolManager {
-    private static ProtocolManager INSTANCE = null;
     private Map<Byte, Protocol> protocolMap;
 
-    public static ProtocolManager getInstance() {
-        return LazyHolder.INSTANCE;
-    }
-
-    private static class LazyHolder {
-        private static final ProtocolManager INSTANCE = new ProtocolManager();
-    }
-
-    private ProtocolManager() {
+    public ProtocolManager() {
         protocolMap = new HashMap<>();
         protocolInit();
     }

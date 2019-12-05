@@ -16,13 +16,10 @@ public class AdminMessage implements Serializable {
     @JsonIgnore
     public static final int REMOVE = 1;
     @JsonIgnore
-    public static final int DOWNLOAD_SUCCESS = 2;
+    public static final int REQUEST_SUCCESS = 2;
     @JsonIgnore
-    public static final int DOWNLOAD_FAIL = 3;
-    @JsonIgnore
-    public static final int UPLOAD_SUCCESS = 4;
-    @JsonIgnore
-    public static final int UPLOAD_FAIL = 5;
+    public static final int REQUEST_FAIL = 3;
+
 
     private int state;
     private String message;

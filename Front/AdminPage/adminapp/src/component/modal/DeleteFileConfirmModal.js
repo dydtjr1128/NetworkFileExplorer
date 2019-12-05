@@ -45,7 +45,10 @@ const useStyles = makeStyles(theme => ({
 export default function DeleteFileConfirmModal(props) {
     const classes = useStyles();
     const { store } = useStores()
-
+    const [name, setName] = React.useState();
+    function handleChange(event) {
+        setName(event.target.value);
+    };
     function requestChangeFileName(event) {
         deleteFile(store.selectedIP, store.selectedPath).then(response => {
             alert("삭제 성공!")            

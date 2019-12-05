@@ -1,5 +1,6 @@
 package com.dydtjr1128.nfe.server.fileserver;
 
+import com.dydtjr1128.nfe.admin.service.ApplicationContextProvider;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import com.dydtjr1128.nfe.server.AdminWebSocketManager;
 import com.dydtjr1128.nfe.server.AsyncServer;
@@ -7,9 +8,9 @@ import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.server.ClientManager;
 import com.dydtjr1128.nfe.server.config.Config;
 import com.dydtjr1128.nfe.server.model.AdminMessage;
-import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xerial.snappy.Snappy;
 
 import java.io.IOException;
@@ -31,10 +32,14 @@ public class AsyncFileServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(AsyncServer.class);
     private final AsynchronousServerSocketChannel assc;
     private final AsynchronousChannelGroup channelGroup;
+    private ClientManager clientManager;
+    private AdminWebSocketManager adminWebSocketManager;
 
     public AsyncFileServer() throws IOException {
         channelGroup = AsynchronousChannelGroup.withFixedThreadPool(Config.FILE_THREAD_POOL_COUNT, Executors.defaultThreadFactory());
         assc = createAsynchronousFileServerSocketChannel();
+        clientManager = ApplicationContextProvider.getApplicationContext().getBean(ClientManager.class);
+        adminWebSocketManager = ApplicationContextProvider.getApplicationContext().getBean(AdminWebSocketManager.class);
         logger.debug("[Finish server setting with " + Config.DEFAULT_THREAD_POOL_COUNT + " thread in thread pool]");
     }
 
@@ -90,7 +95,7 @@ public class AsyncFileServer implements Runnable {
             readFileFromClient(channel, dataBuffer);
         } else if (action == FileAction.FILE_SEND_TO_CLIENT) { // PATH + fileanme
             logger.debug("[File send to client]");
-            Client client = ClientManager.getInstance().getClientByIP((InetSocketAddress) channel.getRemoteAddress());
+            Client client = clientManager.getClientByIP((InetSocketAddress) channel.getRemoteAddress());
             TransferFileMetaData metaData;
             if (client == null) return;
             synchronized (client.getFilePathQueue()) {
@@ -102,7 +107,7 @@ public class AsyncFileServer implements Runnable {
         }
     }
 
-    public void readFileFromClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer) {
+    private void readFileFromClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer) {
         channel.read(dataBuffer, new Attachment(), new CompletionHandler<Integer, Attachment>() {
 
             @Override
@@ -159,7 +164,7 @@ public class AsyncFileServer implements Runnable {
         });
     }
 
-    public void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) throws ExecutionException, InterruptedException {
+    private void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) throws ExecutionException, InterruptedException {
         dataBuffer.flip();
         while (dataBuffer.hasRemaining()) {
             Future<Integer> future = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
@@ -169,7 +174,6 @@ public class AsyncFileServer implements Runnable {
         dataBuffer.clear();
         channel.read(dataBuffer, attachment, new CompletionHandler<Integer, Attachment>() {
 
-                    @SneakyThrows
                     @Override
                     public void completed(Integer result, Attachment attachment) {
                         if (result > 0) {
@@ -187,7 +191,7 @@ public class AsyncFileServer implements Runnable {
 
                             dataBuffer.clear();
                             if (attachment.getReadPosition() == attachment.getFileSize()) {
-                                AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, attachment.getFileName() + " 다운로드 성공!"));
+                                adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REQUEST_FAIL, attachment.getFileName() + " 다운로드 성공!"));
                                 logger.debug("[Download success!] : " + attachment.getFileName());
                                 try {
                                     channel.close();
@@ -197,7 +201,7 @@ public class AsyncFileServer implements Runnable {
                                 }
                                 return;
                             } else if (attachment.getReadPosition() > attachment.getFileSize()) {
-                                AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_FAIL, attachment.getFileName() + " 다운로드 실패!"));
+                                adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REQUEST_FAIL, attachment.getFileName() + " 다운로드 실패!"));
                                 logger.debug("[Download Error!]");
                             }
                             channel.read(dataBuffer, attachment, this);
@@ -206,7 +210,7 @@ public class AsyncFileServer implements Runnable {
 
                     @Override
                     public void failed(Throwable exc, Attachment attachment) {
-                        AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_FAIL, attachment.getFileName() + " 다운로드 실패!"));
+                        adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REQUEST_FAIL, attachment.getFileName() + " 다운로드 실패!"));
                         logger.debug("[Error!]" + exc.toString());
                     }
                 }
@@ -215,7 +219,7 @@ public class AsyncFileServer implements Runnable {
     }
 
 
-    public void writeFileToClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, TransferFileMetaData metaData) throws IOException, ExecutionException, InterruptedException {
+    private void writeFileToClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, TransferFileMetaData metaData) throws IOException, ExecutionException, InterruptedException {
         Path serverPath = Paths.get(metaData.getSeverPath());
         logger.debug("[Send file to Server] : " + serverPath);
         if (Files.exists(serverPath) && !Files.isDirectory(serverPath)) {
@@ -252,14 +256,14 @@ public class AsyncFileServer implements Runnable {
                                 }
 
                             } catch (Exception e) {
-                                AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, serverPath + " 업로드 실패!"));
+                                adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REQUEST_FAIL, serverPath + " 업로드 실패!"));
                                 e.printStackTrace();
                                 return;
                             }
 
                             if (sendData.getReadPosition() == fileSize) {
                                 logger.debug("[Upload success!] : " + metaData.getSeverPath());
-                                AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, serverPath + " 업로드 성공!"));
+                                adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REQUEST_SUCCESS, serverPath + " 업로드 성공!"));
                                 return;
                             }
                             sendData.getBuffer().clear();
@@ -274,20 +278,20 @@ public class AsyncFileServer implements Runnable {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, serverPath + " 업로드 실패!"));
+                            adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REQUEST_FAIL, serverPath + " 업로드 실패!"));
                         }
                     });
         }
     }
 
-    public void close(AsynchronousSocketChannel channel, AsynchronousFileChannel fileChannel) {
+    private void close(AsynchronousSocketChannel channel, AsynchronousFileChannel fileChannel) {
         try {
             if (fileChannel != null && fileChannel.isOpen())
                 fileChannel.close();
             if (!channel.isOpen())
                 channel.close();
         } catch (IOException e) {
-            logger.error("Filer channel close error!",e);
+            logger.error("Filer channel close error!", e);
         }
     }
 

@@ -1,10 +1,13 @@
 package com.dydtjr1128.nfe.server;
 
+import com.dydtjr1128.nfe.admin.service.ApplicationContextProvider;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import com.dydtjr1128.nfe.server.config.Config;
 import com.dydtjr1128.nfe.server.fileserver.SendData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -19,10 +22,12 @@ public class AsyncServer implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(AsyncServer.class);
     private final AsynchronousServerSocketChannel assc;
     private final AsynchronousChannelGroup channelGroup;
+    private ClientManager clientManager;
 
     AsyncServer() throws IOException {
         channelGroup = AsynchronousChannelGroup.withFixedThreadPool(Config.DEFAULT_THREAD_POOL_COUNT, Executors.defaultThreadFactory());
         assc = createAsynchronousServerSocketChannel();
+        clientManager = ApplicationContextProvider.getApplicationContext().getBean(ClientManager.class);
         logger.debug("[Finish server setting with " + Config.DEFAULT_THREAD_POOL_COUNT + " thread in thread pool]");
     }
 
@@ -64,12 +69,12 @@ public class AsyncServer implements Runnable {
             logger.debug("",e);
             // ignore
         }
-        ClientManager.getInstance().addClient(client);
+        clientManager.addClient(client);
         client.run();
     }
 
     public void writeMessageToClients(String clientIP, String message) throws IOException {
         logger.debug("[Send message to client] : " + clientIP);
-        ClientManager.getInstance().clientsHashMap.get(clientIP).writeStringMessage(NFEProtocol.GET_LIST, "C:\\Windows\\Cursors");
+        clientManager.getClient(clientIP).writeStringMessage(NFEProtocol.GET_LIST, "C:\\Windows\\Cursors");
     }
 }

@@ -29,12 +29,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-    private static final String JWT_HEADER = "Authorization";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = tokenProvider.getJwtFromRequest(request, JWT_HEADER);
+            String jwt = tokenProvider.getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 logger.debug("[Get JWT]");

@@ -12,14 +12,14 @@ import java.nio.channels.AsynchronousChannelGroup;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class AsyncFileExplorer {
     private final AsynchronousChannelGroup channelGroup;
     private final AsynchronousSocketChannel asc;
-    private AtomicInteger readAtomicInteger = new AtomicInteger(0);
+    private ProtocolManager protocolManager;
 
     public AsyncFileExplorer(String ip, int port) throws IOException {
+        protocolManager = new ProtocolManager();
         channelGroup = AsynchronousChannelGroup.withFixedThreadPool(
                 Runtime.getRuntime().availableProcessors(), Executors.defaultThreadFactory()
         );
@@ -37,7 +37,7 @@ public class AsyncFileExplorer {
         });
     }
 
-    public AsynchronousSocketChannel initClientSocketChannel() throws IOException {
+    private AsynchronousSocketChannel initClientSocketChannel() throws IOException {
         return AsynchronousSocketChannel.open(channelGroup);
     }
 
@@ -65,15 +65,15 @@ public class AsyncFileExplorer {
                 } else {
                     if (length == 0) {
                         input.flip();
-                        length = (int)input.getLong();
+                        length = (int) input.getLong();
                         input.compact();
                     }
                     if (length + 1 <= input.position()) {
                         input.flip();
                         BindingData bindingData = null;
                         try {
-                            bindingData = ProtocolConverter.convertData(input,length);
-                            ProtocolManager.getInstance().executeProtocol(asc, bindingData);
+                            bindingData = ProtocolConverter.convertData(input, length);
+                            protocolManager.executeProtocol(asc, bindingData);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

@@ -12,6 +12,7 @@ import java.io.IOException;
 @SpringBootApplication
 public class NetworkFileExplorerApplication {
     private static final Logger logger = LoggerFactory.getLogger(NetworkFileExplorerApplication.class);
+
     public static void main(String[] args) {
 
         ConfigurableApplicationContext context = SpringApplication.run(NetworkFileExplorerApplication.class, args);
@@ -20,7 +21,7 @@ public class NetworkFileExplorerApplication {
         try {
             serverManager.startServer();
         } catch (IOException e) {
-            logger.error("",e);
+            logger.error("", e);
         }
     }
 

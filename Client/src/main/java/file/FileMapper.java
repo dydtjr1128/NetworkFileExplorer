@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FileMapper {
-    public static final String FOLDER_TYPE = "파일 폴더";
+    static final String FOLDER_TYPE = "파일 폴더";
     private Map<String, String> hashMap;
 
     public static FileMapper getInstance() {
         return FileMapper.LazyHolder.INSTANCE;
     }
 
-    public String getFileType(boolean isDirectory, String fileName) {
+    String getFileType(boolean isDirectory, String fileName) {
         return isDirectory ? FOLDER_TYPE : getFileType(fileName);
     }
 

@@ -14,11 +14,11 @@ public class CopyProtocol extends Protocol {
 
     @Override
     public void executeProtocol(AsynchronousSocketChannel asc, BindingData bindingData) throws IOException {
-        String temp[] = bindingData.getPayload().split("\\|");
+        String[] temp = bindingData.getPayload().split("\\|");
         String fromPath = temp[0];
         String toPath = temp[1];
         ByteBuffer byteBuffer;
-        if (FileManager.getInstance().copyFile(fromPath, toPath)) {
+        if (FileManager.getInstance().copyFile2(fromPath, toPath)) {
             byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.COPY, "s");
         } else {
             byteBuffer = ProtocolConverter.makeTransferData(NFEProtocol.COPY, "f");
