@@ -22,7 +22,6 @@ class Attachment {
     }
 
     void calcFileData(String string) {
-        System.out.println("@ " + string);
         String[] temp = string.replace(Config.END_MESSAGE_MARKER, "").split(Config.MESSAGE_DELIMITTER.replace("|", "\\|"));
         fileName = temp[0];
         fileSize = Long.parseLong(temp[1]);

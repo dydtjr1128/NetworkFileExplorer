@@ -28,7 +28,6 @@ public class FileReceiver {
     }
 
     public void receive(final String storePath) throws IOException {
-        System.out.println("Receive file to" + storePath);
         final ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_FILE_BYTE);
         AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
         channel.connect(new InetSocketAddress(ip, port), channel, new CompletionHandler<Void, AsynchronousSocketChannel>() {
@@ -37,11 +36,13 @@ public class FileReceiver {
                 dataBuffer.clear();
                 dataBuffer.put(FileAction.FILE_SEND_TO_CLIENT);
                 dataBuffer.flip();
-                Future<Integer> future = channel.write(dataBuffer);
-                try {
-                    future.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
+                while (dataBuffer.hasRemaining()){
+                    Future<Integer> future = channel.write(dataBuffer);
+                    try {
+                        future.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                    }
                 }
                 dataBuffer.clear();
                 readFileFromServer(channel, dataBuffer, storePath);
@@ -64,7 +65,13 @@ public class FileReceiver {
                     dataBuffer.flip();
                     long messageLen = dataBuffer.getLong();
                     byte[] bytes = new byte[(int) messageLen];
-                    dataBuffer.get(bytes);
+                    dataBuffer.get(bytes, 0, (int)messageLen);
+
+                    if (dataBuffer.hasRemaining())
+                        dataBuffer.compact();
+                    else
+                        dataBuffer.clear();
+
                     String string = null;
                     try {
                         string = Snappy.uncompressString(bytes);
@@ -79,18 +86,16 @@ public class FileReceiver {
                                 }
                             }
                             if (Files.notExists(path) && !Files.isDirectory(path)) {
-
-                                System.out.println(path);
+                                System.out.println("[Receive file from server] : " + path);
                                 readData.openFileChannel(path);
 
-                                dataBuffer.clear();
                                 writeToFile(channel, readData, dataBuffer);
                             } else {
                                 close(channel, readData.getFileChannel());
-                                System.out.println("Download err!");
+                                System.out.println("Download err! File is exist.");
                             }
                         }
-                    } catch (IOException e) {
+                    } catch (IOException | InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                         close(channel, readData.getFileChannel());
                     }
@@ -106,7 +111,14 @@ public class FileReceiver {
         });
     }
 
-    public void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) {
+    private void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) throws ExecutionException, InterruptedException {
+        dataBuffer.flip();
+        while (dataBuffer.hasRemaining()) {
+            Future<Integer> future = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
+            int l = future.get();
+            attachment.addPosition(l != -1 ? l : 0);
+        }
+        dataBuffer.clear();
         channel.read(dataBuffer, attachment, new CompletionHandler<Integer, Attachment>() {
 
                     @Override
@@ -114,13 +126,17 @@ public class FileReceiver {
                         if (result > 0) {
                             dataBuffer.flip();
                             try {
-                                Future<Integer> operation = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
-                                operation.get(10, TimeUnit.SECONDS);
+                                while (dataBuffer.hasRemaining()){
+                                    Future<Integer> future = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
+                                    int i = future.get(10, TimeUnit.SECONDS);
+                                    attachment.addPosition(i);
+                                }
                             } catch (Exception e) {
-                                System.out.println("timeout");
-                                e.printStackTrace();
+                                System.out.println("[Download error!] : " + attachment.getFileName());
+                                return;
                             }
-                            attachment.addPosition(result);
+
+                            dataBuffer.clear();
                             if (attachment.getReadPosition() == attachment.getFileSize()) {
                                 System.out.println("[Download success!] : " + attachment.getFileName());
                                 try {
@@ -134,14 +150,13 @@ public class FileReceiver {
                                 System.out.println("err!");
                                 return;
                             }
-                            dataBuffer.clear();
                             channel.read(dataBuffer, attachment, this);
                         }
                     }
 
                     @Override
                     public void failed(Throwable exc, Attachment attachment) {
-                        System.out.println("err!");
+                        System.out.println("[Error!]" + exc.toString());
                     }
                 }
         );

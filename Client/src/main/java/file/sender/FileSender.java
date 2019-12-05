@@ -7,6 +7,7 @@ import protocol.core.NFEProtocol;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.channels.AsynchronousSocketChannel;
@@ -15,10 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 public class FileSender {
     private final String ip;
@@ -30,12 +29,13 @@ public class FileSender {
     }
 
     public void send(final String path) {
-        System.out.println(path + "@ start!!");
-        System.out.println(ip + " " + port);
         new Thread(() -> {
             AsynchronousSocketChannel channel = null;
             try {
                 channel = AsynchronousSocketChannel.open();
+                channel.setOption(StandardSocketOptions.SO_RCVBUF, NFEProtocol.NETWORK_FILE_BYTE);
+                channel.setOption(StandardSocketOptions.SO_SNDBUF, NFEProtocol.NETWORK_FILE_BYTE);
+                channel.setOption(StandardSocketOptions.SO_KEEPALIVE, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -47,13 +47,12 @@ public class FileSender {
                         dataBuffer.clear();
                         dataBuffer.put(FileAction.FILE_RECEIVE_FROM_CLIENT);
                         dataBuffer.flip();
-                        Future<Integer> future = channel.write(dataBuffer);
                         try {
-                            future.get();
-                            if (dataBuffer.hasRemaining())
-                                dataBuffer.compact();
-                            else
-                                dataBuffer.clear();
+                            while (dataBuffer.hasRemaining()) {
+                                Future<Integer> future = channel.write(dataBuffer);
+                                future.get();
+                            }
+                            dataBuffer.clear();
                             readFromFile(channel, dataBuffer, path);
                         } catch (InterruptedException | ExecutionException e) {
                             e.printStackTrace();
@@ -74,25 +73,23 @@ public class FileSender {
 
     private void readFromFile(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, String path) throws IOException, ExecutionException, InterruptedException {
         Path clientPath = Paths.get(path);
+        System.out.println("[Send file to Server] : " + clientPath);
         if (Files.exists(clientPath) && !Files.isDirectory(clientPath)) {
-            System.out.println("11");
             AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
                     Paths.get(path),
                     StandardOpenOption.READ
             );
             long fileSize = Files.size(clientPath);
             byte[] message = Snappy.compress(clientPath.getFileName().toString() + Config.MESSAGE_DELIMITTER + fileSize + Config.END_MESSAGE_MARKER);
-            System.out.println("snappy : " + fileSize + " " + message.length);
             dataBuffer.putLong(message.length);
             dataBuffer.put(message);
             dataBuffer.flip();
-            Future<Integer> future = channel.write(dataBuffer);
-            future.get();
-            if (dataBuffer.hasRemaining())
-                dataBuffer.compact();
-            else
-                dataBuffer.clear();
-            System.out.println(dataBuffer.position() + " " + dataBuffer.limit());
+            while (dataBuffer.hasRemaining()) {
+                Future<Integer> future = channel.write(dataBuffer);
+                future.get();
+            }
+            dataBuffer.clear();
+
             fileChannel.read(
                     dataBuffer, 0, new SendData(0, dataBuffer),    // null 대신 iterations 전달
                     new CompletionHandler<Integer, SendData>() {
@@ -105,16 +102,12 @@ public class FileSender {
                             }
                             sendData.addPosition(result);
                             try {
-
-                                System.out.println(sendData.getReadPosition() + " " + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
-
                                 dataBuffer.flip();
-                                Future<Integer> future = channel.write(dataBuffer);
-                                future.get();
-                                if (dataBuffer.hasRemaining())
-                                    dataBuffer.compact();
-                                else
-                                    dataBuffer.clear();
+                                while (dataBuffer.hasRemaining()) {
+                                    Future<Integer> future = channel.write(dataBuffer);
+                                    future.get();
+                                }
+                                dataBuffer.clear();
 
                             } catch (Exception e) {
                                 System.out.println("timeout");
@@ -123,18 +116,16 @@ public class FileSender {
                             }
 
                             if (sendData.getReadPosition() == fileSize) {
-                                System.err.println(sendData.getReadPosition() + "AsynchronousFileChannel.read() 완료");
-                                sendData.getBuffer().clear();
+                                dataBuffer.clear();
                                 try {
                                     fileChannel.close();
-                                    channel.close();
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                                 return;
                             }
 
-                            fileChannel.read(sendData.getBuffer(), sendData.getReadPosition(), sendData, this);
+                            fileChannel.read(dataBuffer, sendData.getReadPosition(), sendData, this);
                         }
 
                         @Override
