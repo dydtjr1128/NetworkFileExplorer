@@ -91,7 +91,9 @@ const ClientStore = observable({
         this.selectedAction = '';
         this.copymoveDataJson = null;
         this.expanded = [];
-    }
+        this.progressVisible = false;
+    },
+    progressVisible : false,
 });
 // class ClientStore2 {
 //     @observable client_list = [];

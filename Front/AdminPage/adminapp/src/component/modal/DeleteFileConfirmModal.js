@@ -49,7 +49,8 @@ export default function DeleteFileConfirmModal(props) {
     function handleChange(event) {
         setName(event.target.value);
     };
-    function requestChangeFileName(event) {
+    function requestChangeFileName(event) {        
+        store.progressVisible = true;
         deleteFile(store.selectedIP, store.selectedPath).then(response => {
             alert("삭제 성공!")            
             if (store.currentDirectoriesList.length >= store.selectedIndex) {
@@ -64,6 +65,8 @@ export default function DeleteFileConfirmModal(props) {
             } else {
                 alert(error.message || 'Sorry! Something went wrong. Please try again!')
             }
+        }).finally(() => {
+            store.progressVisible = false;
         });
         props.setOpen(false);
     }

@@ -51,6 +51,7 @@ export default function FileNameChangeModal(props) {
         setName(event.target.value);
     };
     function requestChangeFileName(event) {
+        store.progressVisible = true;
         changeFileName(store.selectedIP, store.selectedPath, name).then(response => {
             alert("이름 변경 성공!")            
             store.currentDirectoriesList[store.selectedIndex].f = name;            
@@ -64,6 +65,8 @@ export default function FileNameChangeModal(props) {
             } else {
                 alert(error.message || 'Sorry! Something went wrong. Please try again!')
             }
+        }).finally(() => {
+            store.progressVisible = false;
         });
         props.setOpen(false);
     }

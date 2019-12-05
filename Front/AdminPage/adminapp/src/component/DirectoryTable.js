@@ -13,7 +13,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import { fileTransferClient2Server } from '../util/APIUtils'
 import { observer } from 'mobx-react';
-import { faFolder, faFile, faReply} from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faFile, faReply } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -33,8 +33,8 @@ function desc(a, b, orderBy) {
 }
 
 function stableSort(array, cmp) {
-  if(array === undefined) 
-      return [];
+  if (array === undefined)
+    return [];
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = cmp(a[0], b[0]);
@@ -251,7 +251,7 @@ const DirectoryTable = observer((props) => {
   }
 
   function copyFileFromWeb() {
-    console.log(store.copymoveData.path + " " + store.currentClientPath)
+    store.progressVisible = true
     copyFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
       // if( store.copymoveData.path === store.currentClientPath){
       //   alert("동일 경로입니다.")
@@ -268,9 +268,12 @@ const DirectoryTable = observer((props) => {
       } else {
         alert(error.message || 'Sorry! Something went wrong. Please try again!')
       }
+    }).finally(() => {
+      store.progressVisible = false;
     });
   }
   function moveFileFromWeb() {
+    store.progressVisible = true
     moveFile(store.copymoveData.ip, store.copymoveData.path, store.currentClientPath).then(response => {
 
       store.currentDirectoriesList.push(store.copymoveDataJson);
@@ -284,6 +287,8 @@ const DirectoryTable = observer((props) => {
       } else {
         alert(error.message || 'Sorry! Something went wrong. Please try again!')
       }
+    }).finally(() => {
+      store.progressVisible = false;
     });
   }
 
@@ -305,6 +310,7 @@ const DirectoryTable = observer((props) => {
 
   const moveDirectory = (event, name, type) => {
     if (type === "파일 폴더") {
+      store.progressVisible = true;
       getDirectores(store.currentClientIP, store.currentClientPath + "\\" + name).then(response => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
@@ -319,6 +325,8 @@ const DirectoryTable = observer((props) => {
         } else {
           alert(error.message || 'Sorry! Something went wrong. Please try again!')
         }
+      }).finally(() => {
+        store.progressVisible = false;
       });
     } else {
       var isFileDownload = window.confirm("해당 파일을 다운로드 하시겠습니까?");
@@ -359,6 +367,7 @@ const DirectoryTable = observer((props) => {
 
   const moveParentDirectory = (event, name) => {
     if (!store.isRoot()) {//루트 전까지만 이동
+      store.progressVisible = true;
       getDirectores(store.currentClientIP, store.getParentPath()).then(response => {
         if (response === null)
           alert("이동 할 수 없는 경로 입니다!")
@@ -373,6 +382,8 @@ const DirectoryTable = observer((props) => {
         } else {
           alert(error.message || 'Sorry! Something went wrong. Please try again!')
         }
+      }).finally(() => {
+        store.progressVisible = false;
       });
     }
   };

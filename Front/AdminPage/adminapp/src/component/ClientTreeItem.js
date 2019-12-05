@@ -27,6 +27,7 @@ const ClientTreeItem = observer((props) => {
             setGlobalData(responsedData);
         }
         else {
+            store.progressVisible = true;
             getDirectores(ip, path).then(response => {
                 if (response === null)
                     alert("빈 폴더 입니다.!")
@@ -34,8 +35,6 @@ const ClientTreeItem = observer((props) => {
                     setGlobalData(response);
 
                     setResponsedData(response)
-                    //setDirectories(array);
-                    //store.addExpanded(match.nodeId)
                 }
             }).catch(error => {
                 if (error.status === 401) {
@@ -43,6 +42,8 @@ const ClientTreeItem = observer((props) => {
                 } else {
                     alert(error.message || 'Sorry! Something went wrong. Please try again!')
                 }
+            }).finally(() => {
+                store.progressVisible = false;
             });
             console.log(store.expanded)
         }
