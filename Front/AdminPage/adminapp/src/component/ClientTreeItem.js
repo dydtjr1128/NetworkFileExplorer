@@ -45,7 +45,6 @@ const ClientTreeItem = observer((props) => {
             }).finally(() => {
                 store.progressVisible = false;
             });
-            console.log(store.expanded)
         }
     }
 

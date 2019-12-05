@@ -16,8 +16,8 @@ const overlayLoadingStyle = makeStyles(theme => ({
         left: '0px',
         display: 'flex',
         textAlign: 'center',
-        fontSize: '1.2em',    
-        zIndex: 800,    
+        fontSize: '1.5em',
+        zIndex: 800,
     },
     loadingText: {
         margin: 'auto',
@@ -29,12 +29,22 @@ const overlayLoadingStyle = makeStyles(theme => ({
 
 const OverlayLoading = observer((props) => {
     const classes = overlayLoadingStyle();
-    const {store} = useStores();
+    const { store } = useStores();
+    const load = ['.', '..', '...','....','.....'];
+    const [text, setText] = React.useState(load[0]);
+    let index = 0;
+    React.useEffect(() => {
+        setInterval(() => {
+            setText(load[index++])            
+            if(index > 5)
+                index = 0
+        }, 500);
+    }, []);
     return (
         <div className="disable-select">
-            <Fade in={store.progressVisible} timeout={100}>
-                <div className={classes.loadingContent}>                    
-                    <div className={classes.loadingText}><div><CircularProgress /></div>Loading...</div>
+            <Fade in={store.progressVisible} timeout={80}>
+                <div className={classes.loadingContent}>
+                    <div className={classes.loadingText}><div><CircularProgress size={100} /></div>Loading{text}</div>
                 </div>
             </Fade>
         </div >
