@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 콘솔로 로그를 남김 -->
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <!-- 로그 메시지 패턴 -->
+            <Pattern>
+                [NFE LOG] %-5level %d{HH:mm:ss.SSS} [%thread %F:%L] %method - %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+    <!-- 파일로 로그를 남김 -->
+    <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>c:\NFE_LOG\NFE_log.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>
+                [NFE LOG] %-5level %d{HH:mm:ss.SSS} [%thread %F:%L] %method - %msg%n
+            </Pattern>
+        </encoder>
+
+        <!-- 로그를 남기는 파일의 용량이 50KB가 넘으면 이를 압축 파일로 만들고 새로 로그 파일로 만들라는 정책 -->
+        <triggeringPolicy
+                class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>50KB</MaxFileSize>
+        </triggeringPolicy>
+
+        <!-- 파일을 덮어쓰는 정책 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>C:\NFE_LOG\NFE_log.%i.log.zip</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>10</MaxIndex>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="com.dydtjr1128.nfe"  level="debug" additivity="false">
+        <appender-ref ref="consoleAppender" />
+        <appender-ref ref="fileAppender" />
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="consoleAppender" />
+    </root>
+
+</configuration>
