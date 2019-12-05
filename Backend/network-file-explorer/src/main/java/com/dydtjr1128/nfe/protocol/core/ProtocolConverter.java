@@ -22,7 +22,6 @@ public class ProtocolConverter {
         byte[] compressedData = Snappy.compress(path);
         byteBuffer.putLong(compressedData.length);
         byteBuffer.put(protocol);
-        System.out.println(compressedData.length + "s@@@@@@");
         byteBuffer.put(compressedData);
         byteBuffer.flip();
         return byteBuffer;

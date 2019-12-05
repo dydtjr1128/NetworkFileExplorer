@@ -20,8 +20,7 @@ class Attachment {
     }
 
     void calcFileData(String string) {
-        System.out.println("@ " + string);
-        String temp[] = string.replace(Config.END_MESSAGE_MARKER, "").split(Config.MESSAGE_DELIMITER.replace("|", "\\|"));
+        String[] temp = string.replace(Config.END_MESSAGE_MARKER, "").split(Config.MESSAGE_DELIMITER.replace("|", "\\|"));
         fileName = temp[0];
         fileSize = Long.parseLong(temp[1]);
     }
@@ -31,7 +30,6 @@ class Attachment {
     }
 
     void openFileChannel(Path path) throws IOException {
-        System.out.println("openFileChannel!");
         fileChannel = AsynchronousFileChannel.open(
                 path,
                 StandardOpenOption.CREATE,

@@ -34,7 +34,6 @@ public class JwtTokenProvider {
             Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt).getBody();
             Date exp = claims.getExpiration();
             Date now = new Date();
-            System.out.println("@@ " + exp + " " + now);
             if (exp.after(now))
                 return false;
 

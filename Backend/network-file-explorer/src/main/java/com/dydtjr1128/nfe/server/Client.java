@@ -110,7 +110,6 @@ public class Client {
         synchronized (messageQueue) {
             messageQueue.add(buffer);
             if (isWriting) {
-                //System.out.println("쓰기 불가능");
                 return;
             }
         }

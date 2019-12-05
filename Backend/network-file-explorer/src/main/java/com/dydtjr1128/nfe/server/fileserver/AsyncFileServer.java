@@ -40,6 +40,7 @@ public class AsyncFileServer implements Runnable {
 
     private AsynchronousServerSocketChannel createAsynchronousFileServerSocketChannel() throws IOException {
         final AsynchronousServerSocketChannel serverSocketChannel = AsynchronousServerSocketChannel.open(channelGroup);
+        serverSocketChannel.setOption(StandardSocketOptions.SO_RCVBUF, NFEProtocol.NETWORK_FILE_BYTE * 2);
         serverSocketChannel.setOption(StandardSocketOptions.SO_REUSEADDR, true);
         serverSocketChannel.bind(new InetSocketAddress(Config.ASYNC_FILE_SERVER_PORT));
         return serverSocketChannel;
@@ -70,19 +71,20 @@ public class AsyncFileServer implements Runnable {
     }
 
     private void handleNewConnection(AsynchronousSocketChannel channel) throws IOException, ExecutionException, InterruptedException {
-        channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
+        //channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
+        channel.setOption(StandardSocketOptions.SO_RCVBUF, NFEProtocol.NETWORK_FILE_BYTE);
+        channel.setOption(StandardSocketOptions.SO_SNDBUF, NFEProtocol.NETWORK_FILE_BYTE);
         ByteBuffer dataBuffer = ByteBuffer.allocate(NFEProtocol.NETWORK_FILE_BYTE);
         Future<Integer> operations = channel.read(dataBuffer);
         operations.get();
         dataBuffer.flip();
         byte action = dataBuffer.get();
-        System.out.println("get1 " + dataBuffer.position() + " " + dataBuffer.limit());
+
         if (dataBuffer.hasRemaining())
             dataBuffer.compact();
         else
             dataBuffer.clear();
         //추가
-        System.out.println("get2 " + dataBuffer.position() + " " + dataBuffer.limit());
         if (action == FileAction.FILE_RECEIVE_FROM_CLIENT) { // 고정 서버 path + filename
             logger.debug("[File receive from client]");
             readFileFromClient(channel, dataBuffer);
@@ -91,12 +93,9 @@ public class AsyncFileServer implements Runnable {
             Client client = ClientManager.getInstance().getClientByIP((InetSocketAddress) channel.getRemoteAddress());
             TransferFileMetaData metaData;
             if (client == null) return;
-            System.out.println(client.getClientURL() + " " + client.getBlockingQueue().size());
             synchronized (client.getFilePathQueue()) {
                 Queue<TransferFileMetaData> queue = client.getFilePathQueue();
-                System.out.println("poll");
                 metaData = queue.poll();
-                System.out.println("after " + metaData.getSeverPath());
             }
             if (metaData != null)
                 writeFileToClient(channel, dataBuffer, metaData);
@@ -109,20 +108,22 @@ public class AsyncFileServer implements Runnable {
             @Override
             public void completed(final Integer result, final Attachment readData) {
                 if (result < 0) {
-                    System.out.println("close!");
+                    logger.error("Read data error!");
                     close(channel, readData.getFileChannel());
                     return;
                 }
                 dataBuffer.flip();
                 long messageLen = dataBuffer.getLong();
-                System.out.println(messageLen);
+
                 byte[] bytes = new byte[(int) messageLen];
                 dataBuffer.get(bytes, 0, (int) messageLen);
-                String string = null;
+
                 if (dataBuffer.hasRemaining())
                     dataBuffer.compact();
                 else
                     dataBuffer.clear();
+
+                String string = null;
                 try {
                     string = Snappy.uncompressString(bytes);
                     if (string.contains(Config.END_MESSAGE_MARKER)) {
@@ -136,19 +137,15 @@ public class AsyncFileServer implements Runnable {
                             }
                         }
                         if (Files.notExists(path) && !Files.isDirectory(path)) {
-
-                            System.out.println(path);
+                            logger.debug("[Receive file from server] : " + path);
                             readData.openFileChannel(path);
 
-                            System.out.println(result + " " + dataBuffer.position() + " " + dataBuffer.limit());
                             writeToFile(channel, readData, dataBuffer);
                         } else {
                             close(channel, readData.getFileChannel());
-                            System.out.println("Download err!");
-                            return;
                         }
                     }
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException | ExecutionException e) {
                     e.printStackTrace();
                     close(channel, readData.getFileChannel());
                 }
@@ -162,51 +159,48 @@ public class AsyncFileServer implements Runnable {
         });
     }
 
-    public void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) {
-        System.out.println(attachment.getReadPosition() + " " + dataBuffer.position() + " " + dataBuffer.limit());
+    public void writeToFile(AsynchronousSocketChannel channel, Attachment attachment, ByteBuffer dataBuffer) throws ExecutionException, InterruptedException {
+        dataBuffer.flip();
+        while (dataBuffer.hasRemaining()) {
+            Future<Integer> future = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
+            int l = future.get();
+            attachment.addPosition(l != -1 ? l : 0);
+        }
+        dataBuffer.clear();
         channel.read(dataBuffer, attachment, new CompletionHandler<Integer, Attachment>() {
 
                     @SneakyThrows
                     @Override
                     public void completed(Integer result, Attachment attachment) {
                         if (result > 0) {
-                            System.out.println("before flip " + attachment.getReadPosition() + " " + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
                             dataBuffer.flip();
-                            System.out.println(attachment.getReadPosition() + " " + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
                             try {
-                                Future<Integer> operation = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
-                                operation.get(10, TimeUnit.SECONDS);
+                                while (dataBuffer.hasRemaining()) {
+                                    Future<Integer> future = attachment.getFileChannel().write(dataBuffer, attachment.getReadPosition());
+                                    int i = future.get(10, TimeUnit.SECONDS);
+                                    attachment.addPosition(i);
+                                }
                             } catch (Exception e) {
                                 logger.error("[Download error!] : " + attachment.getFileName(), e);
                                 return;
                             }
-                            attachment.addPosition(result);
-                            if (dataBuffer.hasRemaining()) {
-                                System.out.println(attachment.getReadPosition() + "남@" + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
-                                dataBuffer.compact();
-                                System.out.println(attachment.getReadPosition() + "남@@" + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
-                            } else
-                                dataBuffer.clear();
+
+                            dataBuffer.clear();
                             if (attachment.getReadPosition() == attachment.getFileSize()) {
                                 AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, attachment.getFileName() + " 다운로드 성공!"));
                                 logger.debug("[Download success!] : " + attachment.getFileName());
-                                dataBuffer.clear();
-                                System.out.println(attachment.getReadPosition() + " " + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
                                 try {
                                     channel.close();
                                     attachment.getFileChannel().close();
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+                                return;
                             } else if (attachment.getReadPosition() > attachment.getFileSize()) {
                                 AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_FAIL, attachment.getFileName() + " 다운로드 실패!"));
                                 logger.debug("[Download Error!]");
-                            } else {
-                                System.out.println(attachment.getReadPosition() + " " + result + " " + dataBuffer.position() + " " + dataBuffer.limit());
-                                System.out.println("====================================");
-                                channel.read(dataBuffer, attachment, this);
                             }
-
+                            channel.read(dataBuffer, attachment, this);
                         }
                     }
 
@@ -223,9 +217,7 @@ public class AsyncFileServer implements Runnable {
 
     public void writeFileToClient(AsynchronousSocketChannel channel, ByteBuffer dataBuffer, TransferFileMetaData metaData) throws IOException, ExecutionException, InterruptedException {
         Path serverPath = Paths.get(metaData.getSeverPath());
-
-        long position = 0;
-        System.out.println("!@!");
+        logger.debug("[Send file to Server] : " + serverPath);
         if (Files.exists(serverPath) && !Files.isDirectory(serverPath)) {
             AsynchronousFileChannel fileChannel = AsynchronousFileChannel.open(
                     serverPath,
@@ -233,16 +225,14 @@ public class AsyncFileServer implements Runnable {
             );
             long fileSize = Files.size(serverPath);
             byte[] message = Snappy.compress(serverPath.getFileName().toString() + Config.MESSAGE_DELIMITER + fileSize + Config.END_MESSAGE_MARKER);
-            System.out.println("!!");
+
             dataBuffer.putLong(message.length);
             dataBuffer.put(message);
             dataBuffer.flip();
-            System.out.println("!!2");
             Future<Integer> future = channel.write(dataBuffer);
             future.get();
             dataBuffer.clear();
-            dataBuffer.limit(0);
-            System.out.println("!!2");
+
             fileChannel.read(
                     dataBuffer, 0, new SendData(0, dataBuffer),    // null 대신 iterations 전달
                     new CompletionHandler<Integer, SendData>() {
@@ -250,15 +240,16 @@ public class AsyncFileServer implements Runnable {
                         @Override
                         public void completed(Integer result, SendData sendData) {
                             if (result < 0) {
-                                System.err.println("비정상 종료");
+                                logger.error("File read error");
                                 return;
                             }
                             sendData.addPosition(result);
                             try {
-                                sendData.getBuffer().flip();
-                                //System.out.println("전송 " + sendData.getReadPosition() + " " + sendData.getBuffer().position() + " " + sendData.getBuffer().limit());
-                                Future<Integer> operation = channel.write(sendData.getBuffer());
-                                operation.get(100, TimeUnit.SECONDS);
+                                dataBuffer.flip();
+                                while (dataBuffer.hasRemaining()) {
+                                    Future<Integer> future = channel.write(dataBuffer);
+                                    future.get(100, TimeUnit.SECONDS);
+                                }
 
                             } catch (Exception e) {
                                 AdminWebSocketManager.getInstance().writeToAdminPage(new AdminMessage(AdminMessage.DOWNLOAD_SUCCESS, serverPath + " 업로드 실패!"));
@@ -296,8 +287,7 @@ public class AsyncFileServer implements Runnable {
             if (!channel.isOpen())
                 channel.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("FileServer close err!");
+            logger.error("Filer channel close error!",e);
         }
     }
 
