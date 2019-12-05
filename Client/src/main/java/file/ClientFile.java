@@ -18,7 +18,7 @@ public class ClientFile {
     @SerializedName("s")
     private final int size;//KB
 
-    public ClientFile(final String fileName, final BasicFileAttributes attributes) {
+    ClientFile(final String fileName, final BasicFileAttributes attributes) {
         this.fileName = fileName;
         this.isDirectory = attributes.isDirectory();
         this.modifiedDate = attributes.lastModifiedTime().toMillis();

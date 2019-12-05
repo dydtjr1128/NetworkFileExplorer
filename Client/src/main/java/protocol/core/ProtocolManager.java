@@ -8,18 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProtocolManager {
-    private static ProtocolManager INSTANCE = null;
     private Map<Byte, Protocol> protocolMap;
 
-    public static ProtocolManager getInstance() {
-        return LazyHolder.INSTANCE;
-    }
-
-    private static class LazyHolder {
-        private static final ProtocolManager INSTANCE = new ProtocolManager();
-    }
-
-    private ProtocolManager() {
+    public ProtocolManager() {
         protocolMap = new HashMap<>();
         protocolInit();
     }

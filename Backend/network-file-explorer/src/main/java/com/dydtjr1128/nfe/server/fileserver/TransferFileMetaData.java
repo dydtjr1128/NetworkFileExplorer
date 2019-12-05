@@ -1,6 +1,5 @@
 package com.dydtjr1128.nfe.server.fileserver;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter

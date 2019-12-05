@@ -8,13 +8,13 @@ import "./browser_style.scss";
 import { ACCESS_TOKEN } from '../util/Constants';
 import { getClients } from '../util/APIUtils';
 import useStores from '../util/useStore'
-import { useHistory } from "react-router-dom";
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
+import LoadingOverlay from 'react-loading-overlay';
+import OverlayLoading from './OverlayLoading'
 
 export default function Browser() {
     const [adminRef, setClientRef] = React.useState(null);
-    const history = useHistory();
     const wsSourceUrl = 'http://localhost:8080/messaging';
     const customHeaders = {
         "authorization": "Bearer " + localStorage.getItem(ACCESS_TOKEN),
@@ -45,26 +45,28 @@ export default function Browser() {
         } else if (msg.state === 1) { // rmove
             var index = store.client_list.indexOf(msg.message);
             if (index !== -1) {
-                if(msg.message === store.currentClientIP){
+                if (msg.message === store.currentClientIP) {
                     store.clearClient();
                 }
                 store.client_list.splice(index, 1);
             }
-        } else if(msg.state === 2 || msg.state ===3) { // download success or fail
+        } else if (msg.state === 2 || msg.state === 3) { // download success or fail
             alert(msg.message)
         }
     }
 
     function onConnect() {
+        store.progressVisible = true;
         getClients().then(response => {
             store.client_list = store.client_list.concat(response).sort();
+            store.progressVisible = false;
         }).catch(error => {
             if (error.status === 401) {
                 alert('Not authenticated')
             } else {
                 alert(error.message || 'Sorry! Something went wrong. Please try again!')
             }
-        });        
+        });
         console.log("connect!")
     }
 
@@ -81,7 +83,17 @@ export default function Browser() {
     }
 
     return (
+        // <LoadingOverlay
+        //     style={{
+        //         width: '1%',
+        //         height: '10%'
+        //     }}
+        //     active={true}
+        //     spinner
+        //     text='Loading your content...'
+        // >
         <div style={{ height: '100%' }}>
+            <OverlayLoading/>
             <SockJsClient url={wsSourceUrl} topics={["/topic/admin"]}
                 headers={customHeaders}
                 subscribeHeaders={customHeaders}
@@ -107,5 +119,6 @@ export default function Browser() {
                 </Pane>
             </SplitPane>
         </div>
+
     );
 }

@@ -6,6 +6,7 @@ import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import com.dydtjr1128.nfe.server.Client;
 import com.dydtjr1128.nfe.server.ClientManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +18,16 @@ import java.util.HashSet;
 @RequestMapping("/api/admin")
 @Slf4j
 public class AdminController {
+    private ClientManager clientManager;
+
+    @Autowired
+    AdminController(ClientManager clientManager) {
+        this.clientManager = clientManager;
+    }
 
     @GetMapping("/clients")
     public ResponseEntity<?> getUserLists() {
-        ArrayList<String> clients = ClientManager.getInstance().getAllClients();
+        ArrayList<String> clients = clientManager.getAllClients();
         return ResponseEntity.ok(clients);
     }
 
@@ -29,7 +36,7 @@ public class AdminController {
         long start = System.currentTimeMillis();
         path = pathPreProcessing(path);
         log.debug("[GET] Get file list : " + ip + "@" + path);
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.getDirectoriesByPath(path);
 
         HashSet<Byte> set = new HashSet<Byte>();
@@ -45,7 +52,7 @@ public class AdminController {
         long start = System.currentTimeMillis();
         fromPath = pathPreProcessing(fromPath);
         log.debug("[PUT] Change file name : " + ip + "@" + fromPath + "@" + name);
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.changeFileName(fromPath + "|" + name);
 
         HashSet<Byte> set = new HashSet<Byte>();
@@ -65,7 +72,7 @@ public class AdminController {
         fromPath = pathPreProcessing(fromPath);
         toPath = pathPreProcessing(toPath);
         log.debug("[PUT] Copy file : " + ip + "@" + fromPath + "@" + toPath);
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.copyFile(fromPath + "|" + toPath);
 
         HashSet<Byte> set = new HashSet<Byte>();
@@ -85,7 +92,7 @@ public class AdminController {
         fromPath = pathPreProcessing(fromPath);
         toPath = pathPreProcessing(toPath);
         log.debug("[PUT] Move file : " + ip + "@" + fromPath + "@" + toPath);
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.moveFile(fromPath + "|" + toPath);
 
         HashSet<Byte> set = new HashSet<Byte>();
@@ -103,7 +110,7 @@ public class AdminController {
     public ResponseEntity<?> deleteFile(@PathVariable String ip, @PathVariable String filePath) throws InterruptedException {
         long start = System.currentTimeMillis();
         filePath = pathPreProcessing(filePath);
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.deleteFile(filePath);
         log.debug("[DELETE] Delete file path : " + ip + "@" + filePath);
 
@@ -126,7 +133,7 @@ public class AdminController {
         clientFilePath = pathPreProcessing(clientFilePath);
         log.debug("[UPLOAD] Upload file : " + ip + "@" + serverFilePath + "@" + clientFilePath);
 
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.uploadToClient(serverFilePath, clientFilePath);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));
@@ -142,7 +149,7 @@ public class AdminController {
         System.out.println(clientFilePath);
         log.debug("[Download] Upload file : " + ip + "@" + clientFilePath);
         //고정된 폴더에 저장
-        Client client = ClientManager.getInstance().clientsHashMap.get(ip);
+        Client client = clientManager.getClient(ip);
         client.downloadFromClient(clientFilePath);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));

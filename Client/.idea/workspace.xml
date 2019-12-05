@@ -7,19 +7,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f7dca6d-a967-4378-a099-a1bb5ea70512" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/security/JwtTokenProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/security/JwtTokenProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/FileTransferServer2ClientProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/FileTransferServer2ClientProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/NFEProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/NFEProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/AsyncFileServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/AsyncFileServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/Attachment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/Attachment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/file/receiver/Attachment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/file/receiver/Attachment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/file/receiver/FileReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/file/receiver/FileReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/file/sender/FileSender.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/file/sender/FileSender.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/protocol/FileTransferServer2ClientProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/protocol/FileTransferServer2ClientProtocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/protocol/core/NFEProtocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/protocol/core/NFEProtocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/DirectoryTable.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/DirectoryTable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/OverlayLoading.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/OverlayLoading.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/modal/DeleteFileConfirmModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/modal/DeleteFileConfirmModal.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

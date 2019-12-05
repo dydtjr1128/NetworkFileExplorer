@@ -1,11 +1,13 @@
 package com.dydtjr1128.nfe.server;
 
+import com.dydtjr1128.nfe.admin.service.ApplicationContextProvider;
 import com.dydtjr1128.nfe.protocol.core.BindingData;
 import com.dydtjr1128.nfe.protocol.core.NFEProtocol;
 import com.dydtjr1128.nfe.protocol.core.ProtocolConverter;
 import com.dydtjr1128.nfe.server.fileserver.TransferFileMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -23,12 +25,14 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class Client {
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
     private AsynchronousSocketChannel socketChannel;
-    private final Queue<TransferFileMetaData> filePathQueue; //clientPath,will send server file list
+    private final Queue<TransferFileMetaData> filePathQueue;
     private ClientDataHandler dataHandler;
     private InetSocketAddress inetSocketAddress;
     private static boolean isWriting = false;
     private final static Queue<ByteBuffer> messageQueue = new LinkedList<>();
     private BlockingQueue<BindingData> resultBlockingQueue;
+
+    private ClientManager clientManager;
 
     Client(AsynchronousSocketChannel channel, ClientDataHandler dataHandler) throws IOException {
         this.socketChannel = channel;
@@ -36,6 +40,7 @@ public class Client {
         if (channel.isOpen()) {
             inetSocketAddress = ((InetSocketAddress) socketChannel.getRemoteAddress());
         }
+        clientManager = ApplicationContextProvider.getApplicationContext().getBean(ClientManager.class);
         resultBlockingQueue = new LinkedBlockingDeque<>();
         filePathQueue = new ConcurrentLinkedDeque<>();
     }
@@ -49,11 +54,11 @@ public class Client {
         }
     }
 
-    public String getClientURL() {
+    String getClientURL() {
         return inetSocketAddress.getAddress().toString().substring(1) + ":" + inetSocketAddress.getPort();
     }
 
-    public String getClientIP() {
+    String getClientIP() {
         return inetSocketAddress.getAddress().toString().substring(1);
     }
 
@@ -61,8 +66,7 @@ public class Client {
         read();
     }
 
-    /* requset function */
-
+    /* request function */
     public void getDirectoriesByPath(String path) {
         writeStringMessage(NFEProtocol.GET_LIST, path);
     }
@@ -136,7 +140,6 @@ public class Client {
                     socketChannel.write(buffer, resultBuffer, this);
                 } else {
                     loadAndWriteMessage();
-                    // Go back and check if there is new data to write
                 }
             }
 
@@ -160,7 +163,7 @@ public class Client {
                 if (result < 1) {
                     client.close();
                     logger.debug("[Closing connection to ] : " + client);
-                    ClientManager.getInstance().removeClient(client);
+                    clientManager.removeClient(client);
                 } else {
                     logger.debug("[Some data received from] : " + client.getClientURL());
 
@@ -186,7 +189,7 @@ public class Client {
             @Override
             public void failed(Throwable exc, Integer buffer) {
                 close();
-                ClientManager.getInstance().removeClient(client);
+                clientManager.removeClient(client);
             }
         });
     }

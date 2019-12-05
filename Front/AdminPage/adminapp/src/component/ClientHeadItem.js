@@ -13,6 +13,7 @@ const ClientHeadItem = observer((props) => {
     const { store } = useStores();
 
     function onClick() {
+        store.progressVisible = true;
         getDirectores(path, "root").then(response => {
             //response["here"] = path
             // var array = [];
@@ -26,6 +27,8 @@ const ClientHeadItem = observer((props) => {
             } else {
                 alert(error.message || 'Sorry! Something went wrong. Please try again!')
             }
+        }).finally(() => {
+            store.progressVisible = false;
         });
     }
 

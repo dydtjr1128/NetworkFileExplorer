@@ -13,7 +13,6 @@ const request = (url, options) => {
     return fetch(url, options)
         .then(response =>
             response.json().then(json => {
-                console.log(response)
                 if (!response.ok) {
                     return Promise.reject(json);
                 }
@@ -68,7 +67,6 @@ function pathFormatting(path){
 
 export function getDirectores(ip, path) {
     const url = API_BASE_URL + "/admin/directory/" + ipPortToIp(ip) + "/" + pathFormatting(path);
-    console.log("get d ! : " + path + " " + url)
     const requestData = {
         method: 'GET'
     }

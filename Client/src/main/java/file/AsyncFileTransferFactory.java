@@ -4,12 +4,12 @@ import file.receiver.FileReceiver;
 import file.sender.FileSender;
 
 public class AsyncFileTransferFactory {
+    private String ip;
+    private int port;
+
     public static AsyncFileTransferFactory getInstance() {
         return AsyncFileTransferFactory.LazyHolder.INSTANCE;
     }
-
-    private String ip;
-    private int port;
 
     public void fileTransferManagerInitialize(String ip, int port) {
         this.ip = ip;
