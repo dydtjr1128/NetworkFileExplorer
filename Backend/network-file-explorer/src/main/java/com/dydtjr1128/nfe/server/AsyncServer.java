@@ -26,7 +26,7 @@ public class AsyncServer implements Runnable {
 
     AsyncServer() throws IOException {
         channelGroup = AsynchronousChannelGroup.withFixedThreadPool(Config.DEFAULT_THREAD_POOL_COUNT, Executors.defaultThreadFactory());
-        assc = createAsynchronousServerSocketChannel();
+        http://localhost:3000/explorer = createAsynchronousServerSocketChannel();
         clientManager = ApplicationContextProvider.getApplicationContext().getBean(ClientManager.class);
         logger.debug("[Finish server setting with " + Config.DEFAULT_THREAD_POOL_COUNT + " thread in thread pool]");
     }

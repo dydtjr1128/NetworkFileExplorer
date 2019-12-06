@@ -14,6 +14,7 @@ export default function App() {
 
         login(userID, userPassword)
             .then(response => {
+                console.log("login")
                 localStorage.setItem(ACCESS_TOKEN, response.accessToken);
                 setAuthenticated(true);
                 history.push('/explorer')
@@ -30,10 +31,6 @@ export default function App() {
     function handleLogout(redirectTo = "/", description = "You're successfully logged out.") {
         localStorage.removeItem(ACCESS_TOKEN);
         setAuthenticated(false);
-
-        //history.push(redirectTo);
-
-        //alert(description);
     }
 
     return (

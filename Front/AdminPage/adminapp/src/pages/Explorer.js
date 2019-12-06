@@ -5,6 +5,6 @@ import { ACCESS_TOKEN } from '../util/Constants';
 
 export default function Explorer(props) {
   return (
-    localStorage.getItem(ACCESS_TOKEN) ? <Browser /> : <Redirect to='/' />
+    localStorage.getItem(ACCESS_TOKEN)? <Browser /> : <Redirect to='/' />
   );
 }
