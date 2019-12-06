@@ -304,7 +304,6 @@ const DirectoryTable = observer((props) => {
     store.selectedIP = store.currentClientIP;
     store.selectedType = row.t;
     store.selectedIndex = index;
-    console.log(index)
     setSelected(row.f);
   };
 

@@ -53,6 +53,7 @@ public class FileReceiver {
             @Override
             public void failed(Throwable exc, AsynchronousSocketChannel attachment) {
                 System.out.println("err!");
+                exc.printStackTrace();
             }
         });
 
