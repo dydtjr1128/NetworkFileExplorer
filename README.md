@@ -30,10 +30,10 @@ This protocol is used to send with receive server and clients
 ## Class Diagram
 
 ### Server
-![server](https://user-images.githubusercontent.com/19161231/70579681-b3c19580-1bf4-11ea-90c1-41b3f24ecfd4.png)
+![ServerClassDiagram](https://user-images.githubusercontent.com/19161231/70594005-707e1b80-1c22-11ea-929a-8f8c1bc35d4a.png)
 
 ### Client
-![client](https://user-images.githubusercontent.com/19161231/70579682-b3c19580-1bf4-11ea-9565-9fe42d1f783b.png)
+![ClientClassDiagram](https://user-images.githubusercontent.com/19161231/70594004-707e1b80-1c22-11ea-99c1-41efba568910.png)
 
 ## Sequence diagram
 
