@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 @RestController
 @CrossOrigin
@@ -37,11 +36,8 @@ public class AdminController {
         path = pathPreProcessing(path);
         log.debug("[GET] Get file list : " + ip + "@" + path);
         Client client = clientManager.getClient(ip);
-        client.getDirectoriesByPath(path);
 
-        HashSet<Byte> set = new HashSet<Byte>();
-        set.add(NFEProtocol.GET_LIST);
-        BindingData result = client.getCorrectProtocol(client, set);
+        BindingData result = client.sendResponse(NFEProtocol.GET_LIST, path);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));
         return ResponseEntity.ok(result.getPayload());
@@ -53,11 +49,7 @@ public class AdminController {
         fromPath = pathPreProcessing(fromPath);
         log.debug("[PUT] Change file name : " + ip + "@" + fromPath + "@" + name);
         Client client = clientManager.getClient(ip);
-        client.changeFileName(fromPath + "|" + name);
-
-        HashSet<Byte> set = new HashSet<Byte>();
-        set.add(NFEProtocol.CHANGE_NAME);
-        BindingData result = client.getCorrectProtocol(client, set);
+        BindingData result = client.sendResponse(NFEProtocol.CHANGE_NAME, fromPath + "|" + name);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));
         if (result.getPayload().equals("s"))
@@ -73,11 +65,7 @@ public class AdminController {
         toPath = pathPreProcessing(toPath);
         log.debug("[PUT] Copy file : " + ip + "@" + fromPath + "@" + toPath);
         Client client = clientManager.getClient(ip);
-        client.copyFile(fromPath + "|" + toPath);
-
-        HashSet<Byte> set = new HashSet<Byte>();
-        set.add(NFEProtocol.COPY);
-        BindingData result = client.getCorrectProtocol(client, set);
+        BindingData result = client.sendResponse(NFEProtocol.COPY, fromPath + "|" + toPath);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));
         if (result.getPayload().equals("s"))
@@ -93,11 +81,7 @@ public class AdminController {
         toPath = pathPreProcessing(toPath);
         log.debug("[PUT] Move file : " + ip + "@" + fromPath + "@" + toPath);
         Client client = clientManager.getClient(ip);
-        client.moveFile(fromPath + "|" + toPath);
-
-        HashSet<Byte> set = new HashSet<Byte>();
-        set.add(NFEProtocol.MOVE);
-        BindingData result = client.getCorrectProtocol(client, set);
+        BindingData result = client.sendResponse(NFEProtocol.MOVE, fromPath + "|" + toPath);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));
         if (result.getPayload().equals("s"))
@@ -110,13 +94,10 @@ public class AdminController {
     public ResponseEntity<?> deleteFile(@PathVariable String ip, @PathVariable String filePath) throws InterruptedException {
         long start = System.currentTimeMillis();
         filePath = pathPreProcessing(filePath);
-        Client client = clientManager.getClient(ip);
-        client.deleteFile(filePath);
         log.debug("[DELETE] Delete file path : " + ip + "@" + filePath);
 
-        HashSet<Byte> set = new HashSet<Byte>();
-        set.add(NFEProtocol.DELETE);
-        BindingData result = client.getCorrectProtocol(client, set);
+        Client client = clientManager.getClient(ip);
+        BindingData result = client.sendResponse(NFEProtocol.DELETE, filePath);
 
         log.debug(String.valueOf((System.currentTimeMillis() - start)));
         if (result.getPayload().equals("s"))

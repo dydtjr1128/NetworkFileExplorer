@@ -12,7 +12,9 @@ public class ProtocolConverter {
         byte[] bytes = new byte[result];
         buffer.get(bytes, 0, result);
         buffer.compact();
+
         String path = Snappy.uncompressString(bytes);
+        System.out.println(result + " ! " + path);
         return new BindingData(result, protocol, path);
     }
 
