@@ -26,7 +26,7 @@ public class AsyncServer implements Runnable {
 
     AsyncServer() throws IOException {
         channelGroup = AsynchronousChannelGroup.withFixedThreadPool(Config.DEFAULT_THREAD_POOL_COUNT, Executors.defaultThreadFactory());
-        http://localhost:3000/explorer = createAsynchronousServerSocketChannel();
+        assc = createAsynchronousServerSocketChannel();
         clientManager = ApplicationContextProvider.getApplicationContext().getBean(ClientManager.class);
         logger.debug("[Finish server setting with " + Config.DEFAULT_THREAD_POOL_COUNT + " thread in thread pool]");
     }
@@ -61,7 +61,7 @@ public class AsyncServer implements Runnable {
     }
 
     private void handleNewConnection(AsynchronousSocketChannel channel) throws IOException {
-        Client client = new Client(channel,  new DefaultDataHandler());
+        Client client = new Client(channel);
         logger.debug("[New client connected] : " + client.getClientIP());
         try {
             channel.setOption(StandardSocketOptions.TCP_NODELAY, true);
@@ -76,5 +76,5 @@ public class AsyncServer implements Runnable {
     public void writeMessageToClients(String clientIP, String message) throws IOException {
         logger.debug("[Send message to client] : " + clientIP);
         clientManager.getClient(clientIP).writeStringMessage(NFEProtocol.GET_LIST, "C:\\Windows\\Cursors");
-    }
+}
 }

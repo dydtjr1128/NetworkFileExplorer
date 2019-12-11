@@ -7,16 +7,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f7dca6d-a967-4378-a099-a1bb5ea70512" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ReadHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/RequestController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/config/StartOrder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/controller/AdminController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/ChangeNameProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/CopyProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/DeleteProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/FileTransferClient2ServerProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/FileTransferServer2ClientProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/GetListProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/MoveProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/Protocol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AdminWebSocketManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AdminWebSocketManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AsyncServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AsyncServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientDataHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/DefaultDataHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ServerStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ServerStarter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/client/AsyncFileExplorer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/client/AsyncFileExplorer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/file/receiver/FileReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/file/receiver/FileReceiver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/pages/SignIn.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/pages/SignIn.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/shared/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/shared/App.js" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,6 +61,11 @@
   </component>
   <component name="ProjectId" id="1Tp9xCxilqzs4b6vK5OAbTdO7H1" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="false" />
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
@@ -55,11 +76,13 @@
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
+    <property name="settings.editor.selected.configurable" value="MTConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -70,18 +93,6 @@
       <recent name="C:\Users\CYS\Desktop\NetworkFileExplorer\Client\src\main\java\protocol" />
       <recent name="C:\Users\CYS\Desktop\NetworkFileExplorer\Client\src\main\java\file" />
     </key>
-  </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
   </component>
   <component name="RunManager" selected="Application.1">
     <configuration name="1" type="Application" factoryName="Application">
@@ -124,6 +135,18 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -134,8 +157,13 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1574146413602</updated>
+      <workItem from="1576022332252" duration="2549000" />
+      <workItem from="1576040743918" duration="5319000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -149,6 +177,32 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="740" y="251" key="FileChooserDialogImpl" timestamp="1576022435421">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="251" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1576022435421" />
+    <state width="1877" height="254" key="GridCell.Tab.0.bottom" timestamp="1576056551306">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="254" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551306" />
+    <state width="1877" height="254" key="GridCell.Tab.0.center" timestamp="1576056551306">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="254" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551306" />
+    <state width="1877" height="254" key="GridCell.Tab.0.left" timestamp="1576056551305">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="254" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551305" />
+    <state width="1877" height="254" key="GridCell.Tab.0.right" timestamp="1576056551306">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="254" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551306" />
+    <state x="463" y="164" key="SettingsEditor" timestamp="1576025074946">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="463" y="164" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1576025074946" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

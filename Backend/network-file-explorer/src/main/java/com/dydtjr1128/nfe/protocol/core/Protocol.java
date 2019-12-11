@@ -10,7 +10,7 @@ import java.nio.channels.AsynchronousSocketChannel;
 public abstract class Protocol {
     private Gson gson;
     protected Protocol(){
-        gson = new Gson();;
+        gson = new Gson();
     }
 
     public Gson getGson(){return gson;}

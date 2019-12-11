@@ -1,5 +1,6 @@
 package com.dydtjr1128.nfe.server;
 
+import com.dydtjr1128.nfe.server.config.StartOrder;
 import com.dydtjr1128.nfe.server.model.AdminMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@Order(1)
+@Order(StartOrder.CLIENT_MANAGER)
 public class ClientManager {
     private static final Logger logger = LoggerFactory.getLogger(ClientManager.class);
     private final Map<String, Client> clientsHashMap;
@@ -26,13 +27,12 @@ public class ClientManager {
         adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.ADD, clientIP));
     }
 
-    void removeClient(Client client) {
-        String clientIP = client.getClientURL();
+    void removeClient(String clientIP) {
         clientsHashMap.remove(clientIP);
         adminWebSocketManager.writeToAdminPage(new AdminMessage(AdminMessage.REMOVE, clientIP));
     }
 
-    public Map<String,Client> getClientsHashMap(){
+    public Map<String, Client> getClientsHashMap() {
         return clientsHashMap;
     }
 
