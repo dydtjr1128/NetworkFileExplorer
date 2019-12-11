@@ -12,6 +12,7 @@ The Admin page provides several functions.
 - Provides a file copy
 - Provides a file name change
 - Show client connection in real time.
+- Support Windows/Linux
 
 # Structure
 
