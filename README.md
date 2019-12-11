@@ -2,6 +2,14 @@
 
 ![image](https://user-images.githubusercontent.com/19161231/70204936-b1c78480-1765-11ea-836a-5747db9539a9.png)
 
+# Structure
+
+![Structure](https://user-images.githubusercontent.com/19161231/70580224-56c6df00-1bf6-11ea-9f8c-03c2a77e7207.png)
+
+# Message Protocol
+
+![Command](https://user-images.githubusercontent.com/19161231/70580225-56c6df00-1bf6-11ea-9762-cbc1d92864a1.png)
+
 # Class Diagram
 
 ## Server
