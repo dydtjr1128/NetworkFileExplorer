@@ -30,7 +30,7 @@ This protocol is used to send with receive server and clients
 ## Class Diagram
 
 ### Server
-![ServerClassDiagram](https://user-images.githubusercontent.com/19161231/70594005-707e1b80-1c22-11ea-929a-8f8c1bc35d4a.png)
+![ServerClassDiagram](https://user-images.githubusercontent.com/19161231/70698142-312afa00-1d0a-11ea-8385-32f43bfe5aee.png)
 
 ### Client
 ![ClientClassDiagram](https://user-images.githubusercontent.com/19161231/70594004-707e1b80-1c22-11ea-99c1-41efba568910.png)
