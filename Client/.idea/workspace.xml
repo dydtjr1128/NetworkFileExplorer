@@ -7,31 +7,83 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f7dca6d-a967-4378-a099-a1bb5ea70512" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ReadHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/RequestController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/config/StartOrder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/ChangeNameProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/CopyProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/DeleteProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/FileTransferClient2ServerProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/FileTransferServer2ClientProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/GetListProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/MoveProtocol.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/Protocol.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/Protocol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolManager.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AdminWebSocketManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AdminWebSocketManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AsyncServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AsyncServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientDataHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/DefaultDataHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ServerStarter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ServerStarter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/NetworkFileExplorerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/config/WebSecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/config/WebSocketConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/controller/AdminController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/controller/AuthController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/model/EmptyJsonResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/model/JwtAuthenticationResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/model/LoginRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/security/JwtAuthenticationEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/security/JwtAuthenticationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/security/JwtTokenProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/admin/service/ApplicationContextProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/file/ClientFile.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/BindingData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/NFEProtocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/Protocol.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/protocol/core/ProtocolConverter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AdminWebSocketManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/AsyncServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/Client.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ClientManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ReadHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/RequestController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/ServerStarter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/config/Config.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/config/StartOrder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/AsyncFileServer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/Attachment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/FileAction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/SendData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/fileserver/TransferFileMetaData.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/java/com/dydtjr1128/nfe/server/model/AdminMessage.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/main/resources/logback-spring.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Backend/network-file-explorer/src/test/java/com/dydtjr1128/nfe/NetworkFileExplorerApplicationTests.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/client/ClientStore.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/client/Root.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/Browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/Client.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/ClientHeadItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/ClientTreeItem.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/DirectoryTable.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/DirectoryTable.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/Header.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/OverlayLoading.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/Sidebar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/browser_style.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/modal/DeleteFileConfirmModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/modal/FileNameChangeModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/component/modal/FileUploadModal.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/pages/Explorer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/pages/NotFound.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/pages/SignIn.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/pages/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/serviceWorker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/shared/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/shared/App.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/shared/App.test.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/shared/logo.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/util/APIUtils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/util/Constants.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/util/PrivateRoute.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Front/AdminPage/adminapp/src/util/useStore.js" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +130,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Server" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -159,6 +211,7 @@
       <updated>1574146413602</updated>
       <workItem from="1576022332252" duration="2549000" />
       <workItem from="1576040743918" duration="5319000" />
+      <workItem from="1576110114953" duration="1761000" />
     </task>
     <servers />
   </component>
@@ -179,26 +232,26 @@
     </option>
   </component>
   <component name="WindowStateProjectService">
-    <state x="740" y="251" key="FileChooserDialogImpl" timestamp="1576022435421">
+    <state x="740" y="251" key="FileChooserDialogImpl" timestamp="1576112062897">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="251" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1576022435421" />
-    <state width="1877" height="254" key="GridCell.Tab.0.bottom" timestamp="1576056551306">
+    <state x="740" y="251" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1576112062897" />
+    <state width="1877" height="254" key="GridCell.Tab.0.bottom" timestamp="1576137156907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="254" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551306" />
-    <state width="1877" height="254" key="GridCell.Tab.0.center" timestamp="1576056551306">
+    <state width="1877" height="254" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1576137156907" />
+    <state width="1877" height="254" key="GridCell.Tab.0.center" timestamp="1576137156907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="254" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551306" />
-    <state width="1877" height="254" key="GridCell.Tab.0.left" timestamp="1576056551305">
+    <state width="1877" height="254" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1576137156907" />
+    <state width="1877" height="254" key="GridCell.Tab.0.left" timestamp="1576137156907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="254" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551305" />
-    <state width="1877" height="254" key="GridCell.Tab.0.right" timestamp="1576056551306">
+    <state width="1877" height="254" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1576137156907" />
+    <state width="1877" height="254" key="GridCell.Tab.0.right" timestamp="1576137156907">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="254" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1576056551306" />
+    <state width="1877" height="254" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1576137156907" />
     <state x="463" y="164" key="SettingsEditor" timestamp="1576025074946">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
