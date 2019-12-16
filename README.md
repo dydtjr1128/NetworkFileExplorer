@@ -27,10 +27,14 @@ Data communication between the client and the server uses the protocols below. A
 
 This protocol is used to send with receive server and clients
 
+## Server package structure
+
+![server_package](https://user-images.githubusercontent.com/19161231/70880841-d6e1b000-200d-11ea-9b16-f1d34f53572c.png)
+
 ## Class Diagram
 
 ### Server
-![ServerClassDiagram](https://user-images.githubusercontent.com/19161231/70698142-312afa00-1d0a-11ea-8385-32f43bfe5aee.png)
+![Server (1)](https://user-images.githubusercontent.com/19161231/70880853-e234db80-200d-11ea-8a6e-0a63d8fc0516.png)
 
 ### Client
 ![ClientClassDiagram](https://user-images.githubusercontent.com/19161231/70594004-707e1b80-1c22-11ea-99c1-41efba568910.png)
