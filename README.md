@@ -1,8 +1,10 @@
-# NetworkFileExplorer
+## Welcome to NetworkFileExplorer project!
+
+### What Is It?
 
 ![image](https://user-images.githubusercontent.com/19161231/70204936-b1c78480-1765-11ea-836a-5747db9539a9.png)
 
-This project that allows you to view a client's directory on the Admin page, just like the File Explorer in Windows.
+The NetworkFileExplorer is a cross platform project that allows you to view a client's directory on the Admin page, just like the File Explorer in Windows.
 
 The Admin page provides several functions.
 - Show file & directory (include name, last-modified date, type, file size)
