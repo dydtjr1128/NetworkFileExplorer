@@ -12,7 +12,7 @@ The Admin page provides several functions.
 - Provides a file copy
 - Provides a file name change
 - Show client connection in real time.
-- Support Windows/Linux
+- Support Windows/Linux OS
 
 ## Structure
 
@@ -47,3 +47,7 @@ This protocol is used to send with receive server and clients
 ### Client
 ![Client_sequenceDiagram](https://user-images.githubusercontent.com/19161231/70585731-7d8e1100-1c08-11ea-993f-b65bf025e317.png)
 
+## ToDO
+
+- [ ] Imporve project structure
+- [ ] Do asynchronous UI event about action when success/fail
