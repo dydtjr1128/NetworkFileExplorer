@@ -51,5 +51,6 @@ This protocol is used to send with receive server and clients
 
 ## ToDO
 
-- [ ] Imporve project structure
-- [ ] Do asynchronous UI event about action when success/fail
+- [ ] Improve file upload/download
+- [ ] React rendering time out.
+- [ ] Event driven based asynchronous UI event about action when success/fail
