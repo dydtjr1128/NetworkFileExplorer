@@ -3,7 +3,10 @@
 ### What Is It?
 
 The NetworkFileExplorer is a cross platform project that allows you to view a client's directory on the Admin page, just like the File Explorer in Windows.
-This project was implemented based on Java asynchronous non-blocking socket channel(`AsynchronousSocketChannel`, `AsynchronousServerSocketChannel`)
+
+This project was implemented based on Java asynchronous non-blocking socket channel(`AsynchronousSocketChannel`, `AsynchronousServerSocketChannel`). 
+
+`AsynchronousSocketChannel` and `AsynchronousServerSocketChannel` work as an `IOCP` in a Windows and as an `epoll` in a Linux.
 
 #### Demo screenshot
 
@@ -52,8 +55,15 @@ This protocol is used to send with receive server and clients
 ### Client
 ![Client_sequenceDiagram](https://user-images.githubusercontent.com/19161231/70585731-7d8e1100-1c08-11ea-993f-b65bf025e317.png)
 
-## ToDO
+## TODO
 
 - [ ] Improve file upload/download
 - [ ] React rendering time out.
 - [ ] Event driven based asynchronous UI event about action when success/fail
+
+## Contributing
+1. Fork it (`https://github.com/dydtjr1128/NetworkFileExplorer/`)
+2. Create your feature branch (git checkout -b feature/issueName)
+3. Commit your changes (git commit -am 'Add some fooBar')
+4. Push to the branch (git push origin feature/issueName)
+5. Create a new Pull Request
