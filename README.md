@@ -3,6 +3,7 @@
 ### What Is It?
 
 The NetworkFileExplorer is a cross platform project that allows you to view a client's directory on the Admin page, just like the File Explorer in Windows.
+This project was implemented based on Java asynchronous non-blocking socket channel(`AsynchronousSocketChannel`, `AsynchronousServerSocketChannel`)
 
 #### Demo screenshot
 
