@@ -62,7 +62,7 @@ This protocol is used to send with receive server and clients
 - [ ] Event driven based asynchronous UI event about action when success/fail
 
 ## Contributing
-1. Fork it (`https://github.com/dydtjr1128/NetworkFileExplorer/`)
+1. Fork it (https://github.com/dydtjr1128/NetworkFileExplorer/)
 2. Create your feature branch (git checkout -b feature/issueName)
 3. Commit your changes (git commit -am 'Add some fooBar')
 4. Push to the branch (git push origin feature/issueName)
