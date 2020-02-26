@@ -67,3 +67,12 @@ This protocol is used to send with receive server and clients
 3. Commit your changes (git commit -am 'Add some fooBar')
 4. Push to the branch (git push origin feature/issueName)
 5. Create a new Pull Request
+
+<br/> 
+
+<a href="mailto:dydtjr1994@gmail.com" target="_blank">
+  <img src="https://img.shields.io/badge/E--mail-Yongseok%20choi-yellow.svg">
+</a>
+<a href="https://dydtjr1128.github.io/" target="_blank">
+  <img src="https://img.shields.io/badge/Blog-cys__star%27s%20Blog-blue.svg">
+</a>
