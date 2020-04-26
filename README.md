@@ -58,6 +58,8 @@ This protocol is used to send with receive server and clients
 ## TODO
 
 - [ ] Improve file upload/download
+- [ ] File access permission to admin
+- [ ] need effective locking about simultaneous access
 - [ ] React rendering time out.
 - [ ] Event driven based asynchronous UI event about action when success/fail
 
