@@ -1,3 +1,5 @@
+![image](https://user-images.githubusercontent.com/19161231/80490865-f2d26680-899c-11ea-9743-9a8d15d6e381.png)
+
 ## Welcome to NetworkFileExplorer project!
 
 ### What Is It?
