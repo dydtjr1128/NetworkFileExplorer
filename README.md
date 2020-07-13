@@ -64,7 +64,7 @@ This protocol is used to send with receive server and clients
 - [ ] need effective locking about simultaneous access
 - [ ] React rendering time out.
 - [ ] Event driven based asynchronous UI event about action when success/fail
-- [ ] Packing to docker.
+- [ ] Packaging to docker.
 
 ## Contributing
 1. Fork it (https://github.com/dydtjr1128/NetworkFileExplorer/)
