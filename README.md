@@ -1,3 +1,8 @@
+![issues](https://img.shields.io/github/issues/dydtjr1128/NetworkFileExplorer)
+![forks](https://img.shields.io/github/forks/dydtjr1128/NetworkFileExplorer)
+![stars](https://img.shields.io/github/stars/dydtjr1128/NetworkFileExplorer)
+![license](https://img.shields.io/github/license/dydtjr1128/NetworkFileExplorer)
+
 ![image](https://user-images.githubusercontent.com/19161231/80490865-f2d26680-899c-11ea-9743-9a8d15d6e381.png)
 
 ## Welcome to NetworkFileExplorer project!
