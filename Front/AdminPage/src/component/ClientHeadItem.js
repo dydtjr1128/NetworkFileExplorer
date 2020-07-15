@@ -15,8 +15,6 @@ const ClientHeadItem = observer((props) => {
     function onClick() {
         store.progressVisible = true;
         getDirectores(path, "root").then(response => {
-            //response["here"] = path
-            // var array = [];
             response.map((dir, index) => {
                 store.root_drive.push(dir.f);
             });

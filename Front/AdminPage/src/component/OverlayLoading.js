@@ -26,13 +26,12 @@ const overlayLoadingStyle = makeStyles(theme => ({
     }
 }));
 
-
+let index = 0;
+const load = ['.', '..', '...','....','.....'];
 const OverlayLoading = observer((props) => {
     const classes = overlayLoadingStyle();
-    const { store } = useStores();
-    const load = ['.', '..', '...','....','.....'];
-    const [text, setText] = React.useState(load[0]);
-    let index = 0;
+    const { store } = useStores();    
+    const [text, setText] = React.useState(load[0]);    
     React.useEffect(() => {
         setInterval(() => {
             setText(load[index++])            

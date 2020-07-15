@@ -10,7 +10,6 @@ import { getClients } from '../util/APIUtils';
 import useStores from '../util/useStore'
 import SplitPane from 'react-split-pane';
 import Pane from 'react-split-pane/lib/Pane';
-import LoadingOverlay from 'react-loading-overlay';
 import OverlayLoading from './OverlayLoading'
 
 export default function Browser() {
@@ -83,15 +82,6 @@ export default function Browser() {
     }
 
     return (
-        // <LoadingOverlay
-        //     style={{
-        //         width: '1%',
-        //         height: '10%'
-        //     }}
-        //     active={true}
-        //     spinner
-        //     text='Loading your content...'
-        // >
         <div style={{ height: '100%' }}>
             <OverlayLoading/>
             <SockJsClient url={wsSourceUrl} topics={["/topic/admin"]}
