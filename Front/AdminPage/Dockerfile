@@ -9,6 +9,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 
 # install app dependencies
+COPY jsconfig.json ./
 COPY package.json ./
 COPY package-lock.json ./
 RUN npm install --silent
