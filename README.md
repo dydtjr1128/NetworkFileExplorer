@@ -19,7 +19,10 @@ This project was implemented based on Java asynchronous non-blocking socket chan
 
 ![image](https://user-images.githubusercontent.com/19161231/70204936-b1c78480-1765-11ea-836a-5747db9539a9.png)
 
+![empty image](./img/empty.jpg)
+
 The Admin page provides several functions.
+
 - Show file & directory (include name, last-modified date, type, file size)
 - Provides a file & directory deletion.
 - Provides a file upload/download
@@ -28,6 +31,37 @@ The Admin page provides several functions.
 - Provides a file name change
 - Show client connection in real time.
 - Support Windows/Linux OS
+
+## Build & run
+
+You can build and execute using the commands below.
+
+### Server build
+
+```bash
+cd .\Server
+mvn clean package
+docker build -t network-file-explorer-server:dev .
+```
+
+### Server run
+
+```bash
+docker run -v ${PWD}:/app -p 8080:8080 --rm -it network-file-explorer-server:dev
+```
+
+### Front build
+
+```bash
+cd .\Front\AdminPage\
+docker build -t network-file-explorer-front:dev .
+```
+
+### Front run
+
+```bash
+docker run -v ${PWD}:/app -v ./app/node_modules -p 3000:3000 --rm -it network-file-explorer-front:dev
+```
 
 ## Structure
 
