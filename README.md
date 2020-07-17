@@ -105,7 +105,7 @@ This protocol is used to send with receive server and clients
 - [ ] React rendering time out.
 - [ ] Event driven based asynchronous UI event about action when success/fail/
 - [x] Packaging to docker.
-- [ ] Managing kubernates/
+- [ ] Managing to kubernates.
 
 ## Contributing
 1. Fork it (https://github.com/dydtjr1128/NetworkFileExplorer/)
