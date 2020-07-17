@@ -31,6 +31,7 @@ The Admin page provides several functions.
 - Provides a file name change
 - Show client connection in real time.
 - Support Windows/Linux OS
+- Support Docker images to easy build&run
 
 ## Build & run
 
@@ -98,12 +99,13 @@ This protocol is used to send with receive server and clients
 
 ## TODO
 
-- [ ] Improve file upload/download
-- [ ] File access permission to admin
-- [ ] need effective locking about simultaneous access
+- [ ] Improve file upload/download/
+- [ ] File access permission to admin/
+- [ ] need effective locking about simultaneous access/
 - [ ] React rendering time out.
-- [ ] Event driven based asynchronous UI event about action when success/fail
-- [ ] Packaging to docker.
+- [ ] Event driven based asynchronous UI event about action when success/fail/
+- [x] Packaging to docker.
+- [ ] Managing kubernates/
 
 ## Contributing
 1. Fork it (https://github.com/dydtjr1128/NetworkFileExplorer/)
