@@ -64,6 +64,12 @@ docker build -t network-file-explorer-front:dev .
 docker run -v ${PWD}:/app -v ./app/node_modules -p 3000:3000 --rm -it network-file-explorer-front:dev
 ```
 
+### Client run
+
+I do not recommend using client as a docker. because client application access all drive.
+
+You can easy to start with .jar file.
+
 ## Structure
 
 <img src="https://user-images.githubusercontent.com/19161231/70580224-56c6df00-1bf6-11ea-9f8c-03c2a77e7207.png" width="80%"/>
