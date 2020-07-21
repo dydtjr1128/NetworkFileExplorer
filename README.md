@@ -90,17 +90,21 @@ This protocol is used to send with receive server and clients
 ## Class Diagram
 
 ### Server
+
 ![Server (1)](https://user-images.githubusercontent.com/19161231/70880853-e234db80-200d-11ea-8a6e-0a63d8fc0516.png)
 
 ### Client
+
 ![ClientClassDiagram](https://user-images.githubusercontent.com/19161231/70594004-707e1b80-1c22-11ea-99c1-41efba568910.png)
 
 ## Sequence diagram
 
 ### Server
+
 ![Server_sequenceDiagram](https://user-images.githubusercontent.com/19161231/70585732-7d8e1100-1c08-11ea-9046-ad1ad71fce9d.png)
 
 ### Client
+
 ![Client_sequenceDiagram](https://user-images.githubusercontent.com/19161231/70585731-7d8e1100-1c08-11ea-993f-b65bf025e317.png)
 
 ## TODO
