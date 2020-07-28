@@ -3,6 +3,8 @@
 # 자바 openjdk 8 환경
 FROM openjdk:8-jdk-alpine
 
+WORKDIR /backend
+
 VOLUME /tmp
 
 ARG JAR_FILE=target/*.jar
