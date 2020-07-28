@@ -22,10 +22,6 @@ jobs:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    # Runs a single command using the runners shell
-    - name: Echo command
-      run: start building docker image.
-
     - name: Front Build and push Docker images
       uses: docker/build-push-action@v1
       with:
