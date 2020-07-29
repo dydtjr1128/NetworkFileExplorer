@@ -25,8 +25,8 @@ jobs:
     - name: Front Build and push Docker images
       uses: docker/build-push-action@v1
       with:
-        username: _json_key
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
         path: ./Front/AdminPage
         repository: dydtjr1128/NetworkFileExplorer
@@ -38,8 +38,8 @@ jobs:
     - name: Server Build and push Docker images
       uses: docker/build-push-action@v1
       with:
-        username: _json_key
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
         path: ./Server
         repository: dydtjr1128/NetworkFileExplorer
