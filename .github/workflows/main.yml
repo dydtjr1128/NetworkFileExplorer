@@ -29,7 +29,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: gcr.io
         path: ./Front/AdminPage
-        repository: myorg/myrepository
+        repository: dydtjr1128/NetworkFileExplorer
         tags: latest
         
     - name: Build with Maven
@@ -42,5 +42,5 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
         registry: gcr.io
         path: ./Server
-        repository: myorg/myrepository
+        repository: dydtjr1128/NetworkFileExplorer
         tags: latest
