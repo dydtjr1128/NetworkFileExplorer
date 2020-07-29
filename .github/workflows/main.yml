@@ -29,7 +29,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
         path: ./Front/AdminPage
-        repository: dydtjr1128/network-file-explorer
+        repository: dydtjr1128/network-file-explorer/nfe-front
         tags: latest
         
     - name: Build with Maven
@@ -42,5 +42,5 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
         registry: docker.pkg.github.com
         path: ./Server
-        repository: dydtjr1128/network-file-explorer
+        repository: dydtjr1128/network-file-explorer/nfe-server
         tags: latest
