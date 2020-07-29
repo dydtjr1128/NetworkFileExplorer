@@ -2,6 +2,7 @@
 ![forks](https://img.shields.io/github/forks/dydtjr1128/NetworkFileExplorer)
 ![stars](https://img.shields.io/github/stars/dydtjr1128/NetworkFileExplorer)
 ![license](https://img.shields.io/github/license/dydtjr1128/NetworkFileExplorer)
+![Build docker Images](https://github.com/dydtjr1128/network-file-explorer/workflows/Build%20docker%20Images/badge.svg?branch=master)
 
 ![image](https://user-images.githubusercontent.com/19161231/80490865-f2d26680-899c-11ea-9743-9a8d15d6e381.png)
 
