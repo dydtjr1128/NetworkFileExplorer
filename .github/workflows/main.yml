@@ -27,7 +27,7 @@ jobs:
       with:
         username: _json_key
         password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: gcr.io
+        registry: docker.pkg.github.com
         path: ./Front/AdminPage
         repository: dydtjr1128/NetworkFileExplorer
         tags: latest
@@ -40,7 +40,7 @@ jobs:
       with:
         username: _json_key
         password: ${{ secrets.DOCKER_PASSWORD }}
-        registry: gcr.io
+        registry: docker.pkg.github.com
         path: ./Server
         repository: dydtjr1128/NetworkFileExplorer
         tags: latest
