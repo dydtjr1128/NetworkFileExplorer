@@ -113,13 +113,16 @@ This protocol is used to send with receive server and clients
 
 ## TODO
 
-- [ ] Improve file upload/download/
-- [ ] File access permission to admin/
-- [ ] need effective locking about simultaneous access/
+- [ ] Improve file upload/download.
+- [ ] File access permission to admin.
+- [ ] Support file action(change, move, rename ...) transaction.
+- [ ] Update spring rest function/url more explicitly.
+- [ ] need effective locking about simultaneous access.
 - [ ] React rendering time out.
-- [ ] Event driven based asynchronous UI event about action when success/fail/
+- [ ] Event driven based asynchronous UI event about action when success/fail.
 - [x] Packaging to docker.
-- [ ] Managing to kubernates.
+- [x] Support CI(Github action) with master branch push hook.
+
 
 ## Contributing
 1. Fork it (https://github.com/dydtjr1128/NetworkFileExplorer/)
