@@ -1,5 +1,4 @@
-# 리눅스 환경에 대한 셋팅
-# pull official base image
+# 노드 셋팅
 FROM node:13.12.0-alpine
 
 # 리눅스의 /app을 저장공간으로 사용하겠다는 의미. cd frontend와 동일
