@@ -37,7 +37,7 @@ The Admin page provides several functions.
 - Support Windows/Linux OS
 - Support Docker images to easy build&run
 
-## Build & run
+## Docker build & run
 
 You can build and execute using the commands below.
 
