@@ -26,5 +26,4 @@ jobs:
       run: mvn package --file ./Server/pom.xml
           
     - name: Server docker image build test
-      uses: docker/build-push-action@v1
       run: docker build . --file ./Server/Dockerfile --tag nfe-server:test
